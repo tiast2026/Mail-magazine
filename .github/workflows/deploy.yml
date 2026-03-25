@@ -1,39 +1,62 @@
-name: Deploy to Production
+# ============================================================
+# 手動デプロイ
+# ============================================================
+# いつ動く？
+#   - GitHubの「Actions」タブから手動で「Run workflow」を押したとき
+#
+# 何をする？
+#   - 選択した環境（本番 or ステージング）にデプロイする
+#
+# なぜ必要？
+#   - 「今すぐデプロイしたい」ときにボタン1つで実行できる
+#   - 自動デプロイとは別に、任意のタイミングで使える
+# ============================================================
+
+name: 手動デプロイ
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Deployment environment"
+        description: "デプロイ先を選択"
         required: true
         default: "production"
         type: choice
         options:
-          - production
-          - staging
+          - production    # 本番環境
+          - staging       # ステージング（テスト）環境
 
+# 同じ環境への同時デプロイを防止
 concurrency:
   group: deploy-${{ github.event.inputs.environment }}
   cancel-in-progress: false
 
 jobs:
   deploy:
+    name: デプロイ実行
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker images
+      # Dockerイメージをビルド
+      - name: Dockerイメージ ビルド
         run: |
           docker build -t mail-magazine-backend ./backend
           docker build -t mail-magazine-frontend ./frontend
 
-      # --- Option A: Deploy via SSH + Docker Compose ---
-      # Configure these secrets in GitHub Settings > Secrets:
-      #   DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY, ANTHROPIC_API_KEY
+      # ===================================================
+      # ↓↓↓ デプロイ先を設定したらコメントを外してください ↓↓↓
+      # ===================================================
       #
-      # - name: Copy docker-compose and configs
+      # 【事前準備】GitHub → Settings → Secrets に以下を登録：
+      #   DEPLOY_HOST      : サーバーのIPアドレス
+      #   DEPLOY_USER      : SSHログインユーザー名
+      #   DEPLOY_SSH_KEY   : SSH秘密鍵の中身
+      #   ANTHROPIC_API_KEY: Claude APIキー
+      #
+      # - name: サーバーにファイル転送
       #   uses: appleboy/scp-action@v0.1.7
       #   with:
       #     host: ${{ secrets.DEPLOY_HOST }}
@@ -42,7 +65,7 @@ jobs:
       #     source: "docker-compose.yml,db/init.sql,backend/,frontend/"
       #     target: "/opt/mail-magazine"
       #
-      # - name: Deploy containers
+      # - name: サーバーでアプリを再起動
       #   uses: appleboy/ssh-action@v1.0.3
       #   with:
       #     host: ${{ secrets.DEPLOY_HOST }}
@@ -55,15 +78,15 @@ jobs:
       #       docker compose up -d --build
       #       sleep 10
       #       curl -sf http://localhost:8000/health || exit 1
-      #       echo "Deploy successful!"
+      #       echo "デプロイ完了！"
 
-      # --- Option B: Deploy to cloud (AWS ECS / GCP Cloud Run / etc.) ---
-      # Uncomment the appropriate section for your cloud provider.
-
-      - name: Deploy summary
+      # デプロイ結果をGitHub上に表示
+      - name: デプロイ結果レポート
         run: |
-          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "## デプロイ結果" >> $GITHUB_STEP_SUMMARY
+          echo "| 項目 | 値 |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo "| 環境 | ${{ github.event.inputs.environment }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| コミット | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ブランチ | ${{ github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 実行者 | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY

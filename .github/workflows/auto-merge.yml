@@ -1,4 +1,18 @@
-name: Auto-merge on CI pass
+# ============================================================
+# PR自動マージ
+# ============================================================
+# いつ動く？
+#   - Pull Request が作成・更新されたとき
+#
+# 何をする？
+#   - claude/ で始まるブランチのPRを、CIが通ったら自動マージする
+#   - マージ方式は squash merge（コミットを1つにまとめる）
+#
+# なぜ必要？
+#   - Claude Code が作成したPRを手動でマージする手間を省く
+# ============================================================
+
+name: PR自動マージ
 
 on:
   pull_request:
@@ -10,11 +24,13 @@ permissions:
 
 jobs:
   auto-merge:
+    name: 自動マージ設定
     runs-on: ubuntu-latest
+    # claude/ ブランチからのPRのみ対象
     if: startsWith(github.head_ref, 'claude/')
 
     steps:
-      - name: Enable auto-merge
+      - name: 自動マージを有効化
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
