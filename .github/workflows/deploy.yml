@@ -1,0 +1,69 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - production
+          - staging
+
+concurrency:
+  group: deploy-${{ github.event.inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker images
+        run: |
+          docker build -t mail-magazine-backend ./backend
+          docker build -t mail-magazine-frontend ./frontend
+
+      # --- Option A: Deploy via SSH + Docker Compose ---
+      # Configure these secrets in GitHub Settings > Secrets:
+      #   DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY, ANTHROPIC_API_KEY
+      #
+      # - name: Copy docker-compose and configs
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.DEPLOY_HOST }}
+      #     username: ${{ secrets.DEPLOY_USER }}
+      #     key: ${{ secrets.DEPLOY_SSH_KEY }}
+      #     source: "docker-compose.yml,db/init.sql,backend/,frontend/"
+      #     target: "/opt/mail-magazine"
+      #
+      # - name: Deploy containers
+      #   uses: appleboy/ssh-action@v1.0.3
+      #   with:
+      #     host: ${{ secrets.DEPLOY_HOST }}
+      #     username: ${{ secrets.DEPLOY_USER }}
+      #     key: ${{ secrets.DEPLOY_SSH_KEY }}
+      #     script: |
+      #       cd /opt/mail-magazine
+      #       echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}" > .env
+      #       docker compose down
+      #       docker compose up -d --build
+      #       sleep 10
+      #       curl -sf http://localhost:8000/health || exit 1
+      #       echo "Deploy successful!"
+
+      # --- Option B: Deploy to cloud (AWS ECS / GCP Cloud Run / etc.) ---
+      # Uncomment the appropriate section for your cloud provider.
+
+      - name: Deploy summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
