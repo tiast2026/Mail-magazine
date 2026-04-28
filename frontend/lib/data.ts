@@ -11,9 +11,9 @@ export function getTemplate(id: string): Template | undefined {
 }
 
 export function getOutputs(): MailOutput[] {
-  return (outputs as MailOutput[]).slice().sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt),
-  );
+  return (outputs as unknown as MailOutput[])
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export function getOutput(id: string): MailOutput | undefined {
