@@ -5,8 +5,8 @@
 ## 仕組み
 
 - **AI生成役**: Claude Code（CLI）— 楽天RMS APIで商品情報を取得し、テンプレートに流し込んでメルマガHTMLを生成
-- **Web UI**: GitHub Pages で静的ホスティング — テンプレート/メルマガの閲覧・プレビュー・HTMLコピー・実績入力
-- **データ**: リポジトリ内 JSON ファイルで一元管理（push でWeb反映）
+- **Web UI**: Vercel でホスティング — テンプレート/メルマガの閲覧・プレビュー・HTMLコピー・実績入力
+- **データ**: リポジトリ内 JSON ファイルで一元管理（push で Web 自動更新）
 
 API課金が発生しないよう、AI生成は Claude Code 側で実行し、Web は閲覧専用に徹しています。
 
@@ -14,7 +14,7 @@ API課金が発生しないよう、AI生成は Claude Code 側で実行し、We
 
 ```
 .
-├── frontend/                 Next.js (静的エクスポート)
+├── frontend/                 Next.js（Vercel デプロイ）
 │   ├── app/                  ページ
 │   ├── components/           UIコンポーネント
 │   ├── lib/                  データ取得・型定義
@@ -23,11 +23,9 @@ API課金が発生しないよう、AI生成は Claude Code 側で実行し、We
 │       └── outputs.json      生成済みメルマガ一覧
 ├── scripts/
 │   └── fetch-rakuten.mjs     楽天RMS API商品情報取得
-├── data/
-│   ├── config.example.json   認証情報サンプル
-│   └── config.local.json     実際の認証情報（gitignore）
-└── .github/workflows/
-    └── pages.yml             GitHub Pages 自動デプロイ
+└── data/
+    ├── config.example.json   認証情報サンプル
+    └── config.local.json     実際の認証情報（gitignore）
 ```
 
 ## セットアップ
@@ -56,10 +54,14 @@ npm install
 npm run dev   # http://localhost:3000
 ```
 
-### 3. GitHub Pages 公開
+### 3. Vercel デプロイ
 
-リポジトリの Settings > Pages で Source を「GitHub Actions」に設定。
-`main` または `claude/check-project-status-RE1Io` ブランチへ push すると自動デプロイされます。
+1. https://vercel.com/new で「Import Git Repository」→ `tiast2026/Mail-magazine` を選択
+2. **Root Directory** を `frontend` に変更（Next.js が `frontend/` 配下にあるため）
+3. Framework Preset は自動で `Next.js` が選ばれる
+4. 「Deploy」を押すだけ
+
+push のたびに自動で再デプロイされます。Privateリポジトリでも無料プランで利用可能です。
 
 ## 使い方（メルマガ制作フロー）
 
@@ -71,7 +73,7 @@ npm run dev   # http://localhost:3000
    - テンプレに変数を流し込んで HTML 生成
    - `frontend/data/outputs.json` に追記
    - commit & push
-3. **Web で確認**: GitHub Pages で `配信メルマガ` から該当メルマガを開く → プレビュー確認 → 「HTMLをコピー」で楽天RMSのメルマガ管理にペースト
+3. **Web で確認**: Vercel デプロイ先で `配信メルマガ` から該当メルマガを開く → プレビュー確認 → 「HTMLをコピー」で楽天RMSのメルマガ管理にペースト
 4. **配信後**: Web の実績フォームに開封率・クリック率・売上を入力 → JSON出力 → Claude に渡して `outputs.json` 永続化
 
 ## テンプレート
