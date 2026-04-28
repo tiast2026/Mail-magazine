@@ -1,44 +1,63 @@
 [
   {
-    "id": "sample-001",
-    "title": "【サンプル】テンプレB を使ったセール告知メルマガ",
+    "id": "20260428-gw-marathon",
+    "title": "GW直前セール｜春の新作50%OFFキャンペーン",
     "templateId": "B",
-    "createdAt": "2026-04-28T10:00:00+09:00",
-    "tags": ["サンプル"],
+    "createdAt": "2026-04-28T13:00:00+09:00",
+    "tags": [
+      "GWセール",
+      "お買い物マラソン",
+      "春新作"
+    ],
     "products": [
       {
-        "manageNumber": "sample-1",
-        "name": "サンプル商品1（イチオシ）",
-        "url": "https://item.rakuten.co.jp/noahl/sample-1/",
-        "imageUrl": "https://placehold.jp/400x400.png?text=Sample+1",
+        "manageNumber": "spring-linen-blouse",
+        "name": "春のリネンブラウス",
+        "url": "https://item.rakuten.co.jp/noahl/spring-linen-blouse/",
+        "imageUrl": "https://placehold.jp/d4c4b0/625142/400x500.png?text=Linen+Blouse",
+        "regularPrice": "4,900円",
+        "salePrice": "2,450円"
+      },
+      {
+        "manageNumber": "natural-wide-pants",
+        "name": "ナチュラルワイドパンツ",
+        "url": "https://item.rakuten.co.jp/noahl/natural-wide-pants/",
+        "imageUrl": "https://placehold.jp/c4b59a/625142/400x500.png?text=Wide+Pants",
+        "regularPrice": "5,800円",
+        "salePrice": "2,900円"
+      },
+      {
+        "manageNumber": "sukashi-cardigan",
+        "name": "透かし編みカーディガン",
+        "url": "https://item.rakuten.co.jp/noahl/sukashi-cardigan/",
+        "imageUrl": "https://placehold.jp/dfd4c2/625142/400x500.png?text=Cardigan",
         "regularPrice": "6,400円",
         "salePrice": "3,200円"
-      },
-      {
-        "manageNumber": "sample-2",
-        "name": "サンプル商品2",
-        "url": "https://item.rakuten.co.jp/noahl/sample-2/",
-        "imageUrl": "https://placehold.jp/300x300.png?text=Sample+2",
-        "regularPrice": "3,300円",
-        "salePrice": "1,650円"
-      },
-      {
-        "manageNumber": "sample-3",
-        "name": "サンプル商品3",
-        "url": "https://item.rakuten.co.jp/noahl/sample-3/",
-        "imageUrl": "https://placehold.jp/300x300.png?text=Sample+3",
-        "regularPrice": "4,200円",
-        "salePrice": "2,100円"
       }
     ],
     "variables": {
-      "BANNER_IMAGE": "https://placehold.jp/600x200.png?text=SUPER+SALE",
-      "BANNER_ALT": "楽天スーパーSALE開催中",
-      "HEADLINE": "開始2時間限定<br>全品50%OFFクーポン",
-      "DEADLINE": "2026/3/4（水）20:00 〜 21:59",
+      "BANNER_IMAGE": "https://placehold.jp/8c7b6b/ffffff/600x180.png?text=%E6%A5%BD%E5%A4%A9%E3%81%8A%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%9E%E3%83%A9%E3%82%BD%E3%83%B3",
+      "BANNER_ALT": "楽天お買い物マラソン GW直前セール",
+      "HEADLINE": "GW直前！<br>春の新作50%OFFクーポン",
+      "DEADLINE": "5/1（金）20:00 〜 5/5（火）23:59",
       "COUPON_URL": "https://www.rakuten.ne.jp/gold/noahl/coupon.html",
-      "COUPON_CTA": "50%OFFクーポンを取得する →"
+      "COUPON_CTA": "50%OFFクーポンを取得する →",
+      "PRODUCT1_URL": "https://item.rakuten.co.jp/noahl/spring-linen-blouse/",
+      "PRODUCT1_IMAGE": "https://placehold.jp/d4c4b0/625142/400x500.png?text=Linen+Blouse",
+      "PRODUCT1_NAME": "春のリネンブラウス",
+      "PRODUCT1_REGULAR_PRICE": "4,900円",
+      "PRODUCT1_SALE_PRICE": "2,450円",
+      "PRODUCT2_URL": "https://item.rakuten.co.jp/noahl/natural-wide-pants/",
+      "PRODUCT2_IMAGE": "https://placehold.jp/c4b59a/625142/400x500.png?text=Wide+Pants",
+      "PRODUCT2_NAME": "ナチュラルワイドパンツ",
+      "PRODUCT2_REGULAR_PRICE": "5,800円",
+      "PRODUCT2_SALE_PRICE": "2,900円",
+      "PRODUCT3_URL": "https://item.rakuten.co.jp/noahl/sukashi-cardigan/",
+      "PRODUCT3_IMAGE": "https://placehold.jp/dfd4c2/625142/400x500.png?text=Cardigan",
+      "PRODUCT3_NAME": "透かし編みカーディガン",
+      "PRODUCT3_REGULAR_PRICE": "6,400円",
+      "PRODUCT3_SALE_PRICE": "3,200円"
     },
-    "html": "<p style=\"text-align:center;color:#a89585;font-size:13px;padding:20px;\">これはサンプル出力です。Claude Code で実際にメルマガを生成すると、ここに完成したHTMLが入ります。</p>"
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートB -->\n<!-- セール告知型（マラソン・SS） -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"#8c7b6b\" size=\"3\" style=\"letter-spacing: 4px;\">ＮＯＡＨＬ</font><br>\n      <font color=\"#b5a595\" size=\"1\" style=\"letter-spacing: 2px;\">- natural & casual -</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ セールバナー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <a target=\"_blank\" href=\"https://www.rakuten.ne.jp/gold/noahl/sale.html\">\n        <img width=\"100%\" src=\"https://placehold.jp/8c7b6b/ffffff/600x180.png?text=%E6%A5%BD%E5%A4%A9%E3%81%8A%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%9E%E3%83%A9%E3%82%BD%E3%83%B3\" border=\"0\" alt=\"楽天お買い物マラソン GW直前セール\">\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メインメッセージ -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"#625142\" size=\"4\"><b>GW直前！<br>春の新作50%OFFクーポン</b></font><br><br>\n      <font color=\"#a89585\" size=\"2\">5/1（金）20:00 〜 5/5（火）23:59</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ クーポン取得ボタン -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 25px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"80%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"#c4694a\" style=\"padding: 18px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"https://www.rakuten.ne.jp/gold/noahl/coupon.html\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"3\"><b>50%OFFクーポンを取得する →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り線 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"border-top: 1px solid #e8e2db;\"></td>\n  </tr>\n</table>\n\n<!-- ■ おすすめ見出し -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 5px 0;\">\n      <font color=\"#a89585\" size=\"2\">- staff recommend -</font><br><br>\n      <font color=\"#625142\" size=\"3\"><b>今回のおすすめ3選</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ おすすめ商品1（イチオシ・大きめ表示） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 5px 0;\">\n      <font color=\"#c4694a\" size=\"2\"><b>★ スタッフイチオシ</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/spring-linen-blouse/\">\n        <img src=\"https://placehold.jp/d4c4b0/625142/400x500.png?text=Linen+Blouse\" width=\"85%\" border=\"0\" alt=\"春のリネンブラウス\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 8px 0;\">\n      <font color=\"#625142\" size=\"3\"><b>春のリネンブラウス</b></font><br>\n      <font color=\"#b5a595\" size=\"2\"><strike>4,900円</strike></font>\n      <font color=\"#c4694a\" size=\"3\"><b> 2,450円</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 20px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"80%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"#8c7b6b\" style=\"padding: 14px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/spring-linen-blouse/\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>この商品を見る →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ おすすめ商品2・3（2カラム） -->\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"49%\" align=\"center\" valign=\"top\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/natural-wide-pants/\">\n        <img width=\"100%\" src=\"https://placehold.jp/c4b59a/625142/400x500.png?text=Wide+Pants\" border=\"0\" alt=\"ナチュラルワイドパンツ\">\n      </a><br>\n      <font color=\"#625142\" size=\"2\"><b>ナチュラルワイドパンツ</b></font><br>\n      <font color=\"#b5a595\" size=\"1\"><strike>5,800円</strike></font>\n      <font color=\"#c4694a\" size=\"2\"><b> 2,900円</b></font><br><br>\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/natural-wide-pants/\">\n        <font color=\"#8c7b6b\" size=\"2\">詳しく見る →</font>\n      </a>\n    </td>\n    <td width=\"2%\"></td>\n    <td width=\"49%\" align=\"center\" valign=\"top\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/sukashi-cardigan/\">\n        <img width=\"100%\" src=\"https://placehold.jp/dfd4c2/625142/400x500.png?text=Cardigan\" border=\"0\" alt=\"透かし編みカーディガン\">\n      </a><br>\n      <font color=\"#625142\" size=\"2\"><b>透かし編みカーディガン</b></font><br>\n      <font color=\"#b5a595\" size=\"1\"><strike>6,400円</strike></font>\n      <font color=\"#c4694a\" size=\"2\"><b> 3,200円</b></font><br><br>\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/sukashi-cardigan/\">\n        <font color=\"#8c7b6b\" size=\"2\">詳しく見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ もっと見るリンク -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0;\">\n      <a target=\"_blank\" href=\"https://www.rakuten.ne.jp/gold/noahl/sale.html\">\n        <font color=\"#8c7b6b\" size=\"2\"><b>≫ セール対象アイテムをもっと見る</b></font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f7f4f1\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"#8c7b6b\" size=\"2\"><b>▽ NOAHLの新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/c/0000000255/?s=4#risFil\">\n        <font color=\"#625142\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"#b5a595\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"https://www.rakuten.ne.jp/gold/noahl/review.html\">\n        <font color=\"#a89585\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"#b5a595\" size=\"1\" style=\"letter-spacing: 2px;\">ＮＯＡＨＬ ( ノアル )</font>\n    </td>\n  </tr>\n</table>"
   }
 ]
