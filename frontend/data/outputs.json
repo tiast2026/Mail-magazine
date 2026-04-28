@@ -1,0 +1,44 @@
+[
+  {
+    "id": "sample-001",
+    "title": "【サンプル】テンプレB を使ったセール告知メルマガ",
+    "templateId": "B",
+    "createdAt": "2026-04-28T10:00:00+09:00",
+    "tags": ["サンプル"],
+    "products": [
+      {
+        "manageNumber": "sample-1",
+        "name": "サンプル商品1（イチオシ）",
+        "url": "https://item.rakuten.co.jp/noahl/sample-1/",
+        "imageUrl": "https://placehold.jp/400x400.png?text=Sample+1",
+        "regularPrice": "6,400円",
+        "salePrice": "3,200円"
+      },
+      {
+        "manageNumber": "sample-2",
+        "name": "サンプル商品2",
+        "url": "https://item.rakuten.co.jp/noahl/sample-2/",
+        "imageUrl": "https://placehold.jp/300x300.png?text=Sample+2",
+        "regularPrice": "3,300円",
+        "salePrice": "1,650円"
+      },
+      {
+        "manageNumber": "sample-3",
+        "name": "サンプル商品3",
+        "url": "https://item.rakuten.co.jp/noahl/sample-3/",
+        "imageUrl": "https://placehold.jp/300x300.png?text=Sample+3",
+        "regularPrice": "4,200円",
+        "salePrice": "2,100円"
+      }
+    ],
+    "variables": {
+      "BANNER_IMAGE": "https://placehold.jp/600x200.png?text=SUPER+SALE",
+      "BANNER_ALT": "楽天スーパーSALE開催中",
+      "HEADLINE": "開始2時間限定<br>全品50%OFFクーポン",
+      "DEADLINE": "2026/3/4（水）20:00 〜 21:59",
+      "COUPON_URL": "https://www.rakuten.ne.jp/gold/noahl/coupon.html",
+      "COUPON_CTA": "50%OFFクーポンを取得する →"
+    },
+    "html": "<p style=\"text-align:center;color:#a89585;font-size:13px;padding:20px;\">これはサンプル出力です。Claude Code で実際にメルマガを生成すると、ここに完成したHTMLが入ります。</p>"
+  }
+]
