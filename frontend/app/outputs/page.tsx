@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDefaultBrandId, getOutputs } from "@/lib/data";
+import EventBadge from "@/components/EventBadge";
 
 export default function OutputsPage() {
   const brandId = getDefaultBrandId();
@@ -21,23 +22,47 @@ export default function OutputsPage() {
           Claude Code に「品番ABCでセール告知メルマガ作って」と指示してください。
         </div>
       ) : (
-        <ul className="divide-y divide-stone-200 border border-stone-200 rounded bg-white">
+        <ul className="card divide-y divide-stone-100">
           {outputs.map((o) => (
             <li
               key={o.id}
               className="p-4 flex items-center justify-between gap-4"
             >
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <Link
                   href={`/outputs/${o.id}/`}
                   className="font-medium hover:underline block truncate"
                 >
                   {o.title}
                 </Link>
-                <div className="text-xs text-stone-500 mt-1">
-                  テンプレ {o.templateId} ・ 商品 {o.products.length} 点 ・{" "}
-                  {new Date(o.createdAt).toLocaleString("ja-JP")}
+                <div className="text-xs text-stone-500 mt-1 flex items-center gap-2 flex-wrap">
+                  <span
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-white text-[10px]"
+                    style={{ backgroundColor: "var(--brand-primary)" }}
+                  >
+                    テンプレ {o.templateId}
+                  </span>
+                  {o.event && <EventBadge event={o.event} />}
+                  <span>商品 {o.products.length} 点</span>
+                  <span>
+                    {new Date(o.scheduledAt ?? o.createdAt).toLocaleString(
+                      "ja-JP",
+                      {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      },
+                    )}
+                    {o.scheduledAt && o.sentAt ? " 配信済" : o.scheduledAt ? " 予定" : ""}
+                  </span>
                 </div>
+                {o.event?.name && (
+                  <div className="text-xs text-stone-500 mt-1">
+                    {o.event.name}
+                  </div>
+                )}
                 {o.tags && o.tags.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {o.tags.map((tag) => (
@@ -59,7 +84,10 @@ export default function OutputsPage() {
                       <div>クリック {o.results.clickRate.toFixed(1)}%</div>
                     )}
                     {o.results.salesAmount != null && (
-                      <div className="text-emerald-700 font-medium">
+                      <div
+                        className="font-medium"
+                        style={{ color: "var(--brand-accent)" }}
+                      >
                         ￥{o.results.salesAmount.toLocaleString()}
                       </div>
                     )}

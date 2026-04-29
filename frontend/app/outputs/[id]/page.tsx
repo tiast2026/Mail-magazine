@@ -10,6 +10,7 @@ import {
 import HtmlPreview from "@/components/HtmlPreview";
 import CopyButton from "@/components/CopyButton";
 import ResultsForm from "@/components/ResultsForm";
+import EventBadge from "@/components/EventBadge";
 
 export async function generateStaticParams() {
   const brandId = getDefaultBrandId();
@@ -45,8 +46,57 @@ export default async function OutputDetailPage({
           {new Date(output.createdAt).toLocaleString("ja-JP")} 生成
         </div>
         <h1 className="text-2xl font-semibold mt-1">{output.title}</h1>
+
+        <div className="mt-3 flex flex-wrap gap-2 items-center">
+          {output.event && <EventBadge event={output.event} size="md" />}
+          {output.event?.name && (
+            <span className="text-xs text-stone-600">
+              {output.event.name}
+            </span>
+          )}
+        </div>
+
+        <dl className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          {output.scheduledAt && (
+            <div className="card p-3">
+              <dt className="text-stone-500">配信予定</dt>
+              <dd className="mt-1 font-medium">
+                {new Date(output.scheduledAt).toLocaleString("ja-JP", {
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </dd>
+            </div>
+          )}
+          {output.sentAt && (
+            <div className="card p-3">
+              <dt className="text-stone-500">実配信</dt>
+              <dd className="mt-1 font-medium">
+                {new Date(output.sentAt).toLocaleString("ja-JP", {
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </dd>
+            </div>
+          )}
+          {output.event?.startDate && output.event?.endDate && (
+            <div className="card p-3 col-span-2">
+              <dt className="text-stone-500">イベント期間</dt>
+              <dd className="mt-1 text-xs">
+                {new Date(output.event.startDate).toLocaleDateString("ja-JP")}{" "}
+                〜{" "}
+                {new Date(output.event.endDate).toLocaleDateString("ja-JP")}
+              </dd>
+            </div>
+          )}
+        </dl>
+
         {output.tags && output.tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             {output.tags.map((tag) => (
               <span
                 key={tag}

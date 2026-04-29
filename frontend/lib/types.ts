@@ -74,12 +74,34 @@ export type OutputResults = {
   notes?: string;
 };
 
+export type CampaignEventType =
+  | "marathon" // 楽天お買い物マラソン
+  | "supersale" // 楽天スーパーSALE
+  | "blackfriday" // ブラックフライデー
+  | "yearend" // 年末年始・大感謝祭
+  | "newyear" // 新春初売り
+  | "newcollection" // 新作・新商品
+  | "preorder" // 予約販売
+  | "restock" // 再入荷
+  | "review" // レビュー依頼
+  | "regular" // 通常配信（イベントなし）
+  | "custom"; // その他
+
+export type CampaignEvent = {
+  type: CampaignEventType;
+  name?: string; // 表示名（例: "2026年5月お買い物マラソン"）
+  startDate?: string; // ISO 日付（イベント開始）
+  endDate?: string; // ISO 日付（イベント終了）
+};
+
 export type MailOutput = {
   id: string;
   title: string;
   templateId: string;
   createdAt: string;
-  sentAt?: string;
+  scheduledAt?: string; // 配信予定日時（ISO datetime）
+  sentAt?: string; // 実際の配信日時（ISO datetime）
+  event?: CampaignEvent;
   products: Product[];
   variables: Record<string, string>;
   html: string;

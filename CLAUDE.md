@@ -19,21 +19,65 @@
 | `scripts/fetch-rakuten.mjs` | RMS API で商品情報取得 |
 | `scripts/fetch-rakuten-public.mjs` | 公開ページから OGP 取得（フォールバック） |
 
-## 楽天 RMS 認証情報の扱い
+## 楽天 RMS API の使い方
 
-**認証情報はリポジトリに保存しません**。Web UI の `/settings` ページで
-ユーザーが入力 → ブラウザの localStorage に保存されています。
+**認証情報は Vercel 環境変数で管理**しています。Claude Code は
+デプロイ済みの API ルート経由で商品情報を取得します。
 
-### セッション開始時のフロー
+### API エンドポイント
 
-ユーザーが楽天 RMS API を使う作業（品番からの商品取得など）を依頼してきたら：
+```
+GET https://mail-magazine.vercel.app/api/rakuten/<brandId>/<品番>
+```
 
-1. ユーザーが Web の「設定」ページの「JSONとしてコピー」ボタンを押す → JSON を貼ってもらう
-2. その JSON を `data/config.local.json` に書き込む（`.gitignore` 済み、push されない）
-3. `scripts/fetch-rakuten.mjs` を実行して商品情報取得
-4. セッション終了後はサンドボックス環境ごとファイルが消えるため、永続化されない
+例:
+```bash
+curl -s https://mail-magazine.vercel.app/api/rakuten/noahl/nlwp315-2505
+```
 
-ユーザーがまだ JSON を貼ってない場合は、貼ってもらうよう促してから作業に入る。
+レスポンス JSON:
+- `manageNumber`: 商品管理番号
+- `name`: 商品名
+- `tagline`: タグライン
+- `url`: 商品ページURL
+- `mainImage`: 第一画像 URL（fullUrl）
+- `images[]`: 全画像（location, fullUrl, alt）
+- `variants`: カラー別 variants（images, standardPrice）
+
+### 環境変数の命名規則
+
+ブランド固有：
+- `RAKUTEN_<BRANDID大文字>_SERVICE_SECRET`
+- `RAKUTEN_<BRANDID大文字>_LICENSE_KEY`
+- `RAKUTEN_<BRANDID大文字>_SHOP_URL`
+
+例: NOAHL なら `RAKUTEN_NOAHL_SERVICE_SECRET`
+
+旧命名（プレフィックスなし）はフォールバック対応。
+
+### メルマガ生成時のフロー
+
+ユーザーから「品番〇〇でメルマガ作って」と依頼されたら：
+
+1. 現在編集中ブランド（通常は default = noahl）を確認
+2. `curl https://mail-magazine.vercel.app/api/rakuten/<brandId>/<品番>` で商品情報取得
+3. テンプレートを選定（A/B/C/D）
+4. テンプレートに変数を埋めて HTML 生成（{{COLOR_*}} 等は applyBrandToHtml で実行時置換）
+5. `frontend/data/brands/<brandId>/outputs.json` に追記
+6. commit & push → Vercel 自動デプロイ → Web で確認可能
+
+### イベント・配信日付情報
+
+メルマガ生成時に以下も指定する：
+- `event.type`: marathon / supersale / blackfriday / yearend / newyear /
+  newcollection / preorder / restock / review / regular / custom
+- `event.name`: 表示名（例: "2026年5月お買い物マラソン"）
+- `event.startDate` / `event.endDate`: イベント期間
+- `scheduledAt`: 配信予定日時
+- `sentAt`: 実配信日時（後から記録）
+
+ユーザーから「マラソン向けに作って」「スーパーSALE で送る」と言われたら、
+適切な `event.type` を設定する。日時はユーザーから聞くか、現在時刻ベースで仮設定。
 
 ## メルマガ制作フロー
 

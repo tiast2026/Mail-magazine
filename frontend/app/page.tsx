@@ -5,6 +5,7 @@ import {
   getOutputs,
   getTemplates,
 } from "@/lib/data";
+import EventBadge from "@/components/EventBadge";
 
 export default function Home() {
   const brandId = getDefaultBrandId();
@@ -82,15 +83,18 @@ export default function Home() {
                       <div className="font-medium text-stone-900 truncate">
                         {o.title}
                       </div>
-                      <div className="text-xs text-stone-500 mt-1 flex items-center gap-3">
+                      <div className="text-xs text-stone-500 mt-1 flex items-center gap-2 flex-wrap">
                         <span
                           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-white text-[10px]"
                           style={{ backgroundColor: "var(--brand-primary)" }}
                         >
                           テンプレ {o.templateId}
                         </span>
+                        {o.event && <EventBadge event={o.event} />}
                         <span>
-                          {new Date(o.createdAt).toLocaleString("ja-JP", {
+                          {new Date(
+                            o.scheduledAt ?? o.createdAt,
+                          ).toLocaleString("ja-JP", {
                             month: "numeric",
                             day: "numeric",
                             hour: "2-digit",
