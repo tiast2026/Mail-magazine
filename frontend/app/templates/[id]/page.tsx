@@ -128,7 +128,11 @@ export default async function TemplateDetailPage({
 
       <section>
         <h2 className="text-lg font-semibold mb-2">編集・削除</h2>
-        <TemplateEditor brandId={brandId} template={template} />
+        <TemplateEditor
+          brandId={brandId}
+          brand={brand}
+          template={template}
+        />
       </section>
     </div>
   );

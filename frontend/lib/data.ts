@@ -9,6 +9,8 @@ import type {
   Template,
 } from "./types";
 
+export { applyBrandToHtml } from "./brand";
+
 const brandData: Record<
   string,
   { config: BrandConfig; templates: Template[]; outputs: MailOutput[] }
@@ -52,27 +54,3 @@ export function getOutput(brandId: string, id: string): MailOutput | undefined {
   return getOutputs(brandId).find((o) => o.id === id);
 }
 
-/** ブランド設定の色・ロゴ等をテンプレ HTML の {{COLOR_*}} などに流し込む */
-export function applyBrandToHtml(html: string, brand: BrandConfig): string {
-  const replacements: Record<string, string> = {
-    "{{COLOR_PRIMARY}}": brand.colors.primary,
-    "{{COLOR_ACCENT}}": brand.colors.accent,
-    "{{COLOR_MUTED}}": brand.colors.muted,
-    "{{COLOR_TEXT}}": brand.colors.text,
-    "{{COLOR_SUBTEXT}}": brand.colors.subtext,
-    "{{COLOR_PANEL}}": brand.colors.panel,
-    "{{COLOR_BORDER}}": brand.colors.border,
-    "{{COLOR_WHITE}}": brand.colors.white,
-    "{{BRAND_LOGO}}": brand.logoText,
-    "{{BRAND_TAGLINE}}": `- ${brand.tagline} -`,
-    "{{BRAND_LOGO_FULL}}": `${brand.logoText} ( ${brand.name === "NOAHL" ? "ノアル" : brand.name} )`,
-    "{{URL_NEW_ARRIVALS}}": brand.fixedUrls.newArrivals ?? "",
-    "{{URL_REVIEW}}": brand.fixedUrls.review ?? "",
-    "{{URL_SALE}}": brand.fixedUrls.salePage ?? "",
-  };
-  let out = html;
-  for (const [k, v] of Object.entries(replacements)) {
-    out = out.split(k).join(v);
-  }
-  return out;
-}

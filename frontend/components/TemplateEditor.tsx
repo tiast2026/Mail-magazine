@@ -2,14 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { Template } from "@/lib/types";
+import type { BrandConfig, Template } from "@/lib/types";
+import { applyBrandToHtml } from "@/lib/brand";
+import HtmlPreview from "./HtmlPreview";
 
 type Props = {
   brandId: string;
+  brand: BrandConfig;
   template: Template;
 };
 
-export default function TemplateEditor({ brandId, template }: Props) {
+export default function TemplateEditor({ brandId, brand, template }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -226,6 +229,18 @@ export default function TemplateEditor({ brandId, template }: Props) {
             ブランド統一性のため、カラーコードを直書きせず変数を使用してください。
           </p>
         </Field>
+
+        <div className="border border-stone-200 rounded p-3 bg-stone-50 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-stone-600 font-semibold">
+              ライブプレビュー
+            </span>
+            <span className="text-[10px] text-stone-500">
+              編集中の HTML をブランド色で即時表示（保存前確認用）
+            </span>
+          </div>
+          <HtmlPreview html={applyBrandToHtml(html, brand)} />
+        </div>
       </div>
 
       {error && (
