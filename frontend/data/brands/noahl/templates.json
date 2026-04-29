@@ -254,5 +254,92 @@
       "単品の主力訴求 → テンプレA"
     ],
     "exampleScenario": "「マラソン残り24時間！実際に売れた人気TOP3を紹介、人気カラー情報付き」"
+  },
+  {
+    "id": "D",
+    "name": "テンプレD：ナチュラル読み物型",
+    "description": "ブランド DNA の最大要素「Natural」を体現。素材ストーリーやスタッフのこだわりを語り、読み物として価値を提供しながら、さりげなく商品を紹介。販促色を抑え、ブランドの世界観を伝える。",
+    "useCases": [
+      "素材ストーリー",
+      "スタッフのこだわり紹介",
+      "ブランド世界観訴求",
+      "読み物としての価値提供"
+    ],
+    "productSlots": "1〜2",
+    "requiredProductCount": {
+      "min": 1,
+      "max": 2
+    },
+    "requiredImages": [
+      {
+        "key": "OPENING_IMAGE",
+        "label": "オープニング画像",
+        "description": "コラム的な世界観を伝える1枚。商品単体でなく、ライフスタイル感ある画像",
+        "recommended": "横長・落ち着いたトーン"
+      },
+      {
+        "key": "PRODUCT1_IMAGE",
+        "label": "メイン商品画像",
+        "description": "ストーリーで紹介する商品",
+        "recommended": "1000x1000以上"
+      },
+      {
+        "key": "DETAIL_IMAGE",
+        "label": "ディテール画像",
+        "description": "素材アップやこだわりの部分が分かるカット",
+        "recommended": "正方形・ディテール感"
+      }
+    ],
+    "requiredText": [
+      {
+        "key": "STORY_TITLE",
+        "label": "コラムタイトル",
+        "example": "楊柳という素材のはなし / クロシェ編みのある暮らし"
+      },
+      {
+        "key": "STORY_LEAD",
+        "label": "リード文（2-3行）",
+        "example": "夏の日差しが気持ちよく感じられる頃。\\nふわりと涼しげな素材が心地よい季節になりました。"
+      },
+      {
+        "key": "STORY_BODY",
+        "label": "本文（4-6行）",
+        "example": "楊柳（ようりゅう）は、独特の凹凸感が肌に触れる面積を少なくし、\\n夏でもさらりと心地よく着られる素材です。..."
+      },
+      {
+        "key": "PRODUCT1_NAME",
+        "label": "商品名",
+        "example": "クロシェ編みドッキングワンピース"
+      },
+      {
+        "key": "PRODUCT1_REGULAR_PRICE",
+        "label": "通常価格",
+        "example": "8,980円"
+      },
+      {
+        "key": "PRODUCT1_SALE_PRICE",
+        "label": "現在価格（任意）",
+        "example": "5,388円（40%OFFクーポン適用）"
+      },
+      {
+        "key": "CTA1_TEXT",
+        "label": "CTA文言（控えめに）",
+        "example": "この商品をくわしく見る →"
+      }
+    ],
+    "bestFor": [
+      "素材や製法のこだわりを丁寧に伝えたい時",
+      "ブランドファン化を狙う時",
+      "セール疲れの読者にブランド体験を届けたい時",
+      "新作の世界観を先に伝えてから販売へつなげたい時",
+      "Natural（自然体）を最も強く打ち出したい時"
+    ],
+    "notRecommendedFor": [
+      "短期セールの即時集客 → テンプレB",
+      "売れ筋ランキング訴求 → テンプレC",
+      "強い割引訴求 → テンプレA"
+    ],
+    "exampleScenario": "「楊柳という素材のはなし。日本の夏に寄り添う、ふんわり優しい一着」",
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートD -->\n<!-- ナチュラル読み物型 -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 25px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ コラムタイトル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 15px 5px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- column -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 15px 30px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>{{STORY_TITLE}}</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ オープニング画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <img src=\"{{OPENING_IMAGE}}\" width=\"100%\" border=\"0\" alt=\"{{STORY_TITLE}}\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ リード文 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px 20px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\" style=\"line-height: 1.8;\">{{STORY_LEAD}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ディテール画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0;\">\n      <img src=\"{{DETAIL_IMAGE}}\" width=\"75%\" border=\"0\" alt=\"\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 本文 -->\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"left\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{STORY_BODY}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り線 -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"border-top: 1px solid {{COLOR_BORDER}}; padding: 15px 0 0 0;\"></td>\n  </tr>\n</table>\n\n<!-- ■ さりげない商品紹介 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- featured item -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT1_URL}}\">\n        <img src=\"{{PRODUCT1_IMAGE}}\" width=\"85%\" border=\"0\" alt=\"{{PRODUCT1_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0 5px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>{{PRODUCT1_NAME}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\">{{PRODUCT1_REGULAR_PRICE}}</font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b> {{PRODUCT1_SALE_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 30px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"75%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 14px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{PRODUCT1_URL}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>{{CTA1_TEXT}}</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>"
   }
 ]
