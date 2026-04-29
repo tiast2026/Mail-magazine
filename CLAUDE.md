@@ -14,9 +14,13 @@
 
 | パス | 役割 |
 |------|------|
-| `frontend/data/templates.json` | 3 パターンのテンプレート（A/B/C）+ メタデータ |
-| `frontend/data/outputs.json` | 生成済みメルマガと配信実績 |
-| `scripts/fetch-rakuten.mjs` | RMS API で商品情報取得 |
+| `frontend/data/brands.json` | ブランド一覧 |
+| `frontend/data/brands/<brandId>/config.json` | ブランド情報（色・ロゴ・固定URL・アイデンティティ） |
+| `frontend/data/brands/<brandId>/templates.json` | ブランド別テンプレート（A/B/C/D） |
+| `frontend/data/brands/<brandId>/outputs.json` | 生成済みメルマガと配信実績 |
+| `frontend/app/api/rakuten/[brandId]/[manageNumber]/route.ts` | 楽天 RMS API ルート |
+| `frontend/lib/data.ts` | データ取得 + `applyBrandToHtml()` 色置換ヘルパー |
+| `frontend/lib/events.ts` | キャンペーンイベント定義（marathon, supersale 等） |
 | `scripts/fetch-rakuten-public.mjs` | 公開ページから OGP 取得（フォールバック） |
 
 ## 楽天 RMS API の使い方
@@ -84,15 +88,16 @@ curl -s https://mail-magazine.vercel.app/api/rakuten/noahl/nlwp315-2505
 ### パターン1: 品番渡される（API 経由生成）
 
 ```bash
-node scripts/fetch-rakuten.mjs <品番1> <品番2> ...
+# Vercel 経由で商品情報取得（認証情報は env vars にある）
+curl -s https://mail-magazine.vercel.app/api/rakuten/noahl/<品番>
 ```
 
 1. 商品情報取得 → JSON で読み取り
 2. テンプレ選定（後述「テンプレ選定ロジック」参照）
 3. 必要画像のチェック（不足してたらユーザーに確認）
-4. 変数に値を埋めて HTML 生成
-5. `frontend/data/outputs.json` に追記
-6. commit & push → Vercel 自動デプロイ
+4. テンプレに変数を埋めて HTML 生成（`{{COLOR_*}}` `{{URL_*}}` 等は残す）
+5. `frontend/data/brands/<brandId>/outputs.json` に追記
+6. commit & push → Vercel 自動デプロイ → Web で `applyBrandToHtml()` が色を置換
 
 ### パターン2: 「こういうイベント打ちたい」と相談される
 
@@ -247,13 +252,14 @@ NOAHL（ナチュラル・カジュアル女性服）に合うもの：
 「春らしさを出したい」「セール感を出したい」場合：
 - 色は変えない
 - バナー画像・コピー・構図で差別化する
-- 例: NOAHL の場合、`primary #8c7b6b`/`accent #c4694a` は固定。「春」感は緑系画像や柔らかい商品写真で出す
+- 例: NOAHL の場合、`primary #8c7b6b`/`accent #4a3b2d` は固定。「春」感は緑系画像や柔らかい商品写真で出す
 
-### 認証情報
+### 認証情報（重要）
 
-- 認証情報をリポジトリに保存しない（`/settings` のブラウザ localStorage 経由）
-- Claude Code に渡された認証情報をチャットに表示・ログ出力しない
-- 一時利用後の `data/config.local.json` は session 終了時に消える前提
+- 認証情報は **Vercel の環境変数** に保存（リポジトリには残さない）
+- Claude Code は `https://mail-magazine.vercel.app/api/rakuten/<brandId>/<品番>` を curl して商品取得
+- 環境変数が未設定の場合、API は 500 エラーで `expectedVars` を返してくる（その時はユーザーに Vercel 設定を依頼）
+- ローカルファイル `data/config.local.json` は廃止済み
 
 ### 表記・URL
 
@@ -264,7 +270,41 @@ NOAHL（ナチュラル・カジュアル女性服）に合うもの：
 ## デプロイ
 
 - リポジトリ: `tiast2026/Mail-magazine`
-- Vercel プロジェクト: `mail-magazine`
-- Production Branch: `main`（現在新システム）
+- Vercel プロジェクト: `mail-magazine`（URL: `mail-magazine.vercel.app`）
+- Production Branch: `main`
 - Root Directory: `frontend`
 - push でビルド → 自動デプロイ
+- main の最新は claude/check-project-status-RE1Io と同期維持
+
+## 現在のシステム状態（2026-04-29 時点）
+
+### 登録ブランド
+- **NOAHL**（noahl）— 楽天店舗、ブランド定義書あり、フル設定済み
+
+### テンプレート
+- **A: 商品フォーカス型** — 1〜2商品の主力訴求
+- **B: セール告知型** — マラソン・SS 開始時
+- **C: ランキング型** — マラソン終盤駆け込み
+- **D: ナチュラル読み物型** — 素材ストーリー・ブランド世界観訴求（NEW）
+
+### 配信メルマガ
+- 楊柳のうたう夏（テンプレD、通常配信）
+- クロシェ編みドッキングワンピース40%OFF（テンプレA、4月マラソン）
+
+### 既知の Pending 項目
+- 2 つ目のブランド情報待ち（ユーザーから後日提供予定）
+- テンプレ E（À la mode 系）/ F（Honest 系）の追加候補
+- Web 上での output メタデータ編集機能（タイトル・タグ）
+
+## セッション継承のために（新セッション開始時）
+
+新しい Claude Code セッションが始まった場合、以下を順番に確認：
+
+1. **このファイル（CLAUDE.md）を読み込み済み** ← 自動的に読まれる想定
+2. **`frontend/data/brands.json`** で登録ブランド確認
+3. **`frontend/data/brands/<brandId>/config.json`** でブランド詳細確認
+4. **`frontend/data/brands/<brandId>/templates.json`** でテンプレ一覧確認
+5. **`frontend/data/brands/<brandId>/outputs.json`** で過去メルマガ確認
+6. ユーザーの依頼に応じて API 経由で商品情報取得 → テンプレ選定 → 生成
+
+ユーザーが「品番〇〇でメルマガ作って」と言ったら、即 API を叩いて開始する（認証情報の貼り付けは不要、Vercel env vars に設定済み前提）。
