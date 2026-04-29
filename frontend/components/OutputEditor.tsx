@@ -87,7 +87,8 @@ export default function OutputEditor({ brandId, output }: Props) {
       );
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? data.detail ?? `HTTP ${res.status}`);
+        const msg = [data.error, data.detail].filter(Boolean).join(": ");
+        throw new Error(msg || `HTTP ${res.status}`);
       }
       setOpen(false);
       // データ反映には Vercel 再デプロイが必要なので、リロードしても効果は約30秒後
@@ -118,7 +119,8 @@ export default function OutputEditor({ brandId, output }: Props) {
       );
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? data.detail ?? `HTTP ${res.status}`);
+        const msg = [data.error, data.detail].filter(Boolean).join(": ");
+        throw new Error(msg || `HTTP ${res.status}`);
       }
       alert(
         "削除しました。Vercel の再デプロイ（約30〜60秒）後に一覧から消えます。",

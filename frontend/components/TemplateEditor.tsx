@@ -66,7 +66,8 @@ export default function TemplateEditor({ brandId, template }: Props) {
       );
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? data.detail ?? `HTTP ${res.status}`);
+        const msg = [data.error, data.detail].filter(Boolean).join(": ");
+        throw new Error(msg || `HTTP ${res.status}`);
       }
       alert(
         "保存しました。Vercel の再デプロイ（約30〜60秒）後に反映されます。",
@@ -96,7 +97,8 @@ export default function TemplateEditor({ brandId, template }: Props) {
       );
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? data.detail ?? `HTTP ${res.status}`);
+        const msg = [data.error, data.detail].filter(Boolean).join(": ");
+        throw new Error(msg || `HTTP ${res.status}`);
       }
       alert(
         "削除しました。Vercel の再デプロイ（約30〜60秒）後に一覧から消えます。",
