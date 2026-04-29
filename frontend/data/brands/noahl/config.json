@@ -3,6 +3,42 @@
   "name": "NOAHL",
   "tagline": "natural & casual",
   "logoText": "ＮＯＡＨＬ",
+
+  "identity": {
+    "mindIdentity": "いつでも自分らしくいられるために",
+    "vision": "年齢や環境にとらわれずに、ファッションを通していつでも自分らしく幸せな日常を過ごせる女性を増やす。",
+    "mission": "ライフスタイルが変化してもおしゃれを楽しみたい女性に、よりhappyになってもらうための服を自由な発想でつくること。",
+    "reason": "自分を大切にして、happyな日常を送る人を増やしたい。",
+    "brandEssence": "日々、幸せを感じられる服をつくる",
+    "essenceDescription": "シンプルなのに、なんだかおしゃれ。鏡に映る姿に、毎日がちょっとだけ昨日よりポジティブになる。日々の幸せに寄り添い、自分らしくいられるファッションを提案することが、私たちの喜びです。",
+    "personality": "ありのままの私を、ひとつ上に導いてくれる人",
+    "personalityTraits": [
+      "いつでも自然体で柔らかく包んでくれる",
+      "いつも前向きに輝いていてときめきを与えてくれる",
+      "さりげない気遣いでそっと寄り添ってくれる、安心できる"
+    ],
+    "dna": {
+      "beingMyself": "自然体・自分らしさ。ライフスタイルが変化しても、自然体で自分らしくおしゃれを楽しんでほしい。気取らず、気負わず、柔らかく。どんな瞬間もナチュラルに彩ります。",
+      "happiness": "幸福感・おしゃれ。お気に入りの服を着た自分、お気に入りの服が並んだクローゼット。着ている時も着ていない時も、ときめきを感じる服。NOAHLの服と共に過ごす時間が、happyで前向きな明日につながります。",
+      "thoughtful": "こだわり・寄り添う。シンプルでいて、誰でもセンス良く着こなせる服。ちりばめられた小さな一つ一つのこだわりに、ユーザーの日々に寄り添う想いやりが溢れています。"
+    },
+    "designPrinciple": {
+      "natural": { "label": "Natural", "description": "自然体・柔らかさ", "weight": "largest" },
+      "alaMode": { "label": "À la mode", "description": "ときめき・おしゃれ", "weight": "medium" },
+      "honest": { "label": "Honest", "description": "誠実・丁寧", "weight": "smallest" }
+    },
+    "imageTheme": "自然体でいられる、ナチュラルな抜け感",
+    "imageWords": [
+      "カフェ", "ナチュラル", "ベージュ", "ニュアンスカラー",
+      "女性らしさ", "抜け感", "リラックス", "柔らかさ"
+    ],
+    "ngExpressions": [
+      "価格売り（激安・格安）",
+      "量産を感じさせるワード"
+    ],
+    "positioning": "ナチュラル × 装飾的・温かみある説明 ／ MUJI（無印良品）寄りのトーン"
+  },
+
   "colors": {
     "primary": "#8c7b6b",
     "accent": "#c4694a",
@@ -13,6 +49,15 @@
     "border": "#e8e2db",
     "white": "#ffffff"
   },
+
+  "imageColorPalette": [
+    { "name": "Cream", "hex": "#f0e8df", "use": "明るい背景・最大面積" },
+    { "name": "Beige", "hex": "#d8ccba", "use": "サブ背景・パネル" },
+    { "name": "Taupe", "hex": "#8c7b6b", "use": "プライマリ・ロゴ・帯" },
+    { "name": "DarkBrown", "hex": "#4a3b2d", "use": "テキスト強調・アクセント候補" },
+    { "name": "Charcoal", "hex": "#3a342f", "use": "本文・締め色" }
+  ],
+
   "channel": "rakuten",
   "rakutenShopUrl": "noahl",
   "fixedUrls": {
