@@ -12,7 +12,7 @@ export default function HtmlPreview({ html }: { html: string }) {
     if (!doc) return;
     doc.open();
     doc.write(
-      `<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;font-family:Arial,Helvetica,sans-serif;}</style></head><body>${html}</body></html>`,
+      `<!doctype html><html><head><meta charset="utf-8"><base target="_blank"><style>body{margin:0;font-family:Arial,Helvetica,sans-serif;}a{cursor:pointer;}</style></head><body>${html}</body></html>`,
     );
     doc.close();
     const resize = () => {
@@ -31,7 +31,7 @@ export default function HtmlPreview({ html }: { html: string }) {
         ref={iframeRef}
         className="w-full"
         style={{ minHeight: 400 }}
-        sandbox="allow-same-origin"
+        sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
         title="メルマガプレビュー"
       />
     </div>
