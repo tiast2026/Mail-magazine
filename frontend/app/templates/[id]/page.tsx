@@ -9,6 +9,7 @@ import {
 } from "@/lib/data";
 import HtmlPreview from "@/components/HtmlPreview";
 import CopyButton from "@/components/CopyButton";
+import TemplateEditor from "@/components/TemplateEditor";
 
 export async function generateStaticParams() {
   const brandId = getDefaultBrandId();
@@ -123,6 +124,11 @@ export default async function TemplateDetailPage({
         <pre className="bg-stone-900 text-stone-100 text-xs rounded p-4 overflow-auto max-h-96">
           {template.html}
         </pre>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-2">編集・削除</h2>
+        <TemplateEditor brandId={brandId} template={template} />
       </section>
     </div>
   );
