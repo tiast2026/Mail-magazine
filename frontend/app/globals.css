@@ -3,6 +3,13 @@
 :root {
   --color-bg: #fafaf9;
   --color-fg: #292524;
+  --brand-primary: #8c7b6b;
+  --brand-accent: #c4694a;
+  --brand-muted: #b5a595;
+  --brand-text: #625142;
+  --brand-subtext: #a89585;
+  --brand-panel: #f7f4f1;
+  --brand-border: #e8e2db;
 }
 
 @theme inline {
@@ -13,4 +20,60 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer utilities {
+  .btn-brand {
+    background-color: var(--brand-primary);
+    color: white;
+    transition: filter 0.15s;
+  }
+  .btn-brand:hover {
+    filter: brightness(0.95);
+  }
+  .btn-brand-accent {
+    background-color: var(--brand-accent);
+    color: white;
+    transition: filter 0.15s;
+  }
+  .btn-brand-accent:hover {
+    filter: brightness(0.95);
+  }
+  .text-brand-primary {
+    color: var(--brand-primary);
+  }
+  .text-brand-accent {
+    color: var(--brand-accent);
+  }
+  .text-brand-muted {
+    color: var(--brand-muted);
+  }
+  .text-brand-text {
+    color: var(--brand-text);
+  }
+  .bg-brand-panel {
+    background-color: var(--brand-panel);
+  }
+  .border-brand {
+    border-color: var(--brand-border);
+  }
+  .ring-brand:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--brand-primary);
+  }
+  .card {
+    background-color: white;
+    border: 1px solid #e7e5e4;
+    border-radius: 0.5rem;
+  }
+  .card-hover {
+    transition:
+      box-shadow 0.15s,
+      transform 0.15s;
+  }
+  .card-hover:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+  }
 }
