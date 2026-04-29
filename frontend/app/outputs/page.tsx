@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { getOutputs } from "@/lib/data";
+import { getDefaultBrandId, getOutputs } from "@/lib/data";
 
 export default function OutputsPage() {
-  const outputs = getOutputs();
+  const brandId = getDefaultBrandId();
+  const outputs = getOutputs(brandId);
 
   return (
     <div className="space-y-6">
@@ -22,7 +23,10 @@ export default function OutputsPage() {
       ) : (
         <ul className="divide-y divide-stone-200 border border-stone-200 rounded bg-white">
           {outputs.map((o) => (
-            <li key={o.id} className="p-4 flex items-center justify-between gap-4">
+            <li
+              key={o.id}
+              className="p-4 flex items-center justify-between gap-4"
+            >
               <div className="min-w-0">
                 <Link
                   href={`/outputs/${o.id}/`}

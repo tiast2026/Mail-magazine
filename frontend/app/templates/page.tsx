@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { getTemplates } from "@/lib/data";
+import { getDefaultBrandId, getTemplates } from "@/lib/data";
 
 export default function TemplatesPage() {
-  const templates = getTemplates();
+  const brandId = getDefaultBrandId();
+  const templates = getTemplates(brandId);
 
   return (
     <div className="space-y-6">
@@ -41,7 +42,8 @@ export default function TemplatesPage() {
               </div>
               <Link
                 href={`/templates/${t.id}/`}
-                className="shrink-0 text-sm bg-stone-800 text-white rounded px-4 py-2 hover:bg-stone-700"
+                className="shrink-0 text-sm text-white rounded px-4 py-2"
+                style={{ backgroundColor: "var(--brand-primary)" }}
               >
                 プレビュー
               </Link>
@@ -56,10 +58,7 @@ export default function TemplatesPage() {
         </h3>
         <p>
           Claude Code に「テンプレDを追加したい、HTMLはこれ：…」と指示すれば、
-          <code className="bg-white border border-stone-200 rounded px-1.5 py-0.5 mx-1 text-xs">
-            frontend/data/templates.json
-          </code>
-          に追記して反映します。
+          ブランドのテンプレートファイルに追記して反映します。
         </p>
       </section>
     </div>

@@ -1,0 +1,27 @@
+{
+  "id": "noahl",
+  "name": "NOAHL",
+  "tagline": "natural & casual",
+  "logoText": "ＮＯＡＨＬ",
+  "colors": {
+    "primary": "#8c7b6b",
+    "accent": "#c4694a",
+    "muted": "#b5a595",
+    "text": "#625142",
+    "subtext": "#a89585",
+    "panel": "#f7f4f1",
+    "border": "#e8e2db",
+    "white": "#ffffff"
+  },
+  "channel": "rakuten",
+  "rakutenShopUrl": "noahl",
+  "fixedUrls": {
+    "newArrivals": "https://item.rakuten.co.jp/noahl/c/0000000255/?s=4#risFil",
+    "review": "https://www.rakuten.ne.jp/gold/noahl/review.html",
+    "salePage": "https://www.rakuten.ne.jp/gold/noahl/sale.html"
+  },
+  "footer": {
+    "newArrivalsLabel": "新作一覧を見る →",
+    "reviewLabel": "レビュー投稿でプレゼント♪ 詳しくはこちら →"
+  }
+}

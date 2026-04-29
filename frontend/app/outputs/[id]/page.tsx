@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getOutput, getOutputs } from "@/lib/data";
+import {
+  applyBrandToHtml,
+  getBrandConfig,
+  getDefaultBrandId,
+  getOutput,
+  getOutputs,
+} from "@/lib/data";
 import HtmlPreview from "@/components/HtmlPreview";
 import CopyButton from "@/components/CopyButton";
 import ResultsForm from "@/components/ResultsForm";
 
 export async function generateStaticParams() {
-  return getOutputs().map((o) => ({ id: o.id }));
+  const brandId = getDefaultBrandId();
+  return getOutputs(brandId).map((o) => ({ id: o.id }));
 }
 
 export const dynamicParams = false;
@@ -17,8 +24,12 @@ export default async function OutputDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const output = getOutput(id);
+  const brandId = getDefaultBrandId();
+  const brand = getBrandConfig(brandId)!;
+  const output = getOutput(brandId, id);
   if (!output) notFound();
+
+  const htmlWithBrand = applyBrandToHtml(output.html, brand);
 
   return (
     <div className="space-y-6">
@@ -84,7 +95,10 @@ export default async function OutputDetailPage({
                     </span>
                   )}
                   {p.salePrice && (
-                    <span className="text-orange-700 font-semibold">
+                    <span
+                      className="font-semibold"
+                      style={{ color: "var(--brand-accent)" }}
+                    >
                       {p.salePrice}
                     </span>
                   )}
@@ -98,9 +112,9 @@ export default async function OutputDetailPage({
       <section>
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-semibold">プレビュー</h2>
-          <CopyButton text={output.html} label="HTMLをコピー" />
+          <CopyButton text={htmlWithBrand} label="HTMLをコピー" />
         </div>
-        <HtmlPreview html={output.html} />
+        <HtmlPreview html={htmlWithBrand} />
       </section>
 
       <section>
@@ -111,7 +125,7 @@ export default async function OutputDetailPage({
       <section>
         <h2 className="text-lg font-semibold mb-2">HTML ソース</h2>
         <pre className="bg-stone-900 text-stone-100 text-xs rounded p-4 overflow-auto max-h-96">
-          {output.html}
+          {htmlWithBrand}
         </pre>
       </section>
     </div>

@@ -1,0 +1,5 @@
+{
+  "brands": [
+    { "id": "noahl", "name": "NOAHL", "default": true }
+  ]
+}

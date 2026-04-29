@@ -1,9 +1,17 @@
 import Link from "next/link";
-import { getOutputs, getTemplates } from "@/lib/data";
+import {
+  getBrandConfig,
+  getDefaultBrandId,
+  getOutputs,
+  getTemplates,
+} from "@/lib/data";
+import BrandThemeApply from "@/components/BrandThemeApply";
 
 export default function Home() {
-  const templates = getTemplates();
-  const outputs = getOutputs();
+  const brandId = getDefaultBrandId();
+  const brand = getBrandConfig(brandId);
+  const templates = getTemplates(brandId);
+  const outputs = getOutputs(brandId);
 
   const totalSent = outputs.reduce(
     (sum, o) => sum + (o.results?.sentCount ?? 0),
@@ -13,9 +21,7 @@ export default function Home() {
     (sum, o) => sum + (o.results?.salesAmount ?? 0),
     0,
   );
-  const sendsWithRates = outputs.filter(
-    (o) => o.results?.openRate != null,
-  );
+  const sendsWithRates = outputs.filter((o) => o.results?.openRate != null);
   const avgOpenRate =
     sendsWithRates.length > 0
       ? sendsWithRates.reduce(
@@ -26,10 +32,13 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
+      <BrandThemeApply brand={brand!} />
       <section>
-        <h1 className="text-2xl font-semibold mb-1">ダッシュボード</h1>
+        <h1 className="text-2xl font-semibold mb-1">
+          {brand?.name} ダッシュボード
+        </h1>
         <p className="text-stone-600 text-sm">
-          メルマガテンプレート・配信メルマガ・実績の管理画面です。
+          {brand?.name} のメルマガテンプレート・配信メルマガ・実績の管理画面です。
           メルマガ生成は Claude Code に「品番ABCでセール告知作って」と指示してください。
         </p>
       </section>
@@ -45,10 +54,7 @@ export default function Home() {
 
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Stat label="累計配信数" value={`${totalSent.toLocaleString()} 通`} />
-        <Stat
-          label="累計売上"
-          value={`￥${totalSales.toLocaleString()}`}
-        />
+        <Stat label="累計売上" value={`￥${totalSales.toLocaleString()}`} />
       </section>
 
       <section>
@@ -68,7 +74,10 @@ export default function Home() {
         ) : (
           <ul className="divide-y divide-stone-200 border border-stone-200 rounded bg-white">
             {outputs.slice(0, 5).map((o) => (
-              <li key={o.id} className="p-4 flex items-center justify-between">
+              <li
+                key={o.id}
+                className="p-4 flex items-center justify-between"
+              >
                 <div>
                   <Link
                     href={`/outputs/${o.id}/`}
