@@ -11,7 +11,16 @@ const OWNER = "tiast2026";
 const REPO = "Mail-magazine";
 
 function getBranch(): string {
-  return process.env.WRITE_BRANCH ?? "main";
+  // 1. WRITE_BRANCH が明示指定されればそれを使う
+  // 2. VERCEL_GIT_COMMIT_REF（Vercel が現在の deployment のために使ったブランチ）を使う
+  //    → Production URL なら Production Branch、Preview URL なら Preview Branch に書き込む
+  //    これで「書いた直後にすぐ Vercel が再ビルドして反映」される
+  // 3. ローカル開発時のフォールバックとして main
+  return (
+    process.env.WRITE_BRANCH ??
+    process.env.VERCEL_GIT_COMMIT_REF ??
+    "main"
+  );
 }
 
 function getToken(): string {
