@@ -11,6 +11,7 @@ import HtmlPreview from "@/components/HtmlPreview";
 import CopyButton from "@/components/CopyButton";
 import ResultsForm from "@/components/ResultsForm";
 import EventBadge from "@/components/EventBadge";
+import OutputEditor from "@/components/OutputEditor";
 
 export async function generateStaticParams() {
   const brandId = getDefaultBrandId();
@@ -170,6 +171,11 @@ export default async function OutputDetailPage({
       <section>
         <h2 className="text-lg font-semibold mb-2">配信実績</h2>
         <ResultsForm outputId={output.id} initial={output.results ?? {}} />
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-2">編集・削除</h2>
+        <OutputEditor brandId={brandId} output={output} />
       </section>
 
       <section>
