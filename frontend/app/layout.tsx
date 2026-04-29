@@ -42,6 +42,12 @@ export default function RootLayout({
               >
                 配信メルマガ
               </Link>
+              <Link
+                href="/settings"
+                className="hover:text-stone-900 text-stone-600"
+              >
+                設定
+              </Link>
             </nav>
           </div>
         </header>

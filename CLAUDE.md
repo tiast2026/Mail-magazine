@@ -16,9 +16,24 @@
 |------|------|
 | `frontend/data/templates.json` | 3 パターンのテンプレート（A/B/C）+ メタデータ |
 | `frontend/data/outputs.json` | 生成済みメルマガと配信実績 |
-| `data/config.local.json` | 楽天 RMS 認証情報（gitignore） |
 | `scripts/fetch-rakuten.mjs` | RMS API で商品情報取得 |
 | `scripts/fetch-rakuten-public.mjs` | 公開ページから OGP 取得（フォールバック） |
+
+## 楽天 RMS 認証情報の扱い
+
+**認証情報はリポジトリに保存しません**。Web UI の `/settings` ページで
+ユーザーが入力 → ブラウザの localStorage に保存されています。
+
+### セッション開始時のフロー
+
+ユーザーが楽天 RMS API を使う作業（品番からの商品取得など）を依頼してきたら：
+
+1. ユーザーが Web の「設定」ページの「JSONとしてコピー」ボタンを押す → JSON を貼ってもらう
+2. その JSON を `data/config.local.json` に書き込む（`.gitignore` 済み、push されない）
+3. `scripts/fetch-rakuten.mjs` を実行して商品情報取得
+4. セッション終了後はサンドボックス環境ごとファイルが消えるため、永続化されない
+
+ユーザーがまだ JSON を貼ってない場合は、貼ってもらうよう促してから作業に入る。
 
 ## メルマガ制作フロー
 
