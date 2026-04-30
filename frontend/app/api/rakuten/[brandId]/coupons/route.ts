@@ -84,12 +84,12 @@ export async function GET(
     "ESA " +
     Buffer.from(`${serviceSecret}:${licenseKey}`).toString("base64");
 
-  // 楽天 RMS Coupon API（v2 系）
-  // 仕様の詳細は https://webservice.faq.rakuten.net/ 参照
+  // 楽天 RMS Coupon API（1.0 系：coupon/search が正規パス）
+  // 仕様の詳細は RMS の WEB API ドキュメント参照
   // エンドポイントが異なる場合は環境変数 RAKUTEN_COUPON_API_URL で上書き可能
   const apiUrl =
     process.env.RAKUTEN_COUPON_API_URL ??
-    "https://api.rms.rakuten.co.jp/es/2.0/coupons/issue/search?hits=100";
+    "https://api.rms.rakuten.co.jp/es/1.0/coupon/search";
 
   let upstream: unknown;
   try {
@@ -97,21 +97,35 @@ export async function GET(
       headers: { Authorization: auth, Accept: "application/json" },
       cache: "no-store",
     });
+    const bodyText = await res.text();
     if (!res.ok) {
-      const text = await res.text();
       return Response.json(
         {
           error: `楽天 RMS Coupon API エラー HTTP ${res.status}`,
-          detail: text.slice(0, 1000),
+          detail: bodyText.slice(0, 1000),
+          apiUrl,
           hint: "エンドポイントが異なる場合は環境変数 RAKUTEN_COUPON_API_URL で上書きしてください",
         },
         { status: res.status },
       );
     }
-    upstream = await res.json();
+    // 1.0 系は XML を返す可能性があるので、まず JSON parse を試す
+    try {
+      upstream = JSON.parse(bodyText);
+    } catch {
+      return Response.json(
+        {
+          error: "上流 API が JSON を返さなかった（おそらく SOAP/XML）",
+          apiUrl,
+          rawBody: bodyText.slice(0, 1500),
+          hint: "1.0 系 SOAP の可能性。XML パース対応が必要、または別エンドポイントを RAKUTEN_COUPON_API_URL で指定してください",
+        },
+        { status: 502 },
+      );
+    }
   } catch (e) {
     return Response.json(
-      { error: "クーポン取得失敗", detail: String(e) },
+      { error: "クーポン取得失敗", detail: String(e), apiUrl },
       { status: 500 },
     );
   }
