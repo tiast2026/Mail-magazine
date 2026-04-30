@@ -1,47 +1,5 @@
 [
   {
-    "id": "20260429-yoryu-story",
-    "title": "楊柳のうたう夏｜クロシェ編みドッキングワンピース",
-    "templateId": "D",
-    "createdAt": "2026-04-29T10:00:00+09:00",
-    "tags": [
-      "読み物",
-      "素材ストーリー",
-      "ナチュラル"
-    ],
-    "products": [
-      {
-        "manageNumber": "nlwp315-2505",
-        "name": "クロシェ編みドッキングワンピース",
-        "url": "https://item.rakuten.co.jp/noahl/nlwp315-2505/",
-        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-1r.jpg",
-        "regularPrice": "8,980円",
-        "salePrice": "5,388円",
-        "color": "アイボリー / ブラック"
-      }
-    ],
-    "variables": {
-      "STORY_TITLE": "楊柳のうたう夏",
-      "STORY_LEAD": "暑くなる前に、夏の準備をひとつ。<br>ふわりと軽やか、やさしい素材が恋しい季節になりました。",
-      "STORY_BODY": "楊柳（ようりゅう）は、表面に細かなしぼがある日本の伝統素材。<br>肌に触れる面積が少なく、夏でもさらりと心地いい。<br><br>そこに、繊細なクロシェ編みのドッキング。<br>涼やかさの中に、ほんのひとさじのときめきを。<br><br>シンプルなコーディネートに重ねるだけで、<br>いつもの夏が少し特別になる、そんな一着です。",
-      "OPENING_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-img1.jpg",
-      "DETAIL_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-10.jpg",
-      "PRODUCT1_URL": "https://item.rakuten.co.jp/noahl/nlwp315-2505/",
-      "PRODUCT1_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-1r.jpg",
-      "PRODUCT1_NAME": "クロシェ編みドッキングワンピース",
-      "PRODUCT1_REGULAR_PRICE": "8,980円",
-      "PRODUCT1_SALE_PRICE": "5,388円",
-      "PRODUCT1_DISCOUNT": "40%OFFクーポン適用",
-      "CTA1_TEXT": "この商品をくわしく見る →"
-    },
-    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートD -->\n<!-- ナチュラル読み物型 -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 25px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ コラムタイトル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 15px 5px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- column -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 15px 30px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>楊柳のうたう夏</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ オープニング画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <img src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-img1.jpg\" width=\"100%\" border=\"0\" alt=\"楊柳のうたう夏\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ リード文 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px 20px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\" style=\"line-height: 1.8;\">暑くなる前に、夏の準備をひとつ。<br>ふわりと軽やか、やさしい素材が恋しい季節になりました。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ディテール画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0;\">\n      <img src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-10.jpg\" width=\"75%\" border=\"0\" alt=\"\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 本文 -->\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"left\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">楊柳（ようりゅう）は、表面に細かなしぼがある日本の伝統素材。<br>肌に触れる面積が少なく、夏でもさらりと心地いい。<br><br>そこに、繊細なクロシェ編みのドッキング。<br>涼やかさの中に、ほんのひとさじのときめきを。<br><br>シンプルなコーディネートに重ねるだけで、<br>いつもの夏が少し特別になる、そんな一着です。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り線 -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"border-top: 1px solid {{COLOR_BORDER}}; padding: 15px 0 0 0;\"></td>\n  </tr>\n</table>\n\n<!-- ■ さりげない商品紹介 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- featured item -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp315-2505/\">\n        <img src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-1r.jpg\" width=\"85%\" border=\"0\" alt=\"クロシェ編みドッキングワンピース\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0 5px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>クロシェ編みドッキングワンピース</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\">8,980円</font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b> 5,388円</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 30px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"75%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 14px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp315-2505/\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>この商品をくわしく見る →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>",
-    "event": {
-      "type": "regular",
-      "name": "通常配信（読み物・ブランド世界観訴求）"
-    },
-    "scheduledAt": "2026-04-29T20:00:00+09:00"
-  },
-  {
     "id": "20260428-nlwp315-dress",
     "title": "クロシェ編みドッキングワンピース｜40%OFFクーポン対象",
     "templateId": "A",
