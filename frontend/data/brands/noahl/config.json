@@ -3,7 +3,6 @@
   "name": "NOAHL",
   "tagline": "natural & casual",
   "logoText": "ＮＯＡＨＬ",
-
   "identity": {
     "mindIdentity": "いつでも自分らしくいられるために",
     "vision": "年齢や環境にとらわれずに、ファッションを通していつでも自分らしく幸せな日常を過ごせる女性を増やす。",
@@ -23,14 +22,32 @@
       "thoughtful": "こだわり・寄り添う。シンプルでいて、誰でもセンス良く着こなせる服。ちりばめられた小さな一つ一つのこだわりに、ユーザーの日々に寄り添う想いやりが溢れています。"
     },
     "designPrinciple": {
-      "natural": { "label": "Natural", "description": "自然体・柔らかさ", "weight": "largest" },
-      "alaMode": { "label": "À la mode", "description": "ときめき・おしゃれ", "weight": "medium" },
-      "honest": { "label": "Honest", "description": "誠実・丁寧", "weight": "smallest" }
+      "natural": {
+        "label": "Natural",
+        "description": "自然体・柔らかさ",
+        "weight": "largest"
+      },
+      "alaMode": {
+        "label": "À la mode",
+        "description": "ときめき・おしゃれ",
+        "weight": "medium"
+      },
+      "honest": {
+        "label": "Honest",
+        "description": "誠実・丁寧",
+        "weight": "smallest"
+      }
     },
     "imageTheme": "自然体でいられる、ナチュラルな抜け感",
     "imageWords": [
-      "カフェ", "ナチュラル", "ベージュ", "ニュアンスカラー",
-      "女性らしさ", "抜け感", "リラックス", "柔らかさ"
+      "カフェ",
+      "ナチュラル",
+      "ベージュ",
+      "ニュアンスカラー",
+      "女性らしさ",
+      "抜け感",
+      "リラックス",
+      "柔らかさ"
     ],
     "ngExpressions": [
       "価格売り（激安・格安）",
@@ -38,10 +55,9 @@
     ],
     "positioning": "ナチュラル × 装飾的・温かみある説明 ／ MUJI（無印良品）寄りのトーン"
   },
-
   "colors": {
     "primary": "#8c7b6b",
-    "accent": "#4a3b2d",
+    "accent": "#b5661c",
     "muted": "#b5a595",
     "text": "#625142",
     "subtext": "#a89585",
@@ -50,7 +66,6 @@
     "white": "#ffffff"
   },
   "_colorsNote": "accent はブランド定義書のイメージカラーパレットの DarkBrown を使用。以前は #c4694a（オレンジ）だったが、ブランド統一性のため変更。",
-
   "buttons": {
     "_note": "ボタン種別ごとのスタイル。テンプレ／メルマガ HTML から [[BUTTON:type|url|label]] で参照する。色を変更したい場合は下記 hex を編集すれば全配信に即反映。",
     "coupon": {
@@ -78,15 +93,33 @@
       "border": "#e8e2db"
     }
   },
-
   "imageColorPalette": [
-    { "name": "Cream", "hex": "#f0e8df", "use": "明るい背景・最大面積" },
-    { "name": "Beige", "hex": "#d8ccba", "use": "サブ背景・パネル" },
-    { "name": "Taupe", "hex": "#8c7b6b", "use": "プライマリ・ロゴ・帯" },
-    { "name": "DarkBrown", "hex": "#4a3b2d", "use": "テキスト強調・アクセント候補" },
-    { "name": "Charcoal", "hex": "#3a342f", "use": "本文・締め色" }
+    {
+      "name": "Cream",
+      "hex": "#f0e8df",
+      "use": "明るい背景・最大面積"
+    },
+    {
+      "name": "Beige",
+      "hex": "#d8ccba",
+      "use": "サブ背景・パネル"
+    },
+    {
+      "name": "Taupe",
+      "hex": "#8c7b6b",
+      "use": "プライマリ・ロゴ・帯"
+    },
+    {
+      "name": "DarkBrown",
+      "hex": "#4a3b2d",
+      "use": "テキスト強調・アクセント候補"
+    },
+    {
+      "name": "Charcoal",
+      "hex": "#3a342f",
+      "use": "本文・締め色"
+    }
   ],
-
   "channel": "rakuten",
   "rakutenShopUrl": "noahl",
   "fixedUrls": {
