@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { BrandConfig, Coupon, MailOutput } from "@/lib/types";
 import { applyBrandToHtml } from "@/lib/brand";
 import { useOptimisticOutput } from "@/lib/optimistic";
@@ -127,7 +127,7 @@ export default function OutputDetailContent({
         )}
       </section>
 
-      <CouponsSection output={output} />
+      <CouponsSection output={output} brandId={brandId} />
 
       <section>
         <h2 className="text-lg font-semibold mb-2">使用商品</h2>
@@ -246,16 +246,108 @@ function deriveLabelFromKey(key: string): string {
     .trim();
 }
 
-function CouponsSection({ output }: { output: MailOutput }) {
+/** クーポンURLから getkey を抽出 */
+function extractGetKey(url: string): string | null {
+  const m = url.match(/[?&]getkey=([^&]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+/**
+ * getkey を couponCode に逆変換。
+ * 楽天は `couponCode` の最初の2セグメントを入れ替えて base64 した文字列の `==` を `--` に置換したものを getkey にしている：
+ *   AAAA-BBBB-CCCC-DDDD → BBBB-AAAA-CCCC-DDDD → base64 → "..==" → ".." 末尾を `--` に置換
+ */
+function getKeyToCouponCode(getKey: string): string | null {
+  try {
+    const padded = getKey.replace(/--$/, "==").replace(/-$/, "=");
+    const decoded =
+      typeof atob === "function"
+        ? atob(padded)
+        : Buffer.from(padded, "base64").toString("utf8");
+    const parts = decoded.split("-");
+    if (parts.length < 2) return decoded;
+    [parts[0], parts[1]] = [parts[1], parts[0]];
+    return parts.join("-");
+  } catch {
+    return null;
+  }
+}
+
+type CouponDisplay = Coupon & {
+  /** RMS から取得したフル名（あればこちらを優先表示） */
+  rmsName?: string;
+};
+
+function CouponsSection({
+  output,
+  brandId,
+}: {
+  output: MailOutput;
+  brandId: string;
+}) {
   // 1. output.coupons があればそれを表示
   // 2. なければ vars.COUPON_URL_* から後方互換でフォールバック
-  const coupons: Coupon[] = (() => {
+  const baseCoupons: Coupon[] = (() => {
     if (output.coupons && output.coupons.length > 0) return output.coupons;
     const vars = (output.variables ?? {}) as Record<string, string>;
     return Object.entries(vars)
       .filter(([k, v]) => /^COUPON_URL_/.test(k) && v)
       .map(([k, v]): Coupon => ({ label: deriveLabelFromKey(k), url: v }));
   })();
+
+  const [coupons, setCoupons] = useState<CouponDisplay[]>(baseCoupons);
+
+  // 楽天 RMS からクーポン名を取得して enrich（couponCode で 1 件ずつ取得）
+  useEffect(() => {
+    if (baseCoupons.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      type RmsCoupon = {
+        couponCode?: string;
+        name?: string;
+        startTime?: string | null;
+        endTime?: string | null;
+        discountFactor?: number | null;
+      };
+      const fetchOne = async (
+        couponCode: string,
+      ): Promise<RmsCoupon | null> => {
+        try {
+          const r = await fetch(
+            `/api/rakuten/${encodeURIComponent(brandId)}/coupons?status=all&couponCode=${encodeURIComponent(couponCode)}`,
+            { cache: "no-store" },
+          );
+          if (!r.ok) return null;
+          const data = (await r.json()) as { coupons?: RmsCoupon[] };
+          return data.coupons?.[0] ?? null;
+        } catch {
+          return null;
+        }
+      };
+      const results = await Promise.all(
+        baseCoupons.map(async (c) => {
+          const key = extractGetKey(c.url);
+          if (!key) return c;
+          const code = getKeyToCouponCode(key);
+          if (!code) return c;
+          const matched = await fetchOne(code);
+          if (!matched) return c;
+          return {
+            ...c,
+            rmsName: matched.name ?? undefined,
+            rate: c.rate ?? matched.discountFactor ?? undefined,
+            startDate: c.startDate ?? matched.startTime ?? undefined,
+            endDate: c.endDate ?? matched.endTime ?? undefined,
+          } as CouponDisplay;
+        }),
+      );
+      if (!cancelled) setCoupons(results);
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [brandId, output.id]);
 
   if (coupons.length === 0) return null;
 
@@ -268,7 +360,12 @@ function CouponsSection({ output }: { output: MailOutput }) {
             key={i}
             className="border border-stone-200 rounded bg-white p-3 text-sm"
           >
-            <div className="font-medium text-stone-900">{c.label}</div>
+            <div className="font-medium text-stone-900">
+              {c.rmsName ?? c.label}
+            </div>
+            {c.rmsName && c.rmsName !== c.label && (
+              <div className="text-xs text-stone-500 mt-0.5">{c.label}</div>
+            )}
             {(c.startDate || c.endDate) && (
               <div className="text-xs text-stone-500 mt-1">
                 {c.startDate
