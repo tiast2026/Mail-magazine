@@ -7,6 +7,18 @@ import type { BrandConfig, MailOutput } from "@/lib/types";
 import { applyBrandToHtml } from "@/lib/brand";
 import { useOptimisticOutput } from "@/lib/optimistic";
 import HtmlPreview from "./HtmlPreview";
+
+/** "5,900円" / "¥5900" 等から数値を抽出して割引率（整数%）を返す */
+function computeDiscountPercent(
+  regular?: string,
+  sale?: string,
+): number | null {
+  if (!regular || !sale) return null;
+  const r = parseInt(regular.replace(/[^\d]/g, ""), 10);
+  const s = parseInt(sale.replace(/[^\d]/g, ""), 10);
+  if (!r || !s || r <= s) return null;
+  return Math.round(((r - s) / r) * 100);
+}
 import CopyButton from "./CopyButton";
 import EventBadge from "./EventBadge";
 import OutputEditor from "./OutputEditor";
@@ -143,9 +155,9 @@ export default function OutputDetailContent({
                     品番: {p.manageNumber}
                   </div>
                 )}
-                <div className="text-xs mt-1">
+                <div className="text-xs mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
                   {p.regularPrice && (
-                    <span className="text-stone-500 line-through mr-2">
+                    <span className="text-stone-500 line-through">
                       {p.regularPrice}
                     </span>
                   )}
@@ -157,6 +169,21 @@ export default function OutputDetailContent({
                       {p.salePrice}
                     </span>
                   )}
+                  {(() => {
+                    const off = computeDiscountPercent(
+                      p.regularPrice,
+                      p.salePrice,
+                    );
+                    if (off == null) return null;
+                    return (
+                      <span
+                        className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white"
+                        style={{ backgroundColor: "var(--brand-accent)" }}
+                      >
+                        {off}%OFF
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
             </li>

@@ -308,6 +308,54 @@ NOAHL（ナチュラル・カジュアル女性服）に合うもの：
 
 ## 重要な制約
 
+### 楽天 R-Mail で使える HTML だけ使う（厳守）
+
+メルマガ HTML は楽天 RMS のメルマガ管理画面に貼り付けて配信します。**楽天環境でレンダリングできない記法は絶対に使わない**：
+
+#### ✅ 使ってよいもの
+- `<table>` ベースのレイアウト（`width` `cellpadding` `cellspacing` `align` `bgcolor` 属性 OK）
+- `<font color size>`（テキストの色とサイズ）
+- `<b>` `<strike>` `<br>` `<a target href>`
+- `<img width src alt border>`
+- インライン `style=""` の **基本プロパティのみ**（`padding` `line-height` `letter-spacing` `border-top` `text-decoration: none`）
+- `<!-- コメント -->`
+
+#### ❌ 使ってはいけないもの
+- `<style>` ブロック・外部 CSS
+- `<script>` ・`<iframe>` ・`<form>` ・`<video>`
+- `class=""` （楽天側で剥がされる前提で書かない）
+- CSS Grid / Flexbox / `display: flex` / `display: grid`
+- `position: absolute` / `position: fixed`
+- `border-radius` を多用しない（一部メールクライアントで無視される。装飾用途なら可、ボタン形状などは正方形寄りで設計）
+- `background-image` （表示されない端末が多い）
+- `@media` クエリ
+- Web フォント `@font-face`
+- SVG 直書き
+
+#### 判断に迷ったとき
+- 既存テンプレ（`brands/<brandId>/templates.json` の A/B/C/D）は楽天で配信実績のある書き方ベース。新規生成時もこのパターンを踏襲する
+- 「装飾を凝りたい」場合は CSS ではなく **画像（楽天 cabinet）で表現**する
+
+### 価格訴求時は割引率（%OFF）を必ず入れる
+
+クーポン適用や割引を提案する際は、商品ブロックに **`◯◯%OFF` を必ず明示**する。Web ダッシュボードの「使用商品」セクションは `regularPrice` / `salePrice` から自動計算してバッジ表示されるが、配信用 HTML 側では Claude が生成時に直接書く：
+
+```html
+<font color="{{COLOR_MUTED}}" size="1"><strike>5,900円</strike></font>
+<font color="{{COLOR_ACCENT}}" size="2"><b> → 2,950円</b></font>
+<font color="{{COLOR_ACCENT}}" size="1"><b>（50%OFF）</b></font>
+```
+
+色付きバッジ風にしたい場合は、`bgcolor` 付きの 1セル `<table>` を使う（`<span>` の `background-color` は楽天で効かない端末あり）：
+
+```html
+<table cellpadding="0" cellspacing="0" align="center" style="display:inline-block;"><tr>
+  <td bgcolor="{{COLOR_ACCENT}}" style="padding:3px 8px;"><font color="#ffffff" size="1"><b>50%OFF</b></font></td>
+</tr></table>
+```
+
+割引率の計算は元値・割引後価格から「(元値 − 割引後) / 元値 × 100」を四捨五入。
+
 ### 画像の出所（厳守）
 
 **メルマガに使う画像は必ず楽天 RMS から取得したものを使う。ネット上の画像、プレースホルダー（placehold.jp 等）、フリー素材を勝手に使わない。**
@@ -394,7 +442,16 @@ NOAHL（ナチュラル・カジュアル女性服）に合うもの：
 - push でビルド → 自動デプロイ
 - main の最新は claude/check-project-status-RE1Io と同期維持
 
-## 現在のシステム状態（2026-04-29 時点）
+### PR は draft で残さず main にマージする（ユーザー指示）
+
+ユーザーの方針として、**作業が完了した PR は draft のままにせず main にマージして Production に反映する**。新セッションでも同様：
+
+- PR を作るたびに draft で出した後、内容に問題がなければ **すぐに ready → squash merge** する
+- マージで競合（特に `outputs.json` 等の配列ファイル）が出たら、**id ベースで union 解決**して push → 再マージ
+- マージ後は Vercel 側で main の自動再ビルドが走り、`mail-magazine.vercel.app` に反映される
+- ユーザーから「マージしないで」「レビュー待ち」等の明示指示がある場合のみ draft 維持
+
+## 現在のシステム状態（2026-04-30 時点）
 
 ### 登録ブランド
 - **NOAHL**（noahl）— 楽天店舗、ブランド定義書あり、フル設定済み
@@ -408,6 +465,31 @@ NOAHL（ナチュラル・カジュアル女性服）に合うもの：
 ### 配信メルマガ
 - 楊柳のうたう夏（テンプレD、通常配信）
 - クロシェ編みドッキングワンピース40%OFF（テンプレA、4月マラソン）
+- 5/5 ポイントDAY × 5/6-5/7 連動セール（テンプレB派生・3セクション、10商品）
+
+### 成功事例（参考構成）
+
+#### 複数日・複数割引率の連動セール（テンプレB派生・3セクション）
+
+ID: `20260505-points-day-may-promo`
+
+**構成パターン**:
+1. ヘッダー → メインメッセージパネル（イベント名のみ。サブ見出しは入れすぎない）
+2. セクション1: 5/5限定 50%OFFクーポン（2商品 2カラム + 専用CTA）
+3. 区切り線
+4. セクション2: 5/5限定 60%OFFクーポン（2商品 2カラム + 専用CTA）
+5. ブリッジパネル（`{{COLOR_PANEL}}` 背景）: 翌日からの2点55%OFFを予告
+6. セクション3: 5/6-5/7 2点55%OFFクーポン（6商品 2カラム×3行 + アクセント色CTA）
+7. 注意書き（適用条件を小さく）
+8. フッター
+
+**有効だったポイント**:
+- 割引率ごとにセクションを分け、各セクションに専用CTAを置くことで、ユーザーが目当ての割引に直接到達できる
+- 1日目（高割引・限定）/ 2日目以降（条件付きで広く対象）を視覚的に分離 → 同じ販促期間でも訴求軸が混ざらない
+- 最終CTAだけ `{{COLOR_ACCENT}}` でメリハリ。他は `{{COLOR_PRIMARY}}`
+- CTAリンクは楽天クーポン取得URL（`https://coupon.rakuten.co.jp/getCoupon?getkey=...`）を直接埋め込み（共通の `{{URL_SALE}}` でなく個別URL）
+
+**使い所**: 5と0のつく日 / ポイントDAY と他キャンペーンの抱き合わせ、連続日付で割引内容が変わるセール。3〜10商品でも崩れない。
 
 ### 既知の Pending 項目
 - 2 つ目のブランド情報待ち（ユーザーから後日提供予定）

@@ -27,19 +27,184 @@ function isSameDay(a: Date, b: Date): boolean {
   );
 }
 
-function eventsOnDay(
+type Bar = {
+  kind: "event" | "output";
+  event?: RakutenCalendarEvent;
+  output?: MailOutput;
+  startCol: number; // 0..6
+  endCol: number; // 0..6
+  row: number;
+  color: string;
+  label: string;
+  href?: string;
+};
+
+/** ある週内でのイベントバーを計算（行重複しないように row 割り当て） */
+function placeBarsForWeek(
+  weekStart: Date,
   events: RakutenCalendarEvent[],
-  day: Date,
-): RakutenCalendarEvent[] {
-  const d = startOfDay(day).getTime();
-  return events.filter((e) => {
-    if (!e.startDate) return false;
+  outputs: MailOutput[],
+): Bar[] {
+  const weekStartTs = startOfDay(weekStart).getTime();
+  const weekEndTs = weekStartTs + 6 * 24 * 60 * 60 * 1000;
+
+  type Pre = Omit<Bar, "row">;
+  const pre: Pre[] = [];
+
+  // 楽天イベント
+  for (const e of events) {
+    if (!e.startDate) continue;
     const start = startOfDay(new Date(e.startDate)).getTime();
-    const end = e.endDate
-      ? startOfDay(new Date(e.endDate)).getTime()
-      : start;
-    return d >= start && d <= end;
+    const end = startOfDay(
+      new Date(e.endDate ?? e.startDate),
+    ).getTime();
+    if (end < weekStartTs || start > weekEndTs) continue;
+
+    // 「5と0のつく日」は範囲内の 5,10,15,20,25,30 のみマーク
+    if (e.category === "5と0のつく日") {
+      for (let d = weekStartTs; d <= weekEndTs; d += 24 * 60 * 60 * 1000) {
+        if (d < start || d > end) continue;
+        const dom = new Date(d).getDate();
+        if (dom % 5 !== 0) continue;
+        const col = Math.round((d - weekStartTs) / (24 * 60 * 60 * 1000));
+        pre.push({
+          kind: "event",
+          event: e,
+          startCol: col,
+          endCol: col,
+          color: getCalendarColor(e.category),
+          label: e.category,
+        });
+      }
+      continue;
+    }
+
+    const cs = Math.max(weekStartTs, start);
+    const ce = Math.min(weekEndTs, end);
+    const startCol = Math.round((cs - weekStartTs) / (24 * 60 * 60 * 1000));
+    const endCol = Math.round((ce - weekStartTs) / (24 * 60 * 60 * 1000));
+    pre.push({
+      kind: "event",
+      event: e,
+      startCol,
+      endCol,
+      color: getCalendarColor(e.category),
+      label: e.category,
+    });
+  }
+
+  // 配信メルマガ（単日）
+  for (const o of outputs) {
+    const dateStr = o.sentAt ?? o.scheduledAt;
+    if (!dateStr) continue;
+    const d = startOfDay(new Date(dateStr)).getTime();
+    if (d < weekStartTs || d > weekEndTs) continue;
+    const col = Math.round((d - weekStartTs) / (24 * 60 * 60 * 1000));
+    pre.push({
+      kind: "output",
+      output: o,
+      startCol: col,
+      endCol: col,
+      color: "var(--brand-accent)",
+      label: `📧 ${o.title}`,
+      href: `/outputs/${o.id}/`,
+    });
+  }
+
+  // 行（row）割り当て：長いバーから優先、衝突を避ける
+  pre.sort((a, b) => {
+    const lenA = a.endCol - a.startCol;
+    const lenB = b.endCol - b.startCol;
+    if (lenA !== lenB) return lenB - lenA;
+    return a.startCol - b.startCol;
   });
+
+  const rows: Array<Set<number>> = [];
+  const result: Bar[] = [];
+  for (const p of pre) {
+    let r = 0;
+    while (true) {
+      if (!rows[r]) rows[r] = new Set();
+      let collide = false;
+      for (let c = p.startCol; c <= p.endCol; c++) {
+        if (rows[r].has(c)) {
+          collide = true;
+          break;
+        }
+      }
+      if (!collide) {
+        for (let c = p.startCol; c <= p.endCol; c++) rows[r].add(c);
+        result.push({ ...p, row: r });
+        break;
+      }
+      r++;
+    }
+  }
+  return result;
+}
+
+function SyncButton() {
+  const [state, setState] = useState<"idle" | "syncing" | "ok" | "err">("idle");
+  const [msg, setMsg] = useState<string>("");
+
+  async function run() {
+    setState("syncing");
+    setMsg("");
+    try {
+      const r = await fetch("/api/events/sync", { method: "POST" });
+      const data = (await r.json()) as {
+        ok?: boolean;
+        count?: number;
+        error?: string;
+        detail?: string;
+      };
+      if (!r.ok || !data.ok) {
+        setState("err");
+        setMsg(data.error ?? `HTTP ${r.status}`);
+        return;
+      }
+      setState("ok");
+      setMsg(`${data.count}件同期`);
+      // GitHub 経由で push されるため、Vercel の再ビルド完了後にリロードで反映
+      setTimeout(() => location.reload(), 2000);
+    } catch (e) {
+      setState("err");
+      setMsg(String(e));
+    }
+  }
+
+  const label =
+    state === "syncing"
+      ? "同期中…"
+      : state === "ok"
+        ? `✓ ${msg}`
+        : state === "err"
+          ? `× 失敗`
+          : "同期";
+
+  return (
+    <button
+      type="button"
+      onClick={run}
+      disabled={state === "syncing"}
+      title={
+        state === "err"
+          ? msg
+          : "Google スプレッドシートから楽天イベントを取り込んで events.json を更新します（GitHub 経由で commit→Vercel 再ビルド）"
+      }
+      className={`text-xs px-2 py-1 rounded border transition ${
+        state === "syncing"
+          ? "border-stone-300 text-stone-400"
+          : state === "ok"
+            ? "border-emerald-300 text-emerald-700 bg-emerald-50"
+            : state === "err"
+              ? "border-rose-300 text-rose-700 bg-rose-50"
+              : "border-stone-300 text-stone-700 hover:bg-stone-50"
+      }`}
+    >
+      {label}
+    </button>
+  );
 }
 
 export default function EventCalendar({
@@ -49,15 +214,6 @@ export default function EventCalendar({
 }) {
   const allCategories = getCalendarCategories();
   const allEvents = getCalendarEvents();
-
-  function outputsOnDay(day: Date): MailOutput[] {
-    const d = startOfDay(day).getTime();
-    return outputs.filter((o) => {
-      const dateStr = o.sentAt ?? o.scheduledAt;
-      if (!dateStr) return false;
-      return startOfDay(new Date(dateStr)).getTime() === d;
-    });
-  }
 
   const [cursorDate, setCursorDate] = useState(() => new Date());
   const [hidden, setHidden] = useState<Set<string>>(new Set());
@@ -84,10 +240,16 @@ export default function EventCalendar({
     });
   }
 
-  const visibleEvents = useMemo(
-    () => allEvents.filter((e) => !hidden.has(e.category)),
-    [allEvents, hidden],
-  );
+  const visibleEvents = useMemo(() => {
+    const filtered = allEvents.filter((e) => !hidden.has(e.category));
+    // 同じ「イベント分類」かつ同じ期間（開始日時・終了日時）のイベントは1件にまとめる
+    const seen = new Map<string, RakutenCalendarEvent>();
+    for (const e of filtered) {
+      const key = `${e.category}|${e.startDate ?? ""}|${e.endDate ?? ""}`;
+      if (!seen.has(key)) seen.set(key, e);
+    }
+    return Array.from(seen.values());
+  }, [allEvents, hidden]);
 
   const year = cursorDate.getFullYear();
   const month = cursorDate.getMonth();
@@ -103,7 +265,14 @@ export default function EventCalendar({
     cells.push({ date: d, thisMonth: dayNum >= 1 && dayNum <= daysInMonth });
   }
 
+  // 7日ずつ週に分割
+  const weeks: { date: Date; thisMonth: boolean }[][] = [];
+  for (let i = 0; i < cells.length; i += 7) {
+    weeks.push(cells.slice(i, i + 7));
+  }
+
   const today = new Date();
+
   const monthEventsCount = visibleEvents.filter((e) => {
     if (!e.startDate) return false;
     const sd = new Date(e.startDate);
@@ -122,6 +291,8 @@ export default function EventCalendar({
   function thisMonth() {
     setCursorDate(new Date());
   }
+
+  const ROW_HEIGHT = 18;
 
   return (
     <div className="card p-4">
@@ -154,6 +325,7 @@ export default function EventCalendar({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-500">{monthEventsCount}件</span>
+          <SyncButton />
           <button
             type="button"
             onClick={() => setFilterOpen((v) => !v)}
@@ -205,61 +377,91 @@ export default function EventCalendar({
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-px bg-stone-200">
-        {cells.map((c, i) => {
-          const evts = eventsOnDay(visibleEvents, c.date);
-          const isToday = isSameDay(c.date, today);
+      <div className="border-t border-stone-200">
+        {weeks.map((week, wi) => {
+          const bars = placeBarsForWeek(
+            week[0].date,
+            visibleEvents,
+            outputs,
+          );
+          const maxRow = bars.reduce((m, b) => Math.max(m, b.row), -1);
+          const barsAreaHeight = (maxRow + 1) * (ROW_HEIGHT + 2);
+          const cellMinHeight = Math.max(70, 24 + barsAreaHeight + 4);
+
           return (
             <div
-              key={i}
-              className={`bg-white min-h-[70px] p-1 ${c.thisMonth ? "" : "bg-stone-50"}`}
+              key={wi}
+              className="relative grid grid-cols-7 border-b border-stone-200"
+              style={{ minHeight: cellMinHeight }}
             >
-              <div
-                className={`text-[10px] mb-0.5 ${
-                  isToday
-                    ? "inline-block bg-stone-900 text-white rounded-full w-5 h-5 text-center leading-5"
-                    : c.thisMonth
-                      ? c.date.getDay() === 0
-                        ? "text-rose-600"
-                        : c.date.getDay() === 6
-                          ? "text-sky-600"
-                          : "text-stone-700"
-                      : "text-stone-300"
-                }`}
-              >
-                {c.date.getDate()}
-              </div>
-              <div className="space-y-0.5">
-                {evts.slice(0, 3).map((e, j) => (
+              {week.map((c, ci) => {
+                const isToday = isSameDay(c.date, today);
+                return (
                   <div
-                    key={j}
-                    className="text-[9px] text-white px-1 py-0.5 rounded truncate"
-                    style={{ backgroundColor: getCalendarColor(e.category) }}
-                    title={`${e.category}\n${e.name}\n告知: ${e.announcementDate?.substring(0, 10) ?? "-"}\n開催: ${e.startDate?.substring(0, 10) ?? "-"} 〜 ${e.endDate?.substring(0, 10) ?? "-"}`}
+                    key={ci}
+                    className={`border-r border-stone-200 last:border-r-0 p-1 ${c.thisMonth ? "" : "bg-stone-50"}`}
                   >
-                    {e.category}
+                    <div
+                      className={`text-[10px] inline-block ${
+                        isToday
+                          ? "bg-stone-900 text-white rounded-full w-5 h-5 text-center leading-5"
+                          : c.thisMonth
+                            ? c.date.getDay() === 0
+                              ? "text-rose-600"
+                              : c.date.getDay() === 6
+                                ? "text-sky-600"
+                                : "text-stone-700"
+                            : "text-stone-300"
+                      }`}
+                    >
+                      {c.date.getDate()}
+                    </div>
                   </div>
-                ))}
-                {evts.length > 3 && (
-                  <div className="text-[9px] text-stone-500 pl-1">
-                    +{evts.length - 3}
-                  </div>
-                )}
-                {outputsOnDay(c.date).map((o) => (
-                  <Link
-                    key={o.id}
-                    href={`/outputs/${o.id}/`}
-                    className="block text-[9px] px-1 py-0.5 rounded truncate border-l-2"
-                    style={{
-                      backgroundColor: "var(--brand-panel)",
-                      borderLeftColor: "var(--brand-accent)",
-                      color: "var(--brand-text)",
-                    }}
-                    title={`配信メルマガ\n${o.title}\nテンプレ ${o.templateId}`}
-                  >
-                    📧 {o.title}
-                  </Link>
-                ))}
+                );
+              })}
+
+              {/* 連続バーをセル上にオーバーレイ */}
+              <div className="absolute inset-0 pointer-events-none">
+                {bars.map((b, bi) => {
+                  const left = (b.startCol / 7) * 100;
+                  const width = ((b.endCol - b.startCol + 1) / 7) * 100;
+                  const top = 24 + b.row * (ROW_HEIGHT + 2);
+                  const style: React.CSSProperties = {
+                    position: "absolute",
+                    left: `calc(${left}% + 2px)`,
+                    width: `calc(${width}% - 4px)`,
+                    top,
+                    height: ROW_HEIGHT,
+                  };
+                  if (b.kind === "event") {
+                    return (
+                      <div
+                        key={bi}
+                        className="text-[10px] text-white px-1.5 rounded truncate flex items-center pointer-events-auto"
+                        style={{ ...style, backgroundColor: b.color }}
+                        title={`${b.event!.category}\n${b.event!.name}\n告知: ${b.event!.announcementDate?.substring(0, 10) ?? "-"}\n開催: ${b.event!.startDate?.substring(0, 10) ?? "-"} 〜 ${b.event!.endDate?.substring(0, 10) ?? "-"}`}
+                      >
+                        {b.label}
+                      </div>
+                    );
+                  }
+                  return (
+                    <Link
+                      key={bi}
+                      href={b.href!}
+                      className="text-[10px] px-1.5 rounded truncate flex items-center pointer-events-auto border-l-2 hover:brightness-95"
+                      style={{
+                        ...style,
+                        backgroundColor: "var(--brand-panel)",
+                        borderLeftColor: "var(--brand-accent)",
+                        color: "var(--brand-text)",
+                      }}
+                      title={`配信メルマガ\n${b.output!.title}\nテンプレ ${b.output!.templateId}`}
+                    >
+                      {b.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           );
