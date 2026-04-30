@@ -368,5 +368,37 @@
         "importedAt": "2026-04-30T13:40:27.069Z"
       }
     }
+  },
+  {
+    "id": "rmail-26417059",
+    "title": "【 New arrivals 】機能性抜群！新作Tシャツが解禁。期間限定50%OFF&#9833;",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:28.621Z",
+    "sentAt": "2026-04-22T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 13104,
+      "openRate": 55.2,
+      "openCount": 7237,
+      "clickCount": 270,
+      "salesCount": 13,
+      "salesAmount": 91980,
+      "rakuten": {
+        "mailId": "26417059",
+        "subject": "【 New arrivals 】機能性抜群！新作Tシャツが解禁。期間限定50%OFF&#9833;",
+        "conversionVisitRate": 1.2,
+        "conversionVisitCount": 160,
+        "transactionCount": 13,
+        "transactionRate": 8.1,
+        "revenuePerSent": 7,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:28.621Z"
+      }
+    }
   }
 ]
