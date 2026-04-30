@@ -49,6 +49,24 @@ curl -s https://mail-magazine.vercel.app/api/rakuten/noahl/nlwp315-2505
 - `images[]`: 全画像（location, fullUrl, alt）
 - `variants`: カラー別 variants（images, standardPrice）
 
+### クーポン情報取得 API
+
+商品に紐づく発行中クーポンを取得：
+
+```
+GET https://mail-magazine.vercel.app/api/rakuten/<brandId>/coupons?manageNumber=<品番>&minRate=30
+```
+
+クエリ（全て optional）:
+- `manageNumber`: 個別商品指定クーポンに絞り込み（NOAHL は基本「全品」ではないため有効）
+- `from` / `to`: イベント期間でクーポンを絞る（ISO 形式）
+- `minRate` / `maxRate`: 割引率の上下限（例: `minRate=40`）
+- `status`: `active`（デフォルト・現在期間のもの）/ `all`
+
+レスポンス: `coupons[]` に各クーポンの couponCode / name / startTime / endTime / discountRate / targetManageNumbers / couponUrl。
+
+**メルマガ生成時の使い方**: 品番＋割引率がユーザーから渡された後、このエンドポイントを叩いて該当クーポンを発見し、`couponUrl`（`https://coupon.rakuten.co.jp/getCoupon?getkey=...`）を CTA リンクに埋め込む。クーポン名・期間も outputs.json の `vars` セクションに記録すると後の確認に便利。
+
 ### 環境変数の命名規則
 
 ブランド固有：
