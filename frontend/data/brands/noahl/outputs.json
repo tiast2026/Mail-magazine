@@ -464,5 +464,37 @@
         "importedAt": "2026-04-30T13:40:31.540Z"
       }
     }
+  },
+  {
+    "id": "rmail-26404485",
+    "title": "【 mimi by NOAHL 】春の主役カットソー＊今だけ55%OFFでお届けします♪",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:33.141Z",
+    "sentAt": "2026-04-14T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 34465,
+      "openRate": 52.7,
+      "openCount": 18158,
+      "clickCount": 395,
+      "salesCount": 11,
+      "salesAmount": 103150,
+      "rakuten": {
+        "mailId": "26404485",
+        "subject": "【 mimi by NOAHL 】春の主役カットソー＊今だけ55%OFFでお届けします♪",
+        "conversionVisitRate": 0.8,
+        "conversionVisitCount": 286,
+        "transactionCount": 11,
+        "transactionRate": 3.8,
+        "revenuePerSent": 3,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:33.141Z"
+      }
+    }
   }
 ]
