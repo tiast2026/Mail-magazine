@@ -624,5 +624,37 @@
         "importedAt": "2026-04-30T13:40:39.094Z"
       }
     }
+  },
+  {
+    "id": "rmail-26379159",
+    "title": "【70%OFF】本日限りのアウトレット価格 ＊ 5.5万枚突破のあのTも再販",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:40.752Z",
+    "sentAt": "2026-04-05T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 16403,
+      "openRate": 47.9,
+      "openCount": 7857,
+      "clickCount": 526,
+      "salesCount": 24,
+      "salesAmount": 162380,
+      "rakuten": {
+        "mailId": "26379159",
+        "subject": "【70%OFF】本日限りのアウトレット価格 ＊ 5.5万枚突破のあのTも再販",
+        "conversionVisitRate": 2,
+        "conversionVisitCount": 326,
+        "transactionCount": 24,
+        "transactionRate": 7.4,
+        "revenuePerSent": 9.9,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:40.752Z"
+      }
+    }
   }
 ]
