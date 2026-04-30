@@ -83,15 +83,53 @@ export function useOptimisticOutput(
   };
 }
 
+/**
+ * サーバーが override に追いついたら、その override を捨てる。
+ * - 各フィールドについてサーバー値と override 値を JSON 比較
+ * - 一致しているフィールドはサーバーが既に反映済みなので削除
+ * - すべてのフィールドが追いついた id は override 自体を削除
+ * - 結果が変わったら localStorage を書き戻す
+ */
+function pruneOutputOverrides(
+  initial: MailOutput[],
+): Record<string, Partial<MailOutput>> {
+  const overrides = readJSON<Record<string, Partial<MailOutput>>>(
+    KEY_OUTPUT_OVERRIDES,
+    {},
+  );
+  const cleaned: Record<string, Partial<MailOutput>> = {};
+  let changed = false;
+  for (const [id, partial] of Object.entries(overrides)) {
+    const server = initial.find((o) => o.id === id);
+    if (!server) {
+      changed = true;
+      continue;
+    }
+    const fresh: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(partial)) {
+      const sv = (server as unknown as Record<string, unknown>)[k];
+      if (JSON.stringify(sv) === JSON.stringify(v)) {
+        changed = true;
+      } else {
+        fresh[k] = v;
+      }
+    }
+    if (Object.keys(fresh).length > 0) {
+      cleaned[id] = fresh as Partial<MailOutput>;
+    } else {
+      changed = true;
+    }
+  }
+  if (changed) writeJSON(KEY_OUTPUT_OVERRIDES, cleaned);
+  return cleaned;
+}
+
 /** outputs 一覧の overlay 適用 */
 export function useOptimisticOutputs(initial: MailOutput[]): MailOutput[] {
   const [merged, setMerged] = useState<MailOutput[]>(initial);
 
   useEffect(() => {
-    const overrides = readJSON<Record<string, Partial<MailOutput>>>(
-      KEY_OUTPUT_OVERRIDES,
-      {},
-    );
+    const overrides = pruneOutputOverrides(initial);
     const deleted = new Set(readJSON<string[]>(KEY_OUTPUT_DELETED, []));
     const result = initial
       .filter((o) => !deleted.has(o.id))
