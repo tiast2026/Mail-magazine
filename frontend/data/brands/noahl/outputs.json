@@ -592,5 +592,37 @@
         "importedAt": "2026-04-30T13:40:37.523Z"
       }
     }
+  },
+  {
+    "id": "rmail-26386768",
+    "title": "【再販】セットでも単品でも◎ 人気リネンライク3型が復活 ＊ 2,990円から",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:39.094Z",
+    "sentAt": "2026-04-08T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 34449,
+      "openRate": 51.6,
+      "openCount": 17790,
+      "clickCount": 381,
+      "salesCount": 19,
+      "salesAmount": 82370,
+      "rakuten": {
+        "mailId": "26386768",
+        "subject": "【再販】セットでも単品でも◎ 人気リネンライク3型が復活 ＊ 2,990円から",
+        "conversionVisitRate": 0.7,
+        "conversionVisitCount": 225,
+        "transactionCount": 19,
+        "transactionRate": 8.4,
+        "revenuePerSent": 2.4,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:39.094Z"
+      }
+    }
   }
 ]
