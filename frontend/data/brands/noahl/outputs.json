@@ -400,5 +400,37 @@
         "importedAt": "2026-04-30T13:40:28.621Z"
       }
     }
+  },
+  {
+    "id": "rmail-26402877",
+    "title": "【2日間限定60%OFF】春ブラウス6型がタイムセール ＊ 日替わりで登場",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:30.031Z",
+    "sentAt": "2026-04-18T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 34294,
+      "openRate": 50.3,
+      "openCount": 17255,
+      "clickCount": 542,
+      "salesCount": 22,
+      "salesAmount": 188260,
+      "rakuten": {
+        "mailId": "26402877",
+        "subject": "【2日間限定60%OFF】春ブラウス6型がタイムセール ＊ 日替わりで登場",
+        "conversionVisitRate": 0.9,
+        "conversionVisitCount": 307,
+        "transactionCount": 22,
+        "transactionRate": 7.2,
+        "revenuePerSent": 5.5,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:30.031Z"
+      }
+    }
   }
 ]
