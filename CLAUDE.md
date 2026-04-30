@@ -65,7 +65,30 @@ GET https://mail-magazine.vercel.app/api/rakuten/<brandId>/coupons?manageNumber=
 
 レスポンス: `coupons[]` に各クーポンの couponCode / name / startTime / endTime / discountRate / targetManageNumbers / couponUrl。
 
-**メルマガ生成時の使い方**: 品番＋割引率がユーザーから渡された後、このエンドポイントを叩いて該当クーポンを発見し、`couponUrl`（`https://coupon.rakuten.co.jp/getCoupon?getkey=...`）を CTA リンクに埋め込む。クーポン名・期間も outputs.json の `vars` セクションに記録すると後の確認に便利。
+**メルマガ生成時の使い方**: 品番＋割引率がユーザーから渡された後、このエンドポイントを叩いて該当クーポンを発見し、`couponUrl`（`https://coupon.rakuten.co.jp/getCoupon?getkey=...`）を CTA リンクに埋め込む。
+
+### outputs.json に `coupons[]` を必ず書く（重要）
+
+クーポンを使ったメルマガを生成する場合、outputs エントリに `coupons[]` を **必ず追加**する。Web ダッシュボードの「使用クーポン」セクションはこのフィールドを直接表示する：
+
+```json
+"coupons": [
+  {
+    "label": "5/5限定 全品50%OFFクーポン",
+    "url": "https://coupon.rakuten.co.jp/getCoupon?getkey=...",
+    "rate": 50,
+    "startDate": "2026-05-05T00:00:00+09:00",
+    "endDate": "2026-05-05T23:59:00+09:00",
+    "note": "5/5 ポイントDAY のみ"
+  }
+]
+```
+
+- `label`: **楽天 RMS で設定したクーポン名そのまま**を入れる（一覧画面の主表示）。ユーザーから「クーポン名」を渡された場合はそれをそのまま使う
+- `url`: 必須。getCoupon URL（楽天クーポン取得 URL）
+- `rate` / `startDate` / `endDate` / `note`: optional だが、判断材料になるので可能な限り埋める
+
+旧形式（`variables.COUPON_URL_*`）は後方互換で表示はされるが、新規生成は必ず `coupons[]` で記述する。
 
 ### 環境変数の命名規則
 

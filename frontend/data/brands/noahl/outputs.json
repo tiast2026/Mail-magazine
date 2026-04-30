@@ -288,6 +288,20 @@
       "startDate": "2026-05-05T00:00:00.000Z",
       "endDate": "2026-05-07T00:00:00.000Z"
     },
-    "scheduledAt": "2026-05-05T11:00:00.000Z"
+    "scheduledAt": "2026-05-05T11:00:00.000Z",
+    "coupons": [
+      {
+        "label": "50%OFF",
+        "url": "https://coupon.rakuten.co.jp/getCoupon?getkey=SU9VVi1HMVhMLVBJSlAtTVVIOA--&rt="
+      },
+      {
+        "label": "60%OFF",
+        "url": "https://coupon.rakuten.co.jp/getCoupon?getkey=V09SQi1NRE9NLTJPQzEtSlhLOA--&rt="
+      },
+      {
+        "label": "2点で 55%OFF",
+        "url": "https://coupon.rakuten.co.jp/getCoupon?getkey=OThROC05WEZELUhPWUktWDBCRw--&rt="
+      }
+    ]
   }
 ]

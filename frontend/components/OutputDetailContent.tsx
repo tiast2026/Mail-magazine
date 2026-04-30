@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import type { BrandConfig, MailOutput } from "@/lib/types";
 import { applyBrandToHtml } from "@/lib/brand";
 import { useOptimisticOutput } from "@/lib/optimistic";
@@ -127,7 +127,7 @@ export default function OutputDetailContent({
         )}
       </section>
 
-      <CouponsSection output={output} brandId={brandId} />
+      <CouponsSection output={output} />
 
       <section>
         <h2 className="text-lg font-semibold mb-2">使用商品</h2>
@@ -234,7 +234,7 @@ export default function OutputDetailContent({
   );
 }
 
-/** vars.COUPON_URL_<SUFFIX> → 表示ラベル */
+/** vars.COUPON_URL_<SUFFIX> → 表示ラベル（後方互換用） */
 function deriveLabelFromKey(key: string): string {
   // COUPON_URL_50OFF → "50%OFF"
   // COUPON_URL_2POINT_55OFF → "2点で55%OFF"
@@ -246,95 +246,16 @@ function deriveLabelFromKey(key: string): string {
     .trim();
 }
 
-/** クーポンURLから getkey（couponCode）を抽出 */
-function extractCouponCode(url: string): string | null {
-  try {
-    const m = url.match(/[?&]getkey=([^&]+)/);
-    return m ? decodeURIComponent(m[1]) : null;
-  } catch {
-    return null;
-  }
-}
-
-type EnrichedCoupon = {
-  label: string;
-  url: string;
-  rate?: number;
-  startDate?: string;
-  endDate?: string;
-  note?: string;
-  /** RMS から取得した実際のクーポン名 */
-  rmsName?: string;
-};
-
-function CouponsSection({
-  output,
-  brandId,
-}: {
-  output: MailOutput;
-  brandId: string;
-}) {
-  // 1. output.coupons があればそれを使う
-  // 2. なければ vars.COUPON_URL_* を抽出して自動生成（既存データ互換）
-  const baseCoupons: EnrichedCoupon[] = (() => {
-    if (output.coupons && output.coupons.length > 0) {
-      return output.coupons.map((c) => ({ ...c }));
-    }
+function CouponsSection({ output }: { output: MailOutput }) {
+  // 1. output.coupons があればそれを表示
+  // 2. なければ vars.COUPON_URL_* から後方互換でフォールバック
+  const coupons = (() => {
+    if (output.coupons && output.coupons.length > 0) return output.coupons;
     const vars = (output.variables ?? {}) as Record<string, string>;
     return Object.entries(vars)
       .filter(([k, v]) => /^COUPON_URL_/.test(k) && v)
       .map(([k, v]) => ({ label: deriveLabelFromKey(k), url: v }));
   })();
-
-  const [coupons, setCoupons] = useState<EnrichedCoupon[]>(baseCoupons);
-
-  // 楽天 RMS から実際のクーポン名を取得して enrich
-  useEffect(() => {
-    if (baseCoupons.length === 0) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const r = await fetch(
-          `/api/rakuten/${encodeURIComponent(brandId)}/coupons?status=all`,
-          { cache: "no-store" },
-        );
-        if (!r.ok) return;
-        type RmsCoupon = {
-          couponCode?: string;
-          name?: string;
-          startTime?: string | null;
-          endTime?: string | null;
-          discountRate?: number | null;
-        };
-        const data = (await r.json()) as { coupons?: RmsCoupon[] };
-        const byCode = new Map<string, RmsCoupon>();
-        for (const c of data.coupons ?? []) {
-          if (c.couponCode) byCode.set(c.couponCode, c);
-        }
-        if (cancelled) return;
-        setCoupons(
-          baseCoupons.map((c) => {
-            const code = extractCouponCode(c.url);
-            const matched = code ? byCode.get(code) : undefined;
-            if (!matched) return c;
-            return {
-              ...c,
-              rmsName: matched.name,
-              rate: c.rate ?? matched.discountRate ?? undefined,
-              startDate: c.startDate ?? matched.startTime ?? undefined,
-              endDate: c.endDate ?? matched.endTime ?? undefined,
-            };
-          }),
-        );
-      } catch {
-        // 取得失敗時はベースの表示のままにする
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [brandId, output.id]);
 
   if (coupons.length === 0) return null;
 
@@ -347,12 +268,7 @@ function CouponsSection({
             key={i}
             className="border border-stone-200 rounded bg-white p-3 text-sm"
           >
-            <div className="font-medium text-stone-900">
-              {c.rmsName ?? c.label}
-            </div>
-            {c.rmsName && c.rmsName !== c.label && (
-              <div className="text-xs text-stone-500 mt-0.5">{c.label}</div>
-            )}
+            <div className="font-medium text-stone-900">{c.label}</div>
             {(c.startDate || c.endDate) && (
               <div className="text-xs text-stone-500 mt-1">
                 {c.startDate
