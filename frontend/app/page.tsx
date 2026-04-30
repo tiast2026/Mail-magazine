@@ -8,6 +8,7 @@ import {
 import EventBadge from "@/components/EventBadge";
 import QuickStartCard from "@/components/QuickStartCard";
 import InstructionsPanel from "@/components/InstructionsPanel";
+import EventCalendar from "@/components/EventCalendar";
 
 export default function Home() {
   const brandId = getDefaultBrandId();
@@ -51,6 +52,18 @@ export default function Home() {
       </section>
 
       <QuickStartCard />
+
+      <section>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-semibold text-stone-900">
+            楽天イベントカレンダー
+          </h2>
+          <span className="text-xs text-stone-500">
+            告知解禁日以降に配信可能
+          </span>
+        </div>
+        <EventCalendar />
+      </section>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <Stat label="登録テンプレート" value={`${templates.length}`} unit="件" />
