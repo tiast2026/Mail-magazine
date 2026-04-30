@@ -720,5 +720,37 @@
         "importedAt": "2026-04-30T13:40:44.274Z"
       }
     }
+  },
+  {
+    "id": "rmail-26374081",
+    "title": "【ワンダフルデー】本日限り50%OFF ＊ 春の人気4アイテムが半額に",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:45.725Z",
+    "sentAt": "2026-04-01T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 15997,
+      "openRate": 46.7,
+      "openCount": 7469,
+      "clickCount": 283,
+      "salesCount": 15,
+      "salesAmount": 95310,
+      "rakuten": {
+        "mailId": "26374081",
+        "subject": "【ワンダフルデー】本日限り50%OFF ＊ 春の人気4アイテムが半額に",
+        "conversionVisitRate": 1.1,
+        "conversionVisitCount": 179,
+        "transactionCount": 15,
+        "transactionRate": 8.4,
+        "revenuePerSent": 6,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:45.725Z"
+      }
+    }
   }
 ]
