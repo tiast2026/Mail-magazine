@@ -6,7 +6,7 @@ import {
   getTemplate,
   getTemplates,
 } from "@/lib/data";
-import { applyBrandToHtml, applyVariablesToHtml } from "@/lib/brand";
+import { applyBrandToHtml } from "@/lib/brand";
 import HtmlPreview from "@/components/HtmlPreview";
 import CopyButton from "@/components/CopyButton";
 import TemplateEditor from "@/components/TemplateEditor";
@@ -30,12 +30,6 @@ export default async function TemplateDetailPage({
   if (!template) notFound();
 
   const htmlWithBrand = applyBrandToHtml(template.html, brand);
-  const htmlSampleFilled = template.sampleVariables
-    ? applyBrandToHtml(
-        applyVariablesToHtml(template.html, template.sampleVariables),
-        brand,
-      )
-    : null;
 
   return (
     <div className="space-y-6">
@@ -61,26 +55,9 @@ export default async function TemplateDetailPage({
         </div>
       </section>
 
-      {htmlSampleFilled && (
-        <section>
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-semibold">
-              完成版プレビュー
-              <span className="text-xs text-stone-500 ml-2 font-normal">
-                （サンプルデータで埋めた状態）
-              </span>
-            </h2>
-            <CopyButton text={htmlSampleFilled} label="このHTMLをコピー" />
-          </div>
-          <HtmlPreview html={htmlSampleFilled} />
-        </section>
-      )}
-
       <section>
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-semibold">
-            テンプレ構造（変数あり）
-          </h2>
+          <h2 className="text-lg font-semibold">プレビュー（ブランド色適用済み）</h2>
           <CopyButton text={htmlWithBrand} label="HTMLをコピー" />
         </div>
         <HtmlPreview html={htmlWithBrand} />
