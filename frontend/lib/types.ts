@@ -9,12 +9,43 @@ export type BrandColors = {
   white: string;
 };
 
+/**
+ * 楽天 R-Mail 互換のボタンスタイル定義（用途別）。
+ * テンプレ／メルマガ HTML 内では `{{BUTTON:type|url|label}}` マクロで利用し、
+ * applyBrandToHtml() が下記スタイルを使った <table>+<a> ブロックに展開する。
+ */
+export type ButtonStyle = {
+  /** 背景色（hex） */
+  bg: string;
+  /** 文字色（hex） */
+  fg: string;
+  /** 横幅（"80%" / "100%" など） */
+  width?: string;
+  /** font size 属性（"1"〜"7"） */
+  size?: string;
+  /** padding（CSS 値） */
+  padding?: string;
+  /** 枠線色（hex／null で枠線なし） */
+  border?: string | null;
+};
+
+export type BrandButtons = {
+  /** クーポン取得など最も強い CTA。デフォルトは accent 色 */
+  coupon: ButtonStyle;
+  /** 商品ページへの主 CTA。デフォルトは primary 色 */
+  product: ButtonStyle;
+  /** 補助 CTA（新作一覧／もっと見る等）。デフォルトは panel 背景＋primary 文字 */
+  secondary: ButtonStyle;
+};
+
 export type BrandConfig = {
   id: string;
   name: string;
   tagline: string;
   logoText: string;
   colors: BrandColors;
+  /** ボタン用途別スタイル。未設定の場合は colors からフォールバック */
+  buttons?: BrandButtons;
   channel: "rakuten" | "own";
   rakutenShopUrl?: string;
   siteBaseUrl?: string;
