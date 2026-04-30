@@ -688,5 +688,37 @@
         "importedAt": "2026-04-30T13:40:42.214Z"
       }
     }
+  },
+  {
+    "id": "rmail-26376900",
+    "title": "【 New arrivals 】シーズンムード高まる新作7アイテム＊1週間限定50%OFFクーポン配布♪",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:44.274Z",
+    "sentAt": "2026-04-01T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 15993,
+      "openRate": 47.4,
+      "openCount": 7585,
+      "clickCount": 347,
+      "salesCount": 21,
+      "salesAmount": 180150,
+      "rakuten": {
+        "mailId": "26376900",
+        "subject": "【 New arrivals 】シーズンムード高まる新作7アイテム＊1週間限定50%OFFクーポン配布♪",
+        "conversionVisitRate": 1.3,
+        "conversionVisitCount": 208,
+        "transactionCount": 21,
+        "transactionRate": 10.1,
+        "revenuePerSent": 11.3,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:44.274Z"
+      }
+    }
   }
 ]
