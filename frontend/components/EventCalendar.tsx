@@ -176,10 +176,16 @@ export default function EventCalendar({
     });
   }
 
-  const visibleEvents = useMemo(
-    () => allEvents.filter((e) => !hidden.has(e.category)),
-    [allEvents, hidden],
-  );
+  const visibleEvents = useMemo(() => {
+    const filtered = allEvents.filter((e) => !hidden.has(e.category));
+    // 同じ「イベント分類」かつ同じ期間（開始日時・終了日時）のイベントは1件にまとめる
+    const seen = new Map<string, RakutenCalendarEvent>();
+    for (const e of filtered) {
+      const key = `${e.category}|${e.startDate ?? ""}|${e.endDate ?? ""}`;
+      if (!seen.has(key)) seen.set(key, e);
+    }
+    return Array.from(seen.values());
+  }, [allEvents, hidden]);
 
   const year = cursorDate.getFullYear();
   const month = cursorDate.getMonth();
@@ -350,11 +356,11 @@ export default function EventCalendar({
               })}
 
               {/* 連続バーをセル上にオーバーレイ */}
-              <div className="absolute inset-0 pt-6 pointer-events-none">
+              <div className="absolute inset-0 pointer-events-none">
                 {bars.map((b, bi) => {
                   const left = (b.startCol / 7) * 100;
                   const width = ((b.endCol - b.startCol + 1) / 7) * 100;
-                  const top = b.row * (ROW_HEIGHT + 2);
+                  const top = 24 + b.row * (ROW_HEIGHT + 2);
                   const style: React.CSSProperties = {
                     position: "absolute",
                     left: `calc(${left}% + 2px)`,
