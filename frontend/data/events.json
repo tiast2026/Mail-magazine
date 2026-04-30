@@ -1,8 +1,48 @@
 {
   "source": "https://docs.google.com/spreadsheets/d/1XzHo3EGAnBIIt_1Ww44kiuwYbaNW8bvSfgOjvJt_pvg/",
-  "lastSynced": "2026-04-30T02:20:00.267Z",
+  "lastSynced": "2026-04-30T06:31:48.283Z",
   "note": "告知解禁日時 (announcementDate) でユニーク化。「×ポイントアップ」等の派生イベントは除外。",
   "events": [
+    {
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20251001_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2025-10-01T00:00:00+09:00",
+      "startDate": "2025-10-01T00:00:00+09:00",
+      "endDate": "2025-10-01T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20251004_お買い物マラソン-ポイント最大49倍-",
+      "announcementDate": "2025-09-25T10:00:00+09:00",
+      "startDate": "2025-10-04T20:00:00+09:00",
+      "endDate": "2025-10-09T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/10/4〜10/9）",
+      "announcementDate": "2025-10-02T00:00:00+09:00",
+      "startDate": "2025-10-04T20:00:00+09:00",
+      "endDate": "2025-10-09T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202510"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "お買い物マラソン エントリー＆対象アイテムを5000円(税込)以上購入でポイント3倍",
+      "announcementDate": "2025-09-25T00:00:00+09:00",
+      "startDate": "2025-10-04T20:00:00+09:00",
+      "endDate": "2025-10-09T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": null
+    },
     {
       "type": "fiveday",
       "category": "5と0のつく日",
@@ -22,6 +62,56 @@
       "endDate": "2025-10-18T23:59:00+09:00",
       "status": "開催終了",
       "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/10/24〜10/27）",
+      "announcementDate": "2025-10-22T00:00:00+09:00",
+      "startDate": "2025-10-24T20:00:00+09:00",
+      "endDate": "2025-10-27T09:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202510"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20251025_お買い物マラソン 購入履歴の対象商品限定 エントリー＆リピート購入でポイント2倍",
+      "announcementDate": "2025-10-25T00:00:00+09:00",
+      "startDate": "2025-10-25T00:00:00+09:00",
+      "endDate": "2025-10-25T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/20251024luiyl/history/"
+    },
+    {
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20251101_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2025-11-01T00:00:00+09:00",
+      "startDate": "2025-11-01T00:00:00+09:00",
+      "endDate": "2025-11-01T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20251104_お買い物マラソン-ポイント最大47倍-",
+      "announcementDate": "2025-11-02T10:00:00+09:00",
+      "startDate": "2025-11-04T20:00:00+09:00",
+      "endDate": "2025-11-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/11/4〜11/11）",
+      "announcementDate": "2025-11-02T00:00:00+09:00",
+      "startDate": "2025-11-04T20:00:00+09:00",
+      "endDate": "2025-11-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202511"
     },
     {
       "type": "fiveday",
@@ -44,6 +134,56 @@
       "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
     },
     {
+      "type": "blackfriday",
+      "category": "ブラックフライデー",
+      "name": "20251120_楽天市場のブラックフライデー-ポイント最大47倍-",
+      "announcementDate": "2024-11-12T10:00:00+09:00",
+      "startDate": "2025-11-20T20:00:00+09:00",
+      "endDate": "2025-11-27T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/blackfriday/"
+    },
+    {
+      "type": "blackfriday",
+      "category": "ブラックフライデー",
+      "name": "【学割】【ブラックフライデー】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/11/20〜11/27）",
+      "announcementDate": "2025-11-12T00:00:00+09:00",
+      "startDate": "2025-11-20T20:00:00+09:00",
+      "endDate": "2025-11-27T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/point2/?l-id=ich_rgw_shoppage_blackfriday_202511"
+    },
+    {
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20251201_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2025-12-01T00:00:00+09:00",
+      "startDate": "2025-12-01T00:00:00+09:00",
+      "endDate": "2025-12-01T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
+    },
+    {
+      "type": "supersale",
+      "category": "楽天スーパーSALE",
+      "name": "20251204_楽天スーパーSALE-ポイント最大47倍-",
+      "announcementDate": "2025-11-28T10:00:00+09:00",
+      "startDate": "2025-12-04T20:00:00+09:00",
+      "endDate": "2025-12-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/"
+    },
+    {
+      "type": "supersale",
+      "category": "楽天スーパーSALE",
+      "name": "【学割】【楽天スーパーSALE連動】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍（2025/12/4〜12/11）",
+      "announcementDate": "2025-11-28T00:00:00+09:00",
+      "startDate": "2025-12-04T20:00:00+09:00",
+      "endDate": "2025-12-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/supersale/?l-id=ich_rgw_shoppage_tosupersale_202512"
+    },
+    {
       "type": "fiveday",
       "category": "5と0のつく日",
       "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2025/12",
@@ -52,6 +192,16 @@
       "endDate": "2025-12-30T23:59:00+09:00",
       "status": "開催終了",
       "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "supersale",
+      "category": "楽天スーパーSALE",
+      "name": "20251210_楽天スーパーSALE 購入履歴の対象商品限定 エントリー＆リピート購入でポイント2倍",
+      "announcementDate": "2025-12-10T00:00:00+09:00",
+      "startDate": "2025-12-10T00:00:00+09:00",
+      "endDate": "2025-12-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/20251204gfuuy/history/"
     },
     {
       "type": "loyalty18",
@@ -66,12 +216,52 @@
     {
       "type": "yearend",
       "category": "大感謝祭",
+      "name": "20251219_楽天大感謝祭-ポイント最大47倍-",
+      "announcementDate": "2025-12-17T00:00:00+09:00",
+      "startDate": "2025-12-19T20:00:00+09:00",
+      "endDate": "2025-12-26T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/thanks/"
+    },
+    {
+      "type": "yearend",
+      "category": "大感謝祭",
       "name": "EMP登録用【学割】U25冬の大感謝祭 楽天市場のお買い物が全ショップポイント2倍!楽天モバイル契約者なら5倍!（1/1～1/13分）",
       "announcementDate": null,
       "startDate": "2026-01-01T00:00:00+09:00",
       "endDate": "2026-01-13T09:59:00+09:00",
       "status": "開催終了",
       "pageUrl": "https://event.rakuten.co.jp/young/campaign/winter/point/?l-id=ich_rgw_shoppage_winter2025-point"
+    },
+    {
+      "type": "newyear",
+      "category": "初売り",
+      "name": "【Rakuten初売り2026】新春ポイントアップ祭 最大43倍",
+      "announcementDate": "2025-12-26T00:00:00+09:00",
+      "startDate": "2026-01-01T00:00:00+09:00",
+      "endDate": "2026-01-03T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/newyear/campaign/pointup/"
+    },
+    {
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20260101_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2026-01-01T00:00:00+09:00",
+      "startDate": "2026-01-01T00:00:00+09:00",
+      "endDate": "2026-01-01T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/newyear/campaign/wonderful/"
+    },
+    {
+      "type": "fashion",
+      "category": "Rakuten Fashion",
+      "name": "【Rakuten Fashion THE SALE 2026 Winter】エントリー＆対象ショップにて5,000円(税込)以上購入すると抽選で1,000名様に全額ポイントバック",
+      "announcementDate": "2025-12-24T00:00:00+09:00",
+      "startDate": "2026-01-01T00:00:00+09:00",
+      "endDate": "2026-01-14T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": null
     },
     {
       "type": "fiveday",
@@ -84,6 +274,26 @@
       "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
     },
     {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20260109_お買い物マラソン-ポイント最大47倍-",
+      "announcementDate": "2026-01-07T10:00:00+09:00",
+      "startDate": "2026-01-09T20:00:00+09:00",
+      "endDate": "2026-01-16T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/1/9〜1/16）",
+      "announcementDate": "2026-01-07T00:00:00+09:00",
+      "startDate": "2026-01-09T20:00:00+09:00",
+      "endDate": "2026-01-16T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202601"
+    },
+    {
       "type": "loyalty18",
       "category": "18日ご愛顧感謝デー",
       "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2026/01/18)",
@@ -92,6 +302,66 @@
       "endDate": "2026-01-18T23:59:00+09:00",
       "status": "開催終了",
       "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20260124_お買い物マラソン-ポイント最大47倍-",
+      "announcementDate": "2026-01-22T10:00:00+09:00",
+      "startDate": "2026-01-24T20:00:00+09:00",
+      "endDate": "2026-01-29T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/1/24〜1/29）",
+      "announcementDate": "2026-01-22T00:00:00+09:00",
+      "startDate": "2026-01-24T20:00:00+09:00",
+      "endDate": "2026-01-29T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202601"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20260125_お買い物マラソン 購入履歴の対象商品限定 エントリー＆リピート購入でポイント2倍",
+      "announcementDate": "2026-01-25T00:00:00+09:00",
+      "startDate": "2026-01-25T00:00:00+09:00",
+      "endDate": "2026-01-25T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/20260124xopft/history/"
+    },
+    {
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20260201_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2026-02-01T00:00:00+09:00",
+      "startDate": "2026-02-01T00:00:00+09:00",
+      "endDate": "2026-02-01T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "お買い物マラソン＆ジャンルSALE-ポイント最大49倍-",
+      "announcementDate": "2026-02-02T10:00:00+09:00",
+      "startDate": "2026-02-04T20:00:00+09:00",
+      "endDate": "2026-02-10T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/2/4〜2/10）",
+      "announcementDate": "2026-02-02T00:00:00+09:00",
+      "startDate": "2026-02-04T20:00:00+09:00",
+      "endDate": "2026-02-10T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202602"
     },
     {
       "type": "fiveday",
@@ -114,6 +384,56 @@
       "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
     },
     {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20260219_お買い物マラソン-ポイント最大47倍-",
+      "announcementDate": "2026-02-17T10:00:00+09:00",
+      "startDate": "2026-02-19T20:00:00+09:00",
+      "endDate": "2026-02-23T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/2/19〜2/23）",
+      "announcementDate": "2026-02-17T00:00:00+09:00",
+      "startDate": "2026-02-19T20:00:00+09:00",
+      "endDate": "2026-02-23T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202602"
+    },
+    {
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20260301_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2026-03-01T00:00:00+09:00",
+      "startDate": "2026-03-01T00:00:00+09:00",
+      "endDate": "2026-03-01T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
+    },
+    {
+      "type": "supersale",
+      "category": "楽天スーパーSALE",
+      "name": "20260304_楽天スーパーSALE-ポイント最大47倍-",
+      "announcementDate": "2026-02-26T10:00:00+09:00",
+      "startDate": "2026-03-04T20:00:00+09:00",
+      "endDate": "2026-03-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/"
+    },
+    {
+      "type": "supersale",
+      "category": "楽天スーパーSALE",
+      "name": "【学割】【楽天スーパーSALE連動】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍（2026/3/4〜3/11）",
+      "announcementDate": "2026-02-26T00:00:00+09:00",
+      "startDate": "2026-03-04T20:00:00+09:00",
+      "endDate": "2026-03-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/supersale/?l-id=ich_rgw_shoppage_tosupersale_202603"
+    },
+    {
       "type": "supersale",
       "category": "楽天スーパーSALE",
       "name": "楽天スーパーSALE エントリー＆1注文10,000円(税込)以上の購入でポイント3倍",
@@ -124,8 +444,38 @@
       "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/20260304wofmq/high3/"
     },
     {
-      "type": "fiveday",
-      "category": "5と0のつく日",
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20260401_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2026-04-01T00:00:00+09:00",
+      "startDate": "2026-04-01T00:00:00+09:00",
+      "endDate": "2026-04-01T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20260404_お買い物マラソン＆ジャンルSALE-ポイント最大49倍-",
+      "announcementDate": "2026-04-02T10:00:00+09:00",
+      "startDate": "2026-04-04T20:00:00+09:00",
+      "endDate": "2026-04-10T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/4/4〜4/10）",
+      "announcementDate": "2026-04-02T00:00:00+09:00",
+      "startDate": "2026-04-04T20:00:00+09:00",
+      "endDate": "2026-04-10T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202604"
+    },
+    {
+      "type": "marathon",
+      "category": "お買い物マラソン",
       "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2026/04",
       "announcementDate": null,
       "startDate": "2026-04-05T00:00:00+09:00",
@@ -144,6 +494,26 @@
       "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
     },
     {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/4/24〜4/27）",
+      "announcementDate": "2026-04-22T00:00:00+09:00",
+      "startDate": "2026-04-24T20:00:00+09:00",
+      "endDate": "2026-04-27T09:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202604"
+    },
+    {
+      "type": "wonderfulday",
+      "category": "ワンダフルデー",
+      "name": "20260501_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
+      "announcementDate": "2026-05-01T00:00:00+09:00",
+      "startDate": "2026-05-01T00:00:00+09:00",
+      "endDate": "2026-05-01T23:59:00+09:00",
+      "status": "開催前",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
+    },
+    {
       "type": "fiveday",
       "category": "5と0のつく日",
       "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2026/05",
@@ -154,376 +524,6 @@
       "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
     },
     {
-      "type": "loyalty18",
-      "category": "18日ご愛顧感謝デー",
-      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2026/05/18)",
-      "announcementDate": null,
-      "startDate": "2026-05-18T00:00:00+09:00",
-      "endDate": "2026-05-18T23:59:00+09:00",
-      "status": "開催前",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
-    },
-    {
-      "type": "blackfriday",
-      "category": "ブラックフライデー",
-      "name": "20251120_楽天市場のブラックフライデー-ポイント最大47倍-",
-      "announcementDate": "2024-11-12T10:00:00+09:00",
-      "startDate": "2025-11-20T20:00:00+09:00",
-      "endDate": "2025-11-27T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/blackfriday/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "お買い物マラソン エントリー＆対象アイテムを5000円(税込)以上購入でポイント3倍",
-      "announcementDate": "2025-09-25",
-      "startDate": "2025-10-04T20:00:00+09:00",
-      "endDate": "2025-10-09T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "ー"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20251004_お買い物マラソン-ポイント最大49倍-",
-      "announcementDate": "2025-09-25T10:00:00+09:00",
-      "startDate": "2025-10-04T20:00:00+09:00",
-      "endDate": "2025-10-09T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20251001_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2025-10-01",
-      "startDate": "2025-10-01T00:00:00+09:00",
-      "endDate": "2025-10-01T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/10/4〜10/9）",
-      "announcementDate": "2025-10-02",
-      "startDate": "2025-10-04T20:00:00+09:00",
-      "endDate": "2025-10-09T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202510"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/10/24〜10/27）",
-      "announcementDate": "2025-10-22",
-      "startDate": "2025-10-24T20:00:00+09:00",
-      "endDate": "2025-10-27T09:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202510"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20251025_お買い物マラソン 購入履歴の対象商品限定 エントリー＆リピート購入でポイント2倍",
-      "announcementDate": "2025-10-25",
-      "startDate": "2025-10-25T00:00:00+09:00",
-      "endDate": "2025-10-25T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/20251024luiyl/history/"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20251101_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2025-11-01",
-      "startDate": "2025-11-01T00:00:00+09:00",
-      "endDate": "2025-11-01T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/11/4〜11/11）",
-      "announcementDate": "2025-11-02",
-      "startDate": "2025-11-04T20:00:00+09:00",
-      "endDate": "2025-11-11T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202511"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20251104_お買い物マラソン-ポイント最大47倍-",
-      "announcementDate": "2025-11-02T10:00:00+09:00",
-      "startDate": "2025-11-04T20:00:00+09:00",
-      "endDate": "2025-11-11T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
-    },
-    {
-      "type": "blackfriday",
-      "category": "ブラックフライデー",
-      "name": "【学割】【ブラックフライデー】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/11/20〜11/27）",
-      "announcementDate": "2025-11-12",
-      "startDate": "2025-11-20T20:00:00+09:00",
-      "endDate": "2025-11-27T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/point2/?l-id=ich_rgw_shoppage_blackfriday_202511"
-    },
-    {
-      "type": "supersale",
-      "category": "楽天スーパーSALE",
-      "name": "【学割】【楽天スーパーSALE連動】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍（2025/12/4〜12/11）",
-      "announcementDate": "2025-11-28",
-      "startDate": "2025-12-04T20:00:00+09:00",
-      "endDate": "2025-12-11T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/supersale/?l-id=ich_rgw_shoppage_tosupersale_202512"
-    },
-    {
-      "type": "supersale",
-      "category": "楽天スーパーSALE",
-      "name": "20251204_楽天スーパーSALE-ポイント最大47倍-",
-      "announcementDate": "2025-11-28T10:00:00+09:00",
-      "startDate": "2025-12-04T20:00:00+09:00",
-      "endDate": "2025-12-11T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20251201_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2025-12-01",
-      "startDate": "2025-12-01T00:00:00+09:00",
-      "endDate": "2025-12-01T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
-    },
-    {
-      "type": "supersale",
-      "category": "楽天スーパーSALE",
-      "name": "20251210_楽天スーパーSALE 購入履歴の対象商品限定 エントリー＆リピート購入でポイント2倍",
-      "announcementDate": "2025-12-10",
-      "startDate": "2025-12-10T00:00:00+09:00",
-      "endDate": "2025-12-11T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/20251204gfuuy/history/"
-    },
-    {
-      "type": "yearend",
-      "category": "大感謝祭",
-      "name": "20251219_楽天大感謝祭-ポイント最大47倍-",
-      "announcementDate": "2025-12-17",
-      "startDate": "2025-12-19T20:00:00+09:00",
-      "endDate": "2025-12-26T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/thanks/"
-    },
-    {
-      "type": "fashion",
-      "category": "Rakuten Fashion",
-      "name": "【Rakuten Fashion THE SALE 2026 Winter】エントリー＆対象ショップにて5,000円(税込)以上購入すると抽選で1,000名様に全額ポイントバック",
-      "announcementDate": "2025-12-24",
-      "startDate": "2026-01-01T00:00:00+09:00",
-      "endDate": "2026-01-14T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "ー"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20260101_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2026-01-01",
-      "startDate": "2026-01-01T00:00:00+09:00",
-      "endDate": "2026-01-01T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/newyear/campaign/wonderful/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/1/9〜1/16）",
-      "announcementDate": "2026-01-07",
-      "startDate": "2026-01-09T20:00:00+09:00",
-      "endDate": "2026-01-16T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202601"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20260109_お買い物マラソン-ポイント最大47倍-",
-      "announcementDate": "2026-01-07T10:00:00+09:00",
-      "startDate": "2026-01-09T20:00:00+09:00",
-      "endDate": "2026-01-16T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/1/24〜1/29）",
-      "announcementDate": "2026-01-22",
-      "startDate": "2026-01-24T20:00:00+09:00",
-      "endDate": "2026-01-29T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202601"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20260124_お買い物マラソン-ポイント最大47倍-",
-      "announcementDate": "2026-01-22T10:00:00+09:00",
-      "startDate": "2026-01-24T20:00:00+09:00",
-      "endDate": "2026-01-29T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20260125_お買い物マラソン 購入履歴の対象商品限定 エントリー＆リピート購入でポイント2倍",
-      "announcementDate": "2026-01-25",
-      "startDate": "2026-01-25T00:00:00+09:00",
-      "endDate": "2026-01-25T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/20260124xopft/history/"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20260201_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2026-02-01",
-      "startDate": "2026-02-01T00:00:00+09:00",
-      "endDate": "2026-02-01T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/2/4〜2/10）",
-      "announcementDate": "2026-02-02",
-      "startDate": "2026-02-04T20:00:00+09:00",
-      "endDate": "2026-02-10T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202602"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "お買い物マラソン＆ジャンルSALE-ポイント最大49倍-",
-      "announcementDate": "2026-02-02T10:00:00+09:00",
-      "startDate": "2026-02-04T20:00:00+09:00",
-      "endDate": "2026-02-10T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/2/19〜2/23）",
-      "announcementDate": "2026-02-17",
-      "startDate": "2026-02-19T20:00:00+09:00",
-      "endDate": "2026-02-23T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202602"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20260219_お買い物マラソン-ポイント最大47倍-",
-      "announcementDate": "2026-02-17T10:00:00+09:00",
-      "startDate": "2026-02-19T20:00:00+09:00",
-      "endDate": "2026-02-23T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
-    },
-    {
-      "type": "supersale",
-      "category": "楽天スーパーSALE",
-      "name": "【学割】【楽天スーパーSALE連動】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍（2026/3/4〜3/11）",
-      "announcementDate": "2026-02-26",
-      "startDate": "2026-03-04T20:00:00+09:00",
-      "endDate": "2026-03-11T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/supersale/?l-id=ich_rgw_shoppage_tosupersale_202603"
-    },
-    {
-      "type": "supersale",
-      "category": "楽天スーパーSALE",
-      "name": "20260304_楽天スーパーSALE-ポイント最大47倍-",
-      "announcementDate": "2026-02-26T10:00:00+09:00",
-      "startDate": "2026-03-04T20:00:00+09:00",
-      "endDate": "2026-03-11T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20260301_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2026-03-01",
-      "startDate": "2026-03-01T00:00:00+09:00",
-      "endDate": "2026-03-01T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20260401_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2026-04-01",
-      "startDate": "2026-04-01T00:00:00+09:00",
-      "endDate": "2026-04-01T23:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/4/4〜4/10）",
-      "announcementDate": "2026-04-02",
-      "startDate": "2026-04-04T20:00:00+09:00",
-      "endDate": "2026-04-10T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202604"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "20260404_お買い物マラソン＆ジャンルSALE-ポイント最大49倍-",
-      "announcementDate": "2026-04-02T10:00:00+09:00",
-      "startDate": "2026-04-04T20:00:00+09:00",
-      "endDate": "2026-04-10T01:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
-    },
-    {
-      "type": "marathon",
-      "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/4/24〜4/27）",
-      "announcementDate": "2026-04-22",
-      "startDate": "2026-04-24T20:00:00+09:00",
-      "endDate": "2026-04-27T09:59:00+09:00",
-      "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202604"
-    },
-    {
-      "type": "wonderfulday",
-      "category": "ワンダフルデー",
-      "name": "20260501_ワンダフルデー 全ショップ対象エントリーでポイント3倍＆リピート購入でポイント2倍",
-      "announcementDate": "2026-05-01",
-      "startDate": "2026-05-01T00:00:00+09:00",
-      "endDate": "2026-05-01T23:59:00+09:00",
-      "status": "開催前",
-      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/wonderfulday/"
-    },
-    {
       "type": "marathon",
       "category": "お買い物マラソン",
       "name": "20260509_お買い物マラソン＆ジャンルSALE-ポイント最大49倍-",
@@ -532,6 +532,16 @@
       "endDate": "2026-05-16T01:59:00+09:00",
       "status": "開催前",
       "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2026/05/18)",
+      "announcementDate": null,
+      "startDate": "2026-05-18T00:00:00+09:00",
+      "endDate": "2026-05-18T23:59:00+09:00",
+      "status": "開催前",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
     },
     {
       "type": "marathon",
