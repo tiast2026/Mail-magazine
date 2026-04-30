@@ -127,6 +127,22 @@ function isDerivative(name: string): boolean {
   return /×/.test(name);
 }
 
+/**
+ * スプレッドシートのイベント分類が名前と矛盾するケースを補正。
+ * 例: name=「毎月5と0のつく日は…」だが category=「お買い物マラソン」
+ *     → category を「5と0のつく日」に上書き
+ */
+function reclassifyByName(name: string, category: string): string {
+  if (/5と0のつく日/.test(name)) return "5と0のつく日";
+  if (/ご愛顧感謝デー/.test(name)) return "18日ご愛顧感謝デー";
+  if (/ワンダフルデー/.test(name)) return "ワンダフルデー";
+  if (/ブラックフライデー/.test(name)) return "ブラックフライデー";
+  if (/大感謝祭/.test(name)) return "大感謝祭";
+  if (/初売り|新春/.test(name)) return "初売り";
+  if (/楽天スーパーSALE/.test(name)) return "楽天スーパーSALE";
+  return category;
+}
+
 function originOk(req: NextRequest): boolean {
   const origin = req.headers.get("origin");
   const host = req.headers.get("host");
@@ -197,11 +213,13 @@ export async function POST(req: NextRequest) {
   const collected = new Map<string, RakutenCalendarEvent>();
   for (let r = 1; r < rows.length; r++) {
     const row = rows[r];
-    const category = (row[I.cat] ?? "").trim();
-    if (!ALLOWED_CATEGORIES.has(category)) continue;
+    let category = (row[I.cat] ?? "").trim();
     const name = (row[I.name] ?? "").trim();
     if (!name) continue;
     if (isDerivative(name)) continue;
+    // スプレッドシート上の イベント分類 が誤っている場合は名前から補正
+    category = reclassifyByName(name, category);
+    if (!ALLOWED_CATEGORIES.has(category)) continue;
     const announcementDate = toIsoJst(row[I.announce] ?? "");
     const startDate = toIsoJst(row[I.start] ?? "");
     const endDate = toIsoJst(row[I.end] ?? "");
@@ -209,9 +227,8 @@ export async function POST(req: NextRequest) {
     const pageRaw = (row[I.page] ?? "").trim();
     const pageUrl = pageRaw && pageRaw !== "ー" ? pageRaw : null;
 
-    // 同 category + 同 announcementDate を1件にユニーク化
-    // announcementDate が無いものは startDate を使う（5と0のつく日 等）
-    const dedupKey = `${category}|${announcementDate ?? startDate ?? name}`;
+    // 同 category + 同 期間（startDate, endDate）を1件にユニーク化
+    const dedupKey = `${category}|${startDate ?? ""}|${endDate ?? ""}`;
     if (collected.has(dedupKey)) continue;
 
     collected.set(dedupKey, {
