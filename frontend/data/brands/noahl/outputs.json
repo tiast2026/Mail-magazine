@@ -656,5 +656,37 @@
         "importedAt": "2026-04-30T13:40:40.752Z"
       }
     }
+  },
+  {
+    "id": "rmail-26378597",
+    "title": "【明日20時から2hだけ】非公開55%OFFクーポン ＊ スタッフ厳選5着を先見せ",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:42.214Z",
+    "sentAt": "2026-04-03T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 15960,
+      "openRate": 46.7,
+      "openCount": 7447,
+      "clickCount": 470,
+      "salesCount": 31,
+      "salesAmount": 279460,
+      "rakuten": {
+        "mailId": "26378597",
+        "subject": "【明日20時から2hだけ】非公開55%OFFクーポン ＊ スタッフ厳選5着を先見せ",
+        "conversionVisitRate": 1.8,
+        "conversionVisitCount": 281,
+        "transactionCount": 31,
+        "transactionRate": 11,
+        "revenuePerSent": 17.5,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:42.214Z"
+      }
+    }
   }
 ]
