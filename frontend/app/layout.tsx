@@ -74,6 +74,7 @@ export default function RootLayout({
               <NavLink href="/">ダッシュボード</NavLink>
               <NavLink href="/templates">テンプレート</NavLink>
               <NavLink href="/outputs">配信メルマガ</NavLink>
+              <NavLink href="/results">実績</NavLink>
               <div className="flex-1" />
               <NavLink href="/settings">設定</NavLink>
             </nav>

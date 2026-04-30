@@ -23,6 +23,7 @@ import CopyButton from "./CopyButton";
 import EventBadge from "./EventBadge";
 import OutputEditor from "./OutputEditor";
 import RakutenResultsPanel from "./RakutenResultsPanel";
+import ReflectionEditor from "./ReflectionEditor";
 
 export default function OutputDetailContent({
   brandId,
@@ -209,6 +210,11 @@ export default function OutputDetailContent({
             配信完了後、Tampermonkey スクリプトで取り込むとここに表示されます。
           </div>
         )}
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-2">振り返り</h2>
+        <ReflectionEditor brandId={brandId} output={output} />
       </section>
 
       <section>
