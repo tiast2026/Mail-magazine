@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { CampaignEventType, MailOutput } from "@/lib/types";
 import { EVENT_LABELS, EVENT_ORDER } from "@/lib/events";
+import { markOutputDeleted, setOutputOverride } from "@/lib/optimistic";
 
 type Props = {
   brandId: string;
@@ -90,12 +91,12 @@ export default function OutputEditor({ brandId, output }: Props) {
         const msg = [data.error, data.detail].filter(Boolean).join(": ");
         throw new Error(msg || `HTTP ${res.status}`);
       }
+      // Optimistic update: localStorage に保存して即座にブラウザ反映
+      setOutputOverride(output.id, body);
       setOpen(false);
-      // データ反映には Vercel 再デプロイが必要なので、リロードしても効果は約30秒後
-      alert(
-        "保存しました。Vercel の再デプロイ（約30〜60秒）後に Web に反映されます。",
-      );
       router.refresh();
+      // 通知は非ブロッキング
+      window.dispatchEvent(new CustomEvent("mail-mag-saved"));
     } catch (e) {
       setError(String(e));
     } finally {
@@ -122,9 +123,8 @@ export default function OutputEditor({ brandId, output }: Props) {
         const msg = [data.error, data.detail].filter(Boolean).join(": ");
         throw new Error(msg || `HTTP ${res.status}`);
       }
-      alert(
-        "削除しました。Vercel の再デプロイ（約30〜60秒）後に一覧から消えます。",
-      );
+      // Optimistic delete: localStorage に削除を記録、一覧から即座に消える
+      markOutputDeleted(output.id);
       router.push("/outputs/");
     } catch (e) {
       setError(String(e));

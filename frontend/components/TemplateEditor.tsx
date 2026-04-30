@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { BrandConfig, Template } from "@/lib/types";
 import { applyBrandToHtml } from "@/lib/brand";
+import { markTemplateDeleted, setTemplateOverride } from "@/lib/optimistic";
 import HtmlPreview from "./HtmlPreview";
 
 type Props = {
@@ -72,9 +73,8 @@ export default function TemplateEditor({ brandId, brand, template }: Props) {
         const msg = [data.error, data.detail].filter(Boolean).join(": ");
         throw new Error(msg || `HTTP ${res.status}`);
       }
-      alert(
-        "保存しました。Vercel の再デプロイ（約30〜60秒）後に反映されます。",
-      );
+      // Optimistic update: localStorage で即座にブラウザ反映
+      setTemplateOverride(template.id, body);
       setOpen(false);
       router.refresh();
     } catch (e) {
@@ -103,9 +103,8 @@ export default function TemplateEditor({ brandId, brand, template }: Props) {
         const msg = [data.error, data.detail].filter(Boolean).join(": ");
         throw new Error(msg || `HTTP ${res.status}`);
       }
-      alert(
-        "削除しました。Vercel の再デプロイ（約30〜60秒）後に一覧から消えます。",
-      );
+      // Optimistic delete: localStorage で即座にブラウザ反映
+      markTemplateDeleted(template.id);
       router.push("/templates/");
     } catch (e) {
       setError(String(e));
