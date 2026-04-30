@@ -341,5 +341,386 @@
     ],
     "exampleScenario": "「楊柳という素材のはなし。日本の夏に寄り添う、ふんわり優しい一着」",
     "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートD -->\n<!-- ナチュラル読み物型 -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 25px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ コラムタイトル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 15px 5px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- column -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 15px 30px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>{{STORY_TITLE}}</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ オープニング画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <img src=\"{{OPENING_IMAGE}}\" width=\"100%\" border=\"0\" alt=\"{{STORY_TITLE}}\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ リード文 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px 20px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\" style=\"line-height: 1.8;\">{{STORY_LEAD}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ディテール画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0;\">\n      <img src=\"{{DETAIL_IMAGE}}\" width=\"75%\" border=\"0\" alt=\"\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 本文 -->\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"left\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{STORY_BODY}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り線 -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"border-top: 1px solid {{COLOR_BORDER}}; padding: 15px 0 0 0;\"></td>\n  </tr>\n</table>\n\n<!-- ■ さりげない商品紹介 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- featured item -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT1_URL}}\">\n        <img src=\"{{PRODUCT1_IMAGE}}\" width=\"85%\" border=\"0\" alt=\"{{PRODUCT1_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0 5px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>{{PRODUCT1_NAME}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\">{{PRODUCT1_REGULAR_PRICE}}</font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b> {{PRODUCT1_SALE_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 30px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"75%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 14px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{PRODUCT1_URL}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>{{CTA1_TEXT}}</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>"
+  },
+  {
+    "id": "E",
+    "name": "テンプレE：新作予告（teaser）型",
+    "description": "近日リリースする新作を焦らし系で予告するメルマガ。具体的な商品はまだ出さず、ティーザー画像と日付でワクワク感を演出。À la mode（ときめき）軸で。",
+    "useCases": [
+      "新作予告",
+      "リリース前告知",
+      "焦らし演出"
+    ],
+    "productSlots": "0",
+    "requiredProductCount": {
+      "min": 0,
+      "max": 0
+    },
+    "requiredImages": [
+      {
+        "key": "TEASER_IMAGE",
+        "label": "ティーザー画像",
+        "description": "新作の世界観・素材感をぼかしや一部だけ見せる感じで。商品の全貌は出さない。",
+        "recommended": "横長 600x400 程度、雰囲気重視"
+      }
+    ],
+    "requiredText": [
+      {
+        "key": "TEASER_LABEL",
+        "label": "ティーザーラベル",
+        "example": "Coming Soon / もうすぐ登場 / NEW ARRIVAL"
+      },
+      {
+        "key": "HEADLINE",
+        "label": "見出し",
+        "example": "夏のはじまりに、新しい一着を。"
+      },
+      {
+        "key": "RELEASE_DATE",
+        "label": "リリース日",
+        "example": "5月15日（金）20:00 リリース"
+      },
+      {
+        "key": "TEASER_BODY",
+        "label": "焦らし文（2〜3行）",
+        "example": "やわらかな素材で仕立てた、夏の日常着。<br>くわしくは、リリース当日のお楽しみに。"
+      },
+      {
+        "key": "CTA_URL",
+        "label": "CTAリンク",
+        "example": "新作一覧 or 通知設定ページ URL"
+      },
+      {
+        "key": "CTA_TEXT",
+        "label": "CTA文言",
+        "example": "新作通知を受け取る → / 新作一覧を見る →"
+      }
+    ],
+    "bestFor": [
+      "新作リリース1〜2週間前の予告",
+      "ファンの期待値を上げたい時",
+      "クローズドな先行案内（既存ファン向け）"
+    ],
+    "notRecommendedFor": [
+      "即販売・即購入訴求 → テンプレA",
+      "セール告知 → テンプレB"
+    ],
+    "exampleScenario": "「夏のはじまりに、新作リリース。5月15日（金）20:00、お楽しみに。」",
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートE -->\n<!-- 新作予告（teaser）型 -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ティーザーラベル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 5px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\" style=\"letter-spacing: 4px;\"><b>{{TEASER_LABEL}}</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メイン見出し -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 15px 25px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>{{HEADLINE}}</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ティーザー画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <img src=\"{{TEASER_IMAGE}}\" width=\"100%\" border=\"0\" alt=\"{{HEADLINE}}\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ リリース日 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">- release date -</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>{{RELEASE_DATE}}</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 焦らし文 -->\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{TEASER_BODY}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ CTA -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 30px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"75%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 16px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{CTA_URL}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>{{CTA_TEXT}}</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>"
+  },
+  {
+    "id": "F",
+    "name": "テンプレF：お客様レビュー集型",
+    "description": "実購入されたお客様のレビューを商品とセットで紹介する社会的証明型メルマガ。Honest（誠実・寄り添い）軸で、購買背中押しに有効。",
+    "useCases": [
+      "人気商品の追加プッシュ",
+      "社会的証明訴求",
+      "新規購入者への安心感提供"
+    ],
+    "productSlots": "3",
+    "requiredProductCount": {
+      "min": 3,
+      "max": 3
+    },
+    "requiredImages": [
+      {
+        "key": "PRODUCT1_IMAGE",
+        "label": "レビュー1の商品画像",
+        "description": "1人目のお客様が買った商品",
+        "recommended": "正方形 600x600"
+      },
+      {
+        "key": "PRODUCT2_IMAGE",
+        "label": "レビュー2の商品画像",
+        "description": "2人目",
+        "recommended": "正方形 600x600"
+      },
+      {
+        "key": "PRODUCT3_IMAGE",
+        "label": "レビュー3の商品画像",
+        "description": "3人目",
+        "recommended": "正方形 600x600"
+      }
+    ],
+    "requiredText": [
+      {
+        "key": "INTRO_TEXT",
+        "label": "リード文",
+        "example": "ご購入いただいたお客様から、嬉しいお声が届いています。"
+      },
+      {
+        "key": "REVIEW1_AUTHOR",
+        "label": "投稿者表記",
+        "example": "A.K. 様 / 30代 / 東京都"
+      },
+      {
+        "key": "REVIEW1_RATING",
+        "label": "評価",
+        "example": "★★★★★"
+      },
+      {
+        "key": "REVIEW1_TEXT",
+        "label": "レビュー本文",
+        "example": "素材がとても柔らかく、夏でも快適でした…"
+      },
+      {
+        "key": "PRODUCT[1-3]_NAME / URL / PRICE",
+        "label": "各商品の情報",
+        "example": ""
+      },
+      {
+        "key": "ALL_REVIEWS_URL",
+        "label": "全レビューページURL",
+        "example": ""
+      }
+    ],
+    "bestFor": [
+      "売れ筋商品のさらなる訴求",
+      "購入を迷っている読者の背中押し",
+      "セール疲れの読者にブランドの信頼性を伝えたい",
+      "高単価商品（迷われがち）の購買促進"
+    ],
+    "notRecommendedFor": [
+      "新作予告（実績ない） → テンプレE",
+      "セール開始時の盛り上げ → テンプレB"
+    ],
+    "exampleScenario": "「ご購入いただいたお客様から、嬉しいお声が届きました。実際の声をご紹介します。」",
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートF -->\n<!-- お客様レビュー集（社会的証明）型 -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ タイトル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- voice -</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>お客様の声</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"line-height: 1.8;\">{{INTRO_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ レビュー1 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 15px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b>{{REVIEW1_RATING}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 0 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">{{REVIEW1_AUTHOR}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"left\" style=\"padding: 0 15px 20px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{REVIEW1_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT1_URL}}\">\n        <img src=\"{{PRODUCT1_IMAGE}}\" width=\"60%\" border=\"0\" alt=\"{{PRODUCT1_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{PRODUCT1_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{PRODUCT1_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 25px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT1_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り線 -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}};\"></td></tr>\n</table>\n\n<!-- ■ レビュー2 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 15px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b>{{REVIEW2_RATING}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 0 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">{{REVIEW2_AUTHOR}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"left\" style=\"padding: 0 15px 20px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{REVIEW2_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT2_URL}}\">\n        <img src=\"{{PRODUCT2_IMAGE}}\" width=\"60%\" border=\"0\" alt=\"{{PRODUCT2_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{PRODUCT2_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{PRODUCT2_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 25px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT2_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り線 -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}};\"></td></tr>\n</table>\n\n<!-- ■ レビュー3 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 15px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b>{{REVIEW3_RATING}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 0 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">{{REVIEW3_AUTHOR}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"left\" style=\"padding: 0 15px 20px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{REVIEW3_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT3_URL}}\">\n        <img src=\"{{PRODUCT3_IMAGE}}\" width=\"60%\" border=\"0\" alt=\"{{PRODUCT3_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{PRODUCT3_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{PRODUCT3_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 30px 0;\">\n      <a target=\"_blank\" href=\"{{PRODUCT3_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 全レビューリンク -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 0 0 30px 0;\">\n      <a target=\"_blank\" href=\"{{ALL_REVIEWS_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>≫ もっとレビューを見る</b></font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>"
+  },
+  {
+    "id": "G",
+    "name": "テンプレG：スタッフコーディネート紹介型",
+    "description": "スタッフの私服コーデ感覚で複数アイテムを着回し提案。Natural + À la mode 軸でナチュラル系ECで特に強い。",
+    "useCases": [
+      "スタッフコーデ紹介",
+      "着回し提案",
+      "ライフスタイル訴求"
+    ],
+    "productSlots": "3",
+    "requiredProductCount": {
+      "min": 3,
+      "max": 5
+    },
+    "requiredImages": [
+      {
+        "key": "COORD_IMAGE",
+        "label": "コーデ全体画像",
+        "description": "スタッフがアイテムを着用している全身カット",
+        "recommended": "縦長 800x1200"
+      },
+      {
+        "key": "ITEM[1-3]_IMAGE",
+        "label": "各アイテム画像",
+        "description": "コーデに含まれる商品（最大5点）",
+        "recommended": "正方形 600x600"
+      }
+    ],
+    "requiredText": [
+      {
+        "key": "HEADLINE",
+        "label": "見出し",
+        "example": "今日のスタッフコーデ／春のお散歩コーデ"
+      },
+      {
+        "key": "STAFF_NAME",
+        "label": "スタッフ名",
+        "example": "ノアル スタッフ M.S"
+      },
+      {
+        "key": "STAFF_HEIGHT",
+        "label": "身長",
+        "example": "162cm"
+      },
+      {
+        "key": "STAFF_COMMENT",
+        "label": "スタッフコメント",
+        "example": "肌寒い日のお出かけに、リネンとカーディガンを合わせました。"
+      },
+      {
+        "key": "ITEM[1-3]_NAME / URL / PRICE",
+        "label": "各アイテム情報",
+        "example": ""
+      },
+      {
+        "key": "MORE_COORDS_URL",
+        "label": "他コーデ一覧URL",
+        "example": ""
+      }
+    ],
+    "bestFor": [
+      "スタッフ視点で着回し提案",
+      "新作と既存品の組み合わせ訴求",
+      "身長別の着こなし提案",
+      "Natural ブランド世界観の体現"
+    ],
+    "notRecommendedFor": [
+      "単品プッシュ → A",
+      "セール訴求 → B",
+      "新作予告 → E"
+    ],
+    "exampleScenario": "「身長162cmのスタッフが提案する、春のリネンコーデ。ボトムとカーディガンの組み合わせ。」",
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートG -->\n<!-- スタッフコーディネート紹介型 -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ タイトル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- staff coordinate -</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>{{HEADLINE}}</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ スタッフ紹介 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px 5px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{STAFF_NAME}}</b></font>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\"> ／ 身長 {{STAFF_HEIGHT}}</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 15px 15px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"line-height: 1.8;\">{{STAFF_COMMENT}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ コーデ画像 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0;\">\n      <img src=\"{{COORD_IMAGE}}\" width=\"90%\" border=\"0\" alt=\"{{STAFF_NAME}} のコーディネート\">\n    </td>\n  </tr>\n</table>\n\n<!-- ■ アイテムリスト見出し -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 5px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- items -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 15px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>このコーデのアイテム</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ アイテム1 -->\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"35%\" align=\"center\" valign=\"top\">\n      <a target=\"_blank\" href=\"{{ITEM1_URL}}\">\n        <img width=\"100%\" src=\"{{ITEM1_IMAGE}}\" border=\"0\" alt=\"{{ITEM1_NAME}}\">\n      </a>\n    </td>\n    <td width=\"5%\"></td>\n    <td width=\"60%\" align=\"left\" valign=\"middle\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{ITEM1_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{ITEM1_PRICE}}</b></font><br><br>\n      <a target=\"_blank\" href=\"{{ITEM1_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}}; padding: 15px 0 0 0;\"></td></tr>\n</table>\n\n<!-- ■ アイテム2 -->\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"35%\" align=\"center\" valign=\"top\" style=\"padding: 15px 0;\">\n      <a target=\"_blank\" href=\"{{ITEM2_URL}}\">\n        <img width=\"100%\" src=\"{{ITEM2_IMAGE}}\" border=\"0\" alt=\"{{ITEM2_NAME}}\">\n      </a>\n    </td>\n    <td width=\"5%\"></td>\n    <td width=\"60%\" align=\"left\" valign=\"middle\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{ITEM2_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{ITEM2_PRICE}}</b></font><br><br>\n      <a target=\"_blank\" href=\"{{ITEM2_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}}; padding: 15px 0 0 0;\"></td></tr>\n</table>\n\n<!-- ■ アイテム3 -->\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"35%\" align=\"center\" valign=\"top\" style=\"padding: 15px 0;\">\n      <a target=\"_blank\" href=\"{{ITEM3_URL}}\">\n        <img width=\"100%\" src=\"{{ITEM3_IMAGE}}\" border=\"0\" alt=\"{{ITEM3_NAME}}\">\n      </a>\n    </td>\n    <td width=\"5%\"></td>\n    <td width=\"60%\" align=\"left\" valign=\"middle\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{ITEM3_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{ITEM3_PRICE}}</b></font><br><br>\n      <a target=\"_blank\" href=\"{{ITEM3_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ もっと見る -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0;\">\n      <a target=\"_blank\" href=\"{{MORE_COORDS_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>≫ 他のスタッフコーデを見る</b></font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>"
+  },
+  {
+    "id": "H",
+    "name": "テンプレH：対話式（新入社員 vs 先輩）型",
+    "description": "新入社員と先輩スタッフの Q&A 形式でブランド・商品を紹介。Honest 軸で人柄・親近感を演出、ファン化に最適。",
+    "useCases": [
+      "対話式コンテンツ",
+      "親近感演出",
+      "ファン化",
+      "新入社員紹介"
+    ],
+    "productSlots": "3",
+    "requiredProductCount": {
+      "min": 3,
+      "max": 3
+    },
+    "requiredImages": [
+      {
+        "key": "A[1-3]_PRODUCT_IMAGE",
+        "label": "各回答の商品画像",
+        "description": "先輩が紹介する商品の画像",
+        "recommended": "正方形 600x600"
+      }
+    ],
+    "requiredText": [
+      {
+        "key": "HEADLINE",
+        "label": "タイトル",
+        "example": "新入社員のひみつの質問／先輩に聞いてみた"
+      },
+      {
+        "key": "INTRO_TEXT",
+        "label": "導入文",
+        "example": "新入社員のあかりが、ベテランスタッフに気になることを聞いてみました。"
+      },
+      {
+        "key": "NEWBIE_NAME / NEWBIE_INTRO",
+        "label": "新入社員の名前・紹介",
+        "example": "ノアル 新入社員 あかり / 入社2ヶ月目、ナチュラル服が大好き"
+      },
+      {
+        "key": "SENIOR_NAME / SENIOR_INTRO",
+        "label": "先輩の名前・紹介",
+        "example": "ノアル ベテラン さき / 入社5年目、店長"
+      },
+      {
+        "key": "Q[1-3]_TEXT / A[1-3]_TEXT",
+        "label": "Q&A本文",
+        "example": "Q: 一番人気の商品ってなんですか？"
+      },
+      {
+        "key": "A[1-3]_PRODUCT_NAME / URL / PRICE",
+        "label": "各回答の商品情報",
+        "example": ""
+      },
+      {
+        "key": "CLOSING_TEXT",
+        "label": "締め文",
+        "example": "また次回もお楽しみに。"
+      }
+    ],
+    "bestFor": [
+      "親近感を出したい",
+      "ブランドファン化",
+      "新入社員紹介として連載化",
+      "「これは見てみたい」と思わせる"
+    ],
+    "notRecommendedFor": [
+      "即購入訴求 → A",
+      "セール盛り上げ → B"
+    ],
+    "exampleScenario": "「新入社員あかりが、先輩スタッフに『一番売れている商品』『着回しのコツ』『お気に入り』を聞いた対話式メルマガ。」",
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートH -->\n<!-- 対話式（新入社員 vs 先輩）型 -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ タイトル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- talk -</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>{{HEADLINE}}</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"line-height: 1.8;\">{{INTRO_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 登場人物 -->\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 25px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>新入社員</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>{{NEWBIE_NAME}}</b></font><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">{{NEWBIE_INTRO}}</font>\n    </td>\n    <td width=\"2%\"></td>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 25px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>先輩スタッフ</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>{{SENIOR_NAME}}</b></font><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">{{SENIOR_INTRO}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ Q1 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"padding: 20px 15px 10px 15px;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>Q1. {{NEWBIE_NAME}}：</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\" style=\"line-height: 1.8;\">「{{Q1_TEXT}}」</font>\n    </td>\n  </tr>\n</table>\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td style=\"padding: 20px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>{{SENIOR_NAME}}：</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{A1_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0;\">\n      <a target=\"_blank\" href=\"{{A1_PRODUCT_URL}}\">\n        <img src=\"{{A1_PRODUCT_IMAGE}}\" width=\"60%\" border=\"0\" alt=\"{{A1_PRODUCT_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 25px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{A1_PRODUCT_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{A1_PRODUCT_PRICE}}</b></font><br><br>\n      <a target=\"_blank\" href=\"{{A1_PRODUCT_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}};\"></td></tr>\n</table>\n\n<!-- ■ Q2 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"padding: 30px 15px 10px 15px;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>Q2. {{NEWBIE_NAME}}：</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\" style=\"line-height: 1.8;\">「{{Q2_TEXT}}」</font>\n    </td>\n  </tr>\n</table>\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td style=\"padding: 20px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>{{SENIOR_NAME}}：</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{A2_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0;\">\n      <a target=\"_blank\" href=\"{{A2_PRODUCT_URL}}\">\n        <img src=\"{{A2_PRODUCT_IMAGE}}\" width=\"60%\" border=\"0\" alt=\"{{A2_PRODUCT_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 25px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{A2_PRODUCT_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{A2_PRODUCT_PRICE}}</b></font><br><br>\n      <a target=\"_blank\" href=\"{{A2_PRODUCT_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}};\"></td></tr>\n</table>\n\n<!-- ■ Q3 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"padding: 30px 15px 10px 15px;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>Q3. {{NEWBIE_NAME}}：</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\" style=\"line-height: 1.8;\">「{{Q3_TEXT}}」</font>\n    </td>\n  </tr>\n</table>\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td style=\"padding: 20px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>{{SENIOR_NAME}}：</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{A3_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0;\">\n      <a target=\"_blank\" href=\"{{A3_PRODUCT_URL}}\">\n        <img src=\"{{A3_PRODUCT_IMAGE}}\" width=\"60%\" border=\"0\" alt=\"{{A3_PRODUCT_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 30px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{A3_PRODUCT_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{A3_PRODUCT_PRICE}}</b></font><br><br>\n      <a target=\"_blank\" href=\"{{A3_PRODUCT_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">この商品を見る →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 締め -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{CLOSING_TEXT}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>"
+  },
+  {
+    "id": "I",
+    "name": "テンプレI：ギフト訴求型",
+    "description": "母の日・敬老の日・X'mas等のギフトイベントで、価格帯別にギフト候補を提案。Honest 軸で誠実な贈り物提案。",
+    "useCases": [
+      "ギフトシーズン訴求",
+      "母の日・敬老の日・X'mas",
+      "ラッピング案内"
+    ],
+    "productSlots": "3",
+    "requiredProductCount": {
+      "min": 3,
+      "max": 3
+    },
+    "requiredImages": [
+      {
+        "key": "BANNER_IMAGE",
+        "label": "ギフトバナー",
+        "description": "ギフト感のある世界観画像",
+        "recommended": "横長 600x300"
+      },
+      {
+        "key": "PRICE_LOW_PRODUCT_IMAGE",
+        "label": "プチギフト商品",
+        "description": "〜3000円帯の商品",
+        "recommended": "正方形 600x600"
+      },
+      {
+        "key": "PRICE_MID_PRODUCT_IMAGE",
+        "label": "定番ギフト商品",
+        "description": "〜5000円帯",
+        "recommended": "正方形 600x600"
+      },
+      {
+        "key": "PRICE_HIGH_PRODUCT_IMAGE",
+        "label": "特別ギフト商品",
+        "description": "〜10000円帯",
+        "recommended": "正方形 600x600"
+      }
+    ],
+    "requiredText": [
+      {
+        "key": "HEADLINE",
+        "label": "見出し",
+        "example": "母の日に、ありがとうの気持ちを"
+      },
+      {
+        "key": "INTRO_TEXT",
+        "label": "リード文",
+        "example": "日頃の感謝を、やさしいギフトに込めて。"
+      },
+      {
+        "key": "DEADLINE",
+        "label": "ギフト〆切",
+        "example": "5/8（金）までのご注文で母の日までにお届け"
+      },
+      {
+        "key": "PRICE_LOW_LABEL / MID_LABEL / HIGH_LABEL",
+        "label": "価格帯ラベル",
+        "example": "〜3,000円 / 〜5,000円 / 〜10,000円"
+      },
+      {
+        "key": "PRICE_*_PRODUCT_NAME / URL / PRICE",
+        "label": "各商品情報",
+        "example": ""
+      },
+      {
+        "key": "WRAPPING_NOTE",
+        "label": "ラッピング案内",
+        "example": "ご注文時に「ギフト包装」をご選択ください。無料で承ります。"
+      },
+      {
+        "key": "GIFT_PAGE_URL",
+        "label": "ギフト特集URL",
+        "example": ""
+      }
+    ],
+    "bestFor": [
+      "母の日・敬老の日・X'mas等のギフト企画",
+      "価格帯別の比較提案",
+      "ラッピングサービス訴求"
+    ],
+    "notRecommendedFor": [
+      "セール開始時 → B",
+      "新作予告 → E"
+    ],
+    "exampleScenario": "「母の日ギフト特集。3000円・5000円・10000円の3価格帯でおすすめを紹介、ラッピングサービスも案内。」",
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートI -->\n<!-- ギフト訴求型（母の日・敬老の日・X'mas等） -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ギフトバナー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <a target=\"_blank\" href=\"{{GIFT_PAGE_URL}}\">\n        <img width=\"100%\" src=\"{{BANNER_IMAGE}}\" border=\"0\" alt=\"{{HEADLINE}}\">\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メインメッセージ -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- gift -</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>{{HEADLINE}}</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"line-height: 1.9;\">{{INTRO_TEXT}}</font><br><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{DEADLINE}}</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 価格帯1（〜3000円） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 5px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{PRICE_LOW_LABEL}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 15px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>気軽に贈れるプチギフト</b></font>\n    </td>\n  </tr>\n</table>\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <a target=\"_blank\" href=\"{{PRICE_LOW_PRODUCT_URL}}\">\n        <img src=\"{{PRICE_LOW_PRODUCT_IMAGE}}\" width=\"80%\" border=\"0\" alt=\"{{PRICE_LOW_PRODUCT_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 5px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{PRICE_LOW_PRODUCT_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b>{{PRICE_LOW_PRODUCT_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 25px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"60%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 12px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{PRICE_LOW_PRODUCT_URL}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>このアイテムを見る →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}};\"></td></tr>\n</table>\n\n<!-- ■ 価格帯2（〜5000円） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 5px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{PRICE_MID_LABEL}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 15px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>定番の人気ギフト</b></font>\n    </td>\n  </tr>\n</table>\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <a target=\"_blank\" href=\"{{PRICE_MID_PRODUCT_URL}}\">\n        <img src=\"{{PRICE_MID_PRODUCT_IMAGE}}\" width=\"80%\" border=\"0\" alt=\"{{PRICE_MID_PRODUCT_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 5px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{PRICE_MID_PRODUCT_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b>{{PRICE_MID_PRODUCT_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 25px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"60%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 12px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{PRICE_MID_PRODUCT_URL}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>このアイテムを見る →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr><td style=\"border-top: 1px solid {{COLOR_BORDER}};\"></td></tr>\n</table>\n\n<!-- ■ 価格帯3（〜10000円） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 0 5px 0;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b>{{PRICE_HIGH_LABEL}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 15px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>特別な贈りもの</b></font>\n    </td>\n  </tr>\n</table>\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\">\n      <a target=\"_blank\" href=\"{{PRICE_HIGH_PRODUCT_URL}}\">\n        <img src=\"{{PRICE_HIGH_PRODUCT_IMAGE}}\" width=\"80%\" border=\"0\" alt=\"{{PRICE_HIGH_PRODUCT_NAME}}\">\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 5px 0;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>{{PRICE_HIGH_PRODUCT_NAME}}</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"3\"><b>{{PRICE_HIGH_PRODUCT_PRICE}}</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 10px 0 30px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"60%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 12px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{PRICE_HIGH_PRODUCT_URL}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>このアイテムを見る →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ラッピング案内 -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td style=\"padding: 20px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\"><b>＼ ギフトラッピング承ります ／</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"line-height: 1.8;\">{{WRAPPING_NOTE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ギフトページへ -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0;\">\n      <a target=\"_blank\" href=\"{{GIFT_PAGE_URL}}\">\n        <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>≫ ギフト特集をすべて見る</b></font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>"
   }
 ]
