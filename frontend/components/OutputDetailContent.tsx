@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import type { BrandConfig, MailOutput } from "@/lib/types";
+import type { BrandConfig, Coupon, MailOutput } from "@/lib/types";
 import { applyBrandToHtml } from "@/lib/brand";
 import { useOptimisticOutput } from "@/lib/optimistic";
 import HtmlPreview from "./HtmlPreview";
@@ -249,12 +249,12 @@ function deriveLabelFromKey(key: string): string {
 function CouponsSection({ output }: { output: MailOutput }) {
   // 1. output.coupons があればそれを表示
   // 2. なければ vars.COUPON_URL_* から後方互換でフォールバック
-  const coupons = (() => {
+  const coupons: Coupon[] = (() => {
     if (output.coupons && output.coupons.length > 0) return output.coupons;
     const vars = (output.variables ?? {}) as Record<string, string>;
     return Object.entries(vars)
       .filter(([k, v]) => /^COUPON_URL_/.test(k) && v)
-      .map(([k, v]) => ({ label: deriveLabelFromKey(k), url: v }));
+      .map(([k, v]): Coupon => ({ label: deriveLabelFromKey(k), url: v }));
   })();
 
   if (coupons.length === 0) return null;
