@@ -143,6 +143,70 @@ function placeBarsForWeek(
   return result;
 }
 
+function SyncButton() {
+  const [state, setState] = useState<"idle" | "syncing" | "ok" | "err">("idle");
+  const [msg, setMsg] = useState<string>("");
+
+  async function run() {
+    setState("syncing");
+    setMsg("");
+    try {
+      const r = await fetch("/api/events/sync", { method: "POST" });
+      const data = (await r.json()) as {
+        ok?: boolean;
+        count?: number;
+        error?: string;
+        detail?: string;
+      };
+      if (!r.ok || !data.ok) {
+        setState("err");
+        setMsg(data.error ?? `HTTP ${r.status}`);
+        return;
+      }
+      setState("ok");
+      setMsg(`${data.count}件同期`);
+      // GitHub 経由で push されるため、Vercel の再ビルド完了後にリロードで反映
+      setTimeout(() => location.reload(), 2000);
+    } catch (e) {
+      setState("err");
+      setMsg(String(e));
+    }
+  }
+
+  const label =
+    state === "syncing"
+      ? "同期中…"
+      : state === "ok"
+        ? `✓ ${msg}`
+        : state === "err"
+          ? `× 失敗`
+          : "同期";
+
+  return (
+    <button
+      type="button"
+      onClick={run}
+      disabled={state === "syncing"}
+      title={
+        state === "err"
+          ? msg
+          : "Google スプレッドシートから楽天イベントを取り込んで events.json を更新します（GitHub 経由で commit→Vercel 再ビルド）"
+      }
+      className={`text-xs px-2 py-1 rounded border transition ${
+        state === "syncing"
+          ? "border-stone-300 text-stone-400"
+          : state === "ok"
+            ? "border-emerald-300 text-emerald-700 bg-emerald-50"
+            : state === "err"
+              ? "border-rose-300 text-rose-700 bg-rose-50"
+              : "border-stone-300 text-stone-700 hover:bg-stone-50"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 export default function EventCalendar({
   outputs = [],
 }: {
@@ -176,10 +240,16 @@ export default function EventCalendar({
     });
   }
 
-  const visibleEvents = useMemo(
-    () => allEvents.filter((e) => !hidden.has(e.category)),
-    [allEvents, hidden],
-  );
+  const visibleEvents = useMemo(() => {
+    const filtered = allEvents.filter((e) => !hidden.has(e.category));
+    // 同じ「イベント分類」かつ同じ期間（開始日時・終了日時）のイベントは1件にまとめる
+    const seen = new Map<string, RakutenCalendarEvent>();
+    for (const e of filtered) {
+      const key = `${e.category}|${e.startDate ?? ""}|${e.endDate ?? ""}`;
+      if (!seen.has(key)) seen.set(key, e);
+    }
+    return Array.from(seen.values());
+  }, [allEvents, hidden]);
 
   const year = cursorDate.getFullYear();
   const month = cursorDate.getMonth();
@@ -255,6 +325,7 @@ export default function EventCalendar({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-500">{monthEventsCount}件</span>
+          <SyncButton />
           <button
             type="button"
             onClick={() => setFilterOpen((v) => !v)}
@@ -350,11 +421,11 @@ export default function EventCalendar({
               })}
 
               {/* 連続バーをセル上にオーバーレイ */}
-              <div className="absolute inset-0 pt-6 pointer-events-none">
+              <div className="absolute inset-0 pointer-events-none">
                 {bars.map((b, bi) => {
                   const left = (b.startCol / 7) * 100;
                   const width = ((b.endCol - b.startCol + 1) / 7) * 100;
-                  const top = b.row * (ROW_HEIGHT + 2);
+                  const top = 24 + b.row * (ROW_HEIGHT + 2);
                   const style: React.CSSProperties = {
                     position: "absolute",
                     left: `calc(${left}% + 2px)`,
