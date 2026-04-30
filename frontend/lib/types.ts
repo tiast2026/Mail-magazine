@@ -67,13 +67,76 @@ export type Product = {
   color?: string;
 };
 
+export type DeviceMetric = {
+  device: "pc" | "smartphone" | "tablet" | "app" | "total";
+  opens?: number;
+  openRate?: number;
+  clicks?: number;
+  sent?: number;
+  sendRate?: number;
+  favorites?: number;
+  favoriteRate?: number;
+  conversions?: number;
+  conversionRate?: number;
+  revenue?: number;
+};
+
+export type DailyMetric = {
+  date: string; // YYYY-MM-DD
+  opens?: number;
+  sends?: number;
+  conversions?: number;
+};
+
+export type RakutenRMailMetrics = {
+  /** R-Mail 管理画面のメルマガID（例: "26431856"） */
+  mailId?: string;
+  /** R-Mail で記録されている件名（取り込み確認用） */
+  subject?: string;
+  /** 配信開始日時（R-Mail から取得） */
+  sentStartAt?: string;
+  /** 配信完了日時 */
+  sentEndAt?: string;
+  /** 集計期間 */
+  aggregateFrom?: string;
+  aggregateTo?: string;
+  /** 送客率（%） */
+  conversionVisitRate?: number;
+  /** 送客数 */
+  conversionVisitCount?: number;
+  /** 開封率前月比（pt） */
+  openRateDiffPt?: number;
+  /** 送客率前月比（pt） */
+  conversionVisitRateDiffPt?: number;
+  /** お気に入り登録数 */
+  favoriteCount?: number;
+  favoriteRate?: number;
+  /** 転換数（購入数） */
+  transactionCount?: number;
+  transactionRate?: number;
+  /** 売上/通 */
+  revenuePerSent?: number;
+  /** デバイス別 */
+  deviceBreakdown?: DeviceMetric[];
+  /** 日別推移 */
+  dailyTrend?: DailyMetric[];
+  /** Tampermonkey から取り込んだ日時 */
+  importedAt?: string;
+  /** 取り込み元 URL */
+  sourceUrl?: string;
+};
+
 export type OutputResults = {
   sentCount?: number;
   openRate?: number;
+  openCount?: number;
   clickRate?: number;
+  clickCount?: number;
   salesCount?: number;
   salesAmount?: number;
   notes?: string;
+  /** 楽天 R-Mail から自動取り込みしたメトリクス */
+  rakuten?: RakutenRMailMetrics;
 };
 
 export type CampaignEventType =
