@@ -432,5 +432,37 @@
         "importedAt": "2026-04-30T13:40:30.031Z"
       }
     }
+  },
+  {
+    "id": "rmail-26407769",
+    "title": "【 New arrivals 】初夏の風をまとう、新作8アイテム＊1週間限定で50%OFFで販売中！",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:31.540Z",
+    "sentAt": "2026-04-16T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 13265,
+      "openRate": 55.6,
+      "openCount": 7371,
+      "clickCount": 677,
+      "salesCount": 9,
+      "salesAmount": 59660,
+      "rakuten": {
+        "mailId": "26407769",
+        "subject": "【 New arrivals 】初夏の風をまとう、新作8アイテム＊1週間限定で50%OFFで販売中！",
+        "conversionVisitRate": 3.6,
+        "conversionVisitCount": 472,
+        "transactionCount": 9,
+        "transactionRate": 1.9,
+        "revenuePerSent": 4.5,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:31.540Z"
+      }
+    }
   }
 ]
