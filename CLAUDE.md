@@ -394,6 +394,15 @@ NOAHL（ナチュラル・カジュアル女性服）に合うもの：
 - push でビルド → 自動デプロイ
 - main の最新は claude/check-project-status-RE1Io と同期維持
 
+### PR は draft で残さず main にマージする（ユーザー指示）
+
+ユーザーの方針として、**作業が完了した PR は draft のままにせず main にマージして Production に反映する**。新セッションでも同様：
+
+- PR を作るたびに draft で出した後、内容に問題がなければ **すぐに ready → squash merge** する
+- マージで競合（特に `outputs.json` 等の配列ファイル）が出たら、**id ベースで union 解決**して push → 再マージ
+- マージ後は Vercel 側で main の自動再ビルドが走り、`mail-magazine.vercel.app` に反映される
+- ユーザーから「マージしないで」「レビュー待ち」等の明示指示がある場合のみ draft 維持
+
 ## 現在のシステム状態（2026-04-29 時点）
 
 ### 登録ブランド
