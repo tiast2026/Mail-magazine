@@ -143,6 +143,70 @@ function placeBarsForWeek(
   return result;
 }
 
+function SyncButton() {
+  const [state, setState] = useState<"idle" | "syncing" | "ok" | "err">("idle");
+  const [msg, setMsg] = useState<string>("");
+
+  async function run() {
+    setState("syncing");
+    setMsg("");
+    try {
+      const r = await fetch("/api/events/sync", { method: "POST" });
+      const data = (await r.json()) as {
+        ok?: boolean;
+        count?: number;
+        error?: string;
+        detail?: string;
+      };
+      if (!r.ok || !data.ok) {
+        setState("err");
+        setMsg(data.error ?? `HTTP ${r.status}`);
+        return;
+      }
+      setState("ok");
+      setMsg(`${data.count}件同期`);
+      // GitHub 経由で push されるため、Vercel の再ビルド完了後にリロードで反映
+      setTimeout(() => location.reload(), 2000);
+    } catch (e) {
+      setState("err");
+      setMsg(String(e));
+    }
+  }
+
+  const label =
+    state === "syncing"
+      ? "同期中…"
+      : state === "ok"
+        ? `✓ ${msg}`
+        : state === "err"
+          ? `× 失敗`
+          : "同期";
+
+  return (
+    <button
+      type="button"
+      onClick={run}
+      disabled={state === "syncing"}
+      title={
+        state === "err"
+          ? msg
+          : "Google スプレッドシートから楽天イベントを取り込んで events.json を更新します（GitHub 経由で commit→Vercel 再ビルド）"
+      }
+      className={`text-xs px-2 py-1 rounded border transition ${
+        state === "syncing"
+          ? "border-stone-300 text-stone-400"
+          : state === "ok"
+            ? "border-emerald-300 text-emerald-700 bg-emerald-50"
+            : state === "err"
+              ? "border-rose-300 text-rose-700 bg-rose-50"
+              : "border-stone-300 text-stone-700 hover:bg-stone-50"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 export default function EventCalendar({
   outputs = [],
 }: {
@@ -261,6 +325,7 @@ export default function EventCalendar({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-500">{monthEventsCount}件</span>
+          <SyncButton />
           <button
             type="button"
             onClick={() => setFilterOpen((v) => !v)}

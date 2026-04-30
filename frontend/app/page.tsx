@@ -6,7 +6,6 @@ import {
   getTemplates,
 } from "@/lib/data";
 import EventBadge from "@/components/EventBadge";
-import QuickStartCard from "@/components/QuickStartCard";
 import InstructionsPanel from "@/components/InstructionsPanel";
 import EventCalendar from "@/components/EventCalendar";
 
@@ -50,8 +49,6 @@ export default function Home() {
           メルマガ生成は Claude Code に指示してください。
         </p>
       </section>
-
-      <QuickStartCard />
 
       <section>
         <div className="flex items-center justify-between mb-3">
