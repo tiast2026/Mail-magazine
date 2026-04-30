@@ -68,7 +68,7 @@
   "_colorsNote": "accent はブランド定義書のイメージカラーパレットの DarkBrown を使用。以前は #c4694a（オレンジ）だったが、ブランド統一性のため変更。",
   "buttons": {
     "coupon": {
-      "bg": "#4a3b2d",
+      "bg": "#b5661c",
       "fg": "#ffffff",
       "width": "80%",
       "size": "3",
