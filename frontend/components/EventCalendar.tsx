@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   getCalendarCategories,
@@ -7,6 +8,7 @@ import {
   getCalendarEvents,
   type RakutenCalendarEvent,
 } from "@/lib/events";
+import type { MailOutput } from "@/lib/types";
 
 const HIDDEN_KEY = "noahl-calendar-hidden-categories";
 const WEEK_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
@@ -40,9 +42,22 @@ function eventsOnDay(
   });
 }
 
-export default function EventCalendar() {
+export default function EventCalendar({
+  outputs = [],
+}: {
+  outputs?: MailOutput[];
+}) {
   const allCategories = getCalendarCategories();
   const allEvents = getCalendarEvents();
+
+  function outputsOnDay(day: Date): MailOutput[] {
+    const d = startOfDay(day).getTime();
+    return outputs.filter((o) => {
+      const dateStr = o.sentAt ?? o.scheduledAt;
+      if (!dateStr) return false;
+      return startOfDay(new Date(dateStr)).getTime() === d;
+    });
+  }
 
   const [cursorDate, setCursorDate] = useState(() => new Date());
   const [hidden, setHidden] = useState<Set<string>>(new Set());
@@ -230,6 +245,21 @@ export default function EventCalendar() {
                     +{evts.length - 3}
                   </div>
                 )}
+                {outputsOnDay(c.date).map((o) => (
+                  <Link
+                    key={o.id}
+                    href={`/outputs/${o.id}/`}
+                    className="block text-[9px] px-1 py-0.5 rounded truncate border-l-2"
+                    style={{
+                      backgroundColor: "var(--brand-panel)",
+                      borderLeftColor: "var(--brand-accent)",
+                      color: "var(--brand-text)",
+                    }}
+                    title={`配信メルマガ\n${o.title}\nテンプレ ${o.templateId}`}
+                  >
+                    📧 {o.title}
+                  </Link>
+                ))}
               </div>
             </div>
           );

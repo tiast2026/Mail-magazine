@@ -56,13 +56,13 @@ export default function Home() {
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-semibold text-stone-900">
-            楽天イベントカレンダー
+            楽天イベント × 配信予定カレンダー
           </h2>
           <span className="text-xs text-stone-500">
             告知解禁日以降に配信可能
           </span>
         </div>
-        <EventCalendar />
+        <EventCalendar outputs={outputs} />
       </section>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
