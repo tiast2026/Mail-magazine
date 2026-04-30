@@ -1,13 +1,10 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.1.0
-// @description  楽天 R-Mail の実績ページから開封率・送客数・売上などを抽出し、Mail-magazine の outputs.json に取り込みます
+// @version      0.2.0
+// @description  楽天 R-Mail (Angular SPA) の実績ページから開封率・送客数・売上などを抽出し、Mail-magazine の outputs.json に取り込みます
 // @author       Mail-magazine
-// @match        https://*.rakuten.co.jp/*rmail*
-// @match        https://*.rakuten.co.jp/*r-mail*
-// @match        https://rms.rakuten.co.jp/*
-// @match        https://*.rms.rakuten.co.jp/*
+// @match        https://rmail.rms.rakuten.co.jp/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
@@ -27,234 +24,266 @@
   const DEFAULT_ENDPOINT =
     "https://mail-magazine.vercel.app/api/results/import";
 
-  function getEndpoint() {
-    return GM_getValue("endpoint", DEFAULT_ENDPOINT);
-  }
-  function getToken() {
-    return GM_getValue("token", "");
-  }
-  function getBrandId() {
-    return GM_getValue("brandId", "noahl");
-  }
+  const getEndpoint = () => GM_getValue("endpoint", DEFAULT_ENDPOINT);
+  const getToken = () => GM_getValue("token", "");
+  const getBrandId = () => GM_getValue("brandId", "noahl");
 
   // ------------------------------------------------------------------
-  // スクレイパー
+  // ユーティリティ
   // ------------------------------------------------------------------
-  /** 「ラベル文字列」から最も近い数値ノードを探す汎用関数 */
-  function findValueNearLabel(label, opts = {}) {
-    const { all = false } = opts;
-    const xpath = `//*[normalize-space(text())="${label}"]`;
-    const result = document.evaluate(
-      xpath,
-      document,
-      null,
-      XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
-      null,
-    );
-    const nodes = [];
-    for (let i = 0; i < result.snapshotLength; i++) {
-      nodes.push(result.snapshotItem(i));
-    }
-    if (!nodes.length) return all ? [] : null;
+  const text = (el) => (el?.textContent ?? "").replace(/\s+/g, " ").trim();
+  const pad = (n) => String(n).padStart(2, "0");
 
-    const collected = [];
-    for (const labelNode of nodes) {
-      // 兄弟・親要素の中から数値らしいテキストを探す
-      const candidates = [];
-      const parent = labelNode.parentElement;
-      if (parent) {
-        candidates.push(...Array.from(parent.children));
-        if (parent.parentElement) {
-          candidates.push(...Array.from(parent.parentElement.children));
-        }
-      }
-      for (const c of candidates) {
-        if (c === labelNode) continue;
-        const text = (c.textContent || "").trim();
-        if (!text) continue;
-        if (text === label) continue;
-        const num = parseNumber(text);
-        if (num !== null) {
-          collected.push({ raw: text, num, node: c });
-          break;
-        }
-      }
-    }
-    if (all) return collected;
-    return collected[0] ?? null;
-  }
-
-  function parseNumber(text) {
-    if (!text) return null;
-    // "28.1%" "488" "(3,693)" "¥14,950" "+ 1.2 pt ▲" "-20.8 pt ▼" "0.7%" などに対応
-    const cleaned = text
+  /** "28.1%" "3,358" "¥14,950" "¥1.1" "-20.8" などを number に */
+  function parseNumber(t) {
+    if (t == null) return null;
+    const s = String(t)
       .replace(/[¥￥,()（）]/g, "")
       .replace(/\s+/g, "")
       .replace(/▲|▼/g, "")
       .replace(/pt$/i, "")
       .replace(/[%％]$/, "")
       .replace(/件$|通$|円$/g, "");
-    const m = cleaned.match(/^[+-]?\d+(\.\d+)?$/);
-    if (!m) return null;
-    return parseFloat(cleaned);
+    const m = s.match(/^[+-]?\d+(\.\d+)?$/);
+    return m ? parseFloat(s) : null;
   }
 
-  /** ページから ID と件名と配信日を抜き出す（ヘッダ部の表形式） */
+  /** 「(48.9%)」のような括弧つき値を取り出す */
+  function parseInnerNumber(t) {
+    if (!t) return null;
+    const m = String(t).match(/-?\d+(?:\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
+  }
+
+  // ------------------------------------------------------------------
+  // ページ判定
+  // ------------------------------------------------------------------
+  function getMailIdFromHash() {
+    const m = location.hash.match(/^#\/performance\/(\d+)/);
+    return m ? m[1] : null;
+  }
+  const isPerformancePage = () => !!getMailIdFromHash();
+
+  // ------------------------------------------------------------------
+  // ヘッダ抽出
+  // ------------------------------------------------------------------
   function extractHeader() {
     const out = {};
-    // メルマガID
-    const idLabel = findValueNearLabel("ID");
-    if (idLabel) out.mailId = String(Math.trunc(idLabel.num));
-    // 件名・サブジェクト
-    const subjLabel = findValueNearLabel("サブジェクト（件名）");
-    // ↑数値ではないので findValueNearLabel は機能しない、別ロジック
-    out.subject = extractTextNearLabel("サブジェクト（件名）");
-    // ページタイトル先頭からも拾う（例: "26431856:【ALL50%OFF】..."）
-    if (!out.subject) {
-      const h1 = document.querySelector("h1, h2, .title, [class*=Title]");
-      if (h1) {
-        const t = (h1.textContent || "").trim();
-        const m = t.match(/^\s*\d+\s*[:：]\s*(.+)$/);
-        if (m) out.subject = m[1].trim();
+    out.mailId = getMailIdFromHash();
+
+    const t1 = document.querySelector("table.type1.table01");
+    if (t1) {
+      const cells = t1.querySelectorAll("tbody tr td");
+      if (cells.length >= 4) {
+        out.id = text(cells[0]);
+        out.sentDateRaw = text(cells[1]); // 例: 2026/04/29
+        out.subject = text(cells[2]);
+        out.mailType = text(cells[3]);
       }
     }
-    out.sentStartAt = extractTextNearLabel("送信開始日時") || extractTextNearLabel("送信開始日");
-    out.sentEndAt = extractTextNearLabel("送信完了日時");
-    out.aggregateFrom = extractDateRange().from;
-    out.aggregateTo = extractDateRange().to;
+
+    const t2 = document.querySelector("table.type1.table02");
+    if (t2) {
+      const dataRow = t2.querySelectorAll("tbody tr")[1];
+      if (dataRow) {
+        const cells = dataRow.querySelectorAll("td");
+        if (cells.length >= 4) {
+          out.sentCount = parseNumber(text(cells[0]));
+          out.listCondition = text(cells[1]);
+          out.sentStartAtRaw = text(cells[2]);
+          out.sentEndAtRaw = text(cells[3]);
+        }
+      }
+    }
+
+    const dateWrap = document.querySelector("p.dateWrapper > span");
+    if (dateWrap) {
+      const m = text(dateWrap).match(
+        /(\d{4})\/(\d{1,2})\/(\d{1,2})\s*[〜~～]\s*(\d{4})\/(\d{1,2})\/(\d{1,2})/,
+      );
+      if (m) {
+        out.aggregateFrom = `${m[1]}-${pad(m[2])}-${pad(m[3])}`;
+        out.aggregateTo = `${m[4]}-${pad(m[5])}-${pad(m[6])}`;
+      }
+    }
+
     return out;
   }
 
-  function extractTextNearLabel(label) {
-    const xpath = `//*[normalize-space(text())="${label}"]`;
-    const r = document.evaluate(
-      xpath,
-      document,
-      null,
-      XPathResult.FIRST_ORDERED_NODE_TYPE,
-      null,
+  function toIsoDate(s) {
+    if (!s) return null;
+    const m = s.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+    return m ? `${m[1]}-${pad(m[2])}-${pad(m[3])}` : null;
+  }
+  function toIsoDateTime(s) {
+    if (!s) return null;
+    const m = s.match(
+      /(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/,
     );
-    const node = r.singleNodeValue;
-    if (!node) return null;
-    const parent = node.parentElement;
-    if (!parent) return null;
-    // 兄弟 td / 次の dd / 隣接セルから値を取得
-    const siblings = Array.from(parent.children).filter((c) => c !== node);
-    for (const s of siblings) {
-      const t = (s.textContent || "").trim();
-      if (t && t !== label) return t;
-    }
-    // 親の親で次のセル
-    if (parent.parentElement) {
-      const cells = Array.from(parent.parentElement.children);
-      const idx = cells.indexOf(parent);
-      if (idx >= 0 && cells[idx + 1]) {
-        const t = (cells[idx + 1].textContent || "").trim();
-        if (t) return t;
+    if (!m) return toIsoDate(s);
+    return `${m[1]}-${pad(m[2])}-${pad(m[3])}T${pad(m[4])}:${m[5]}:${m[6] ?? "00"}+09:00`;
+  }
+
+  // ------------------------------------------------------------------
+  // メインカード（開封率 / 送客率）
+  // ------------------------------------------------------------------
+  function extractMainCard(selector) {
+    const card = document.querySelector(selector);
+    if (!card) return null;
+    const cur = card.querySelector(".statsBlockPart.current");
+    const mon = card.querySelector(".statsBlockPart.month");
+
+    const percentP = cur?.querySelector("p.percent");
+    const countStrong = cur?.querySelector("p strong");
+    const diffP = mon?.querySelector("p.pointRes");
+    const lastMonthP = mon
+      ? Array.from(mon.querySelectorAll("p")).find(
+          (p) =>
+            !p.classList.contains("subTtl") &&
+            !p.classList.contains("pointRes"),
+        )
+      : null;
+
+    return {
+      rate: parseNumber(text(percentP)),
+      count: parseNumber(text(countStrong)),
+      diffPt: parseNumber(text(diffP)),
+      diffSign: diffP?.classList.contains("negatifRes")
+        ? "neg"
+        : diffP?.classList.contains("positifRes")
+          ? "pos"
+          : null,
+      lastMonthRate: parseInnerNumber(text(lastMonthP)),
+    };
+  }
+
+  // ------------------------------------------------------------------
+  // mini stats（クリック数・お気に入り・転換・売上・売上/通）
+  // ------------------------------------------------------------------
+  function extractMiniStats() {
+    const out = {};
+    const cards = document.querySelectorAll("div.miniStatsBlock");
+    cards.forEach((card) => {
+      // ラベルは miniStatsBlock 直下の最初の <p>
+      const labelP = card.querySelector(":scope > p");
+      const label = text(labelP);
+      const resNum = card.querySelector("div.resNum");
+      if (!label || !resNum) return;
+
+      const ps = resNum.querySelectorAll("p");
+      // ps[0]: 主数値 (例 "488" / "17" / "5" / "¥14,950" / "¥1.1")
+      // ps[1]: span.smallRes 内に "(5.7%)" など。無いケースもある
+      const main = parseNumber(text(ps[0]));
+      const small = ps[1]
+        ? parseInnerNumber(text(ps[1].querySelector("span.smallRes") || ps[1]))
+        : null;
+
+      const key = label.replace(/\s+/g, "");
+      if (key.startsWith("クリック数")) {
+        out.clickCount = main;
+      } else if (key.startsWith("お気に入り登録率")) {
+        // ラベル「お気に入り登録率」だが主数値は登録"数"、括弧内が率
+        out.favoriteCount = main;
+        out.favoriteRate = small;
+      } else if (key.startsWith("転換数（転換率）")) {
+        out.transactionCount = main;
+        out.transactionRate = small;
+      } else if (key === "売上") {
+        out.revenue = main;
+      } else if (key === "売上/通") {
+        out.revenuePerSent = main;
+      }
+    });
+    return out;
+  }
+
+  // ------------------------------------------------------------------
+  // デバイス別テーブル
+  // ------------------------------------------------------------------
+  function findTableAfterHeading(headingText) {
+    const headings = document.querySelectorAll("h3.partSubtitle");
+    for (const h of headings) {
+      if (text(h).replace(/\s+/g, "") === headingText.replace(/\s+/g, "")) {
+        // 次の table.type2 を兄弟方向から探す
+        let sib = h.nextElementSibling;
+        while (sib) {
+          if (sib.matches?.("table.type2")) return sib;
+          const inner = sib.querySelector?.("table.type2");
+          if (inner) return inner;
+          sib = sib.nextElementSibling;
+        }
+        // 親まで上がって探す
+        const parent = h.parentElement;
+        if (parent) return parent.querySelector("table.type2");
       }
     }
     return null;
   }
 
-  function extractDateRange() {
-    const text = document.body.innerText;
-    const m = text.match(/集計期間[:：]?\s*(\d{4}\/\d{1,2}\/\d{1,2})\s*[〜~～-]\s*(\d{4}\/\d{1,2}\/\d{1,2})/);
-    if (!m) return { from: null, to: null };
-    return {
-      from: m[1].replace(/\//g, "-"),
-      to: m[2].replace(/\//g, "-"),
-    };
+  /** type2 の thead は 2 行構造。row1 が colspan/rowspan 付き、row2 が leaf 列名 */
+  function readType2Headers(table) {
+    const rows = table.querySelectorAll("thead tr");
+    if (rows.length === 0) return [];
+    const row2 = rows[1];
+    if (!row2) {
+      return Array.from(rows[0].querySelectorAll("th")).map((th) => text(th));
+    }
+    return Array.from(row2.querySelectorAll("th")).map((th) => text(th));
   }
 
-  function extractMainMetrics() {
-    const out = {};
-    const sent = findValueNearLabel("送信数");
-    if (sent) out.sentCount = sent.num;
-
-    const openRate = findValueNearLabel("開封率");
-    if (openRate) out.openRate = openRate.num;
-    const openCount = findValueNearLabel("開封数");
-    if (openCount) out.openCount = openCount.num;
-    // 開封数（カッコつき表記）の場合
-    if (!out.openCount) {
-      const openSection = findValueNearLabel("（開封数）");
-      if (openSection) out.openCount = openSection.num;
-    }
-
-    const clicks = findValueNearLabel("クリック数");
-    if (clicks) out.clickCount = clicks.num;
-
-    const conversionVisitRate = findValueNearLabel("送客率");
-    if (conversionVisitRate) out.conversionVisitRate = conversionVisitRate.num;
-    const conversionVisitCount = findValueNearLabel("送客数");
-    if (conversionVisitCount)
-      out.conversionVisitCount = conversionVisitCount.num;
-
-    const favoriteRate = findValueNearLabel("お気に入り登録率");
-    if (favoriteRate) out.favoriteRate = favoriteRate.num;
-    const favoriteCount = findValueNearLabel("お気に入り登録数");
-    if (favoriteCount) out.favoriteCount = favoriteCount.num;
-
-    const txRate = findValueNearLabel("転換率");
-    if (txRate) out.transactionRate = txRate.num;
-    const txCount = findValueNearLabel("転換数");
-    if (txCount) out.transactionCount = txCount.num;
-
-    const revenue = findValueNearLabel("売上");
-    if (revenue) out.revenue = revenue.num;
-    const revPerSent = findValueNearLabel("売上/通");
-    if (revPerSent) out.revenuePerSent = revPerSent.num;
-
-    // 前月比
-    const diffs = document.body.innerText.match(/前月比[\s\S]*?([+-]?\d+(?:\.\d+)?)\s*pt/g);
-    if (diffs && diffs.length) {
-      const nums = diffs
-        .map((s) => s.match(/([+-]?\d+(?:\.\d+)?)\s*pt/))
-        .filter(Boolean)
-        .map((m) => parseFloat(m[1]));
-      if (nums[0] !== undefined) out.openRateDiffPt = nums[0];
-      if (nums[1] !== undefined) out.conversionVisitRateDiffPt = nums[1];
-    }
-
-    return out;
-  }
-
-  /** デバイス別 開封・送客テーブルを抽出 */
-  function extractDeviceBreakdown() {
-    const tables = Array.from(document.querySelectorAll("table"));
+  function extractDeviceSoukyaku() {
+    const tbl = findTableAfterHeading("デバイス別送客");
+    if (!tbl) return [];
+    const rows = tbl.querySelectorAll("tbody tr");
     const result = [];
-    for (const tbl of tables) {
-      const headText = (tbl.tHead?.innerText || "").trim();
-      const firstRowText = (tbl.rows[0]?.innerText || "").trim();
-      const head = headText || firstRowText;
-      if (!/(送客デバイス|転換デバイス|デバイス)/.test(head)) continue;
-      if (!/(送客率|開封率|転換率|お気に入り登録率)/.test(head)) continue;
-
-      const rows = Array.from(tbl.rows).slice(1);
-      const headerCells = Array.from(
-        (tbl.tHead?.rows[0] || tbl.rows[0]).cells,
-      ).map((c) => (c.textContent || "").trim());
-
-      for (const row of rows) {
-        const cells = Array.from(row.cells).map((c) =>
-          (c.textContent || "").trim(),
-        );
-        if (!cells.length) continue;
-        const device = mapDevice(cells[0]);
-        if (!device) continue;
-        const m = { device };
-        headerCells.forEach((h, i) => {
-          const key = mapHeaderToKey(h);
-          if (!key) return;
-          const num = parseNumber(cells[i] || "");
-          if (num !== null) m[key] = num;
-        });
-        const exists = result.find((r) => r.device === device);
-        if (exists) Object.assign(exists, m);
-        else result.push(m);
-      }
-    }
+    rows.forEach((row) => {
+      const th = row.querySelector("th");
+      const tds = row.querySelectorAll("td");
+      const deviceLabel = text(th);
+      const device = mapDevice(deviceLabel);
+      if (!device) return;
+      // 列順（recon 結果より）: 開封数, 開封率, クリック数, 送客数, 送客率
+      const m = { device };
+      m.opens = parseNumber(text(tds[0]));
+      m.openRate = parseNumber(text(tds[1]));
+      m.clicks = parseNumber(text(tds[2]));
+      m.sent = parseNumber(text(tds[3]));
+      m.sendRate = parseNumber(text(tds[4]));
+      result.push(m);
+    });
     return result;
+  }
+
+  function extractDeviceTenkan() {
+    const tbl = findTableAfterHeading("デバイス別転換");
+    if (!tbl) return [];
+    const rows = tbl.querySelectorAll("tbody tr");
+    const result = [];
+    rows.forEach((row) => {
+      const th = row.querySelector("th");
+      const tds = row.querySelectorAll("td");
+      const device = mapDevice(text(th));
+      if (!device) return;
+      // 列順: お気に入り登録数, お気に入り登録率, 転換数, 転換率, 売上
+      const m = { device };
+      m.favorites = parseNumber(text(tds[0]));
+      m.favoriteRate = parseNumber(text(tds[1]));
+      m.conversions = parseNumber(text(tds[2]));
+      m.conversionRate = parseNumber(text(tds[3]));
+      m.revenue = parseNumber(text(tds[4]));
+      result.push(m);
+    });
+    return result;
+  }
+
+  function mergeDeviceMetrics(soukyaku, tenkan) {
+    const map = new Map();
+    for (const s of soukyaku) map.set(s.device, { ...s });
+    for (const t of tenkan) {
+      const cur = map.get(t.device) ?? { device: t.device };
+      map.set(t.device, { ...cur, ...t });
+    }
+    return Array.from(map.values());
   }
 
   function mapDevice(label) {
@@ -267,126 +296,158 @@
     return null;
   }
 
-  function mapHeaderToKey(h) {
-    const t = h.replace(/\s/g, "");
-    if (/開封数/.test(t)) return "opens";
-    if (/開封率/.test(t)) return "openRate";
-    if (/クリック数/.test(t)) return "clicks";
-    if (/送客率/.test(t)) return "sendRate";
-    if (/送客数/.test(t)) return "sent";
-    if (/お気に入り登録数/.test(t)) return "favorites";
-    if (/お気に入り登録率/.test(t)) return "favoriteRate";
-    if (/転換数/.test(t)) return "conversions";
-    if (/転換率/.test(t)) return "conversionRate";
-    if (/売上/.test(t)) return "revenue";
-    return null;
-  }
-
-  /** 日別推移テーブル（「推移データを表示」が展開されている前提） */
-  function extractDailyTrend() {
-    const tables = Array.from(document.querySelectorAll("table"));
-    for (const tbl of tables) {
-      const head = (tbl.tHead?.innerText || tbl.rows[0]?.innerText || "")
-        .trim();
-      if (!/日付|日別/.test(head)) continue;
-      const headerCells = Array.from(
-        (tbl.tHead?.rows[0] || tbl.rows[0]).cells,
-      ).map((c) => (c.textContent || "").trim());
-      const dateIdx = headerCells.findIndex((h) => /日付|日別/.test(h));
-      if (dateIdx < 0) continue;
-      const trend = [];
-      for (const row of Array.from(tbl.rows).slice(1)) {
-        const cells = Array.from(row.cells).map((c) =>
-          (c.textContent || "").trim(),
-        );
-        const dateText = cells[dateIdx];
-        const dm = dateText && dateText.match(/(\d{2,4})\/(\d{1,2})\/(\d{1,2})|(\d{1,2})\/(\d{1,2})/);
-        if (!dm) continue;
-        const date = dm[1]
-          ? `${dm[1].length === 2 ? "20" + dm[1] : dm[1]}-${pad(dm[2])}-${pad(dm[3])}`
-          : null;
-        if (!date) continue;
-        const e = { date };
-        headerCells.forEach((h, i) => {
-          const key = /開封/.test(h)
-            ? "opens"
-            : /送客/.test(h)
-              ? "sends"
-              : /転換/.test(h)
-                ? "conversions"
-                : null;
-          if (!key) return;
-          const num = parseNumber(cells[i] || "");
-          if (num !== null) e[key] = num;
-        });
-        trend.push(e);
-      }
-      if (trend.length) return trend;
+  // ------------------------------------------------------------------
+  // 日別推移（3 テーブル分割）
+  // ------------------------------------------------------------------
+  async function ensureDailyExpanded() {
+    const btn = document.querySelector("a.accordeonBtn");
+    if (btn && !btn.classList.contains("opened")) {
+      btn.click();
+      // Angular の描画待ち
+      await new Promise((r) => setTimeout(r, 600));
     }
-    return [];
   }
 
-  function pad(n) {
-    return String(n).padStart(2, "0");
+  function extractDailyTrend() {
+    const wrap = document.querySelector("div.tableWrapper.tableWrapperDaily");
+    if (!wrap) return [];
+
+    const leftTbl = wrap.querySelector(
+      "div.tableLeftWrapper table.type2",
+    );
+    const headTbl = wrap.querySelector("div.tableCatWrapper table.type2");
+    const dataTbl = wrap.querySelector("div.tableContentWrapper table.type2");
+    if (!leftTbl || !headTbl || !dataTbl) return [];
+
+    // 日付列: 各 tr の td (日付セル)を取り出す。1行目は ['', '日'] のヘッダ相当
+    const leftRows = Array.from(leftTbl.querySelectorAll("tbody tr"));
+    const dataRows = Array.from(dataTbl.querySelectorAll("tbody tr"));
+    if (leftRows.length === 0 || dataRows.length === 0) return [];
+
+    // ヘッダ列名（row2）
+    const headers = readType2Headers(headTbl);
+    // recon 結果の列順: 開封(全体/PC/SP/Tablet) + クリック(全/PC/SP/Tablet) + 送客(全/PC/SP/Tablet) + お気に入り(5) + 転換(5) + 売上(5) + 売上/通
+    const groupSpec = [
+      { key: "opens", labels: ["全体", "PC", "スマートフォン", "タブレット"] },
+      { key: "clicks", labels: ["全体", "PC", "スマートフォン", "タブレット"] },
+      { key: "sends", labels: ["全体", "PC", "スマートフォン", "タブレット"] },
+      {
+        key: "favorites",
+        labels: ["全体", "PC", "スマートフォン", "タブレット", "アプリ"],
+      },
+      {
+        key: "conversions",
+        labels: ["全体", "PC", "スマートフォン", "タブレット", "アプリ"],
+      },
+      {
+        key: "revenue",
+        labels: ["全体", "PC", "スマートフォン", "タブレット", "アプリ"],
+      },
+      { key: "revenuePerSent", labels: ["売上/通"] },
+    ];
+
+    const trend = [];
+    // leftRows[0] はヘッダ ('','日') なので 1 から開始
+    for (let i = 1; i < leftRows.length; i++) {
+      const leftCells = leftRows[i].querySelectorAll("th, td");
+      // [0] = "1日目" などラベル, [1] = "04/29"
+      const dayText = text(leftCells[1] ?? leftCells[0]);
+      const date = parseShortDate(dayText);
+      if (!date) continue;
+
+      const dataRow = dataRows[i - 1] ?? dataRows[i];
+      if (!dataRow) continue;
+      const tds = Array.from(dataRow.querySelectorAll("td"));
+
+      const entry = { date };
+      let col = 0;
+      for (const grp of groupSpec) {
+        for (const lbl of grp.labels) {
+          if (lbl === "全体") {
+            // 全体だけを抽出して保存（PC/SP/Tablet/アプリは省略）
+            entry[grp.key] = parseNumber(text(tds[col]));
+          } else if (grp.labels.length === 1) {
+            entry[grp.key] = parseNumber(text(tds[col]));
+          }
+          col++;
+        }
+      }
+      trend.push(entry);
+    }
+    return trend;
   }
 
-  function buildPayload() {
+  function parseShortDate(s) {
+    if (!s) return null;
+    // "04/29" or "04/29 ~"
+    const m = s.match(/(\d{1,2})\/(\d{1,2})/);
+    if (!m) return null;
+    // 集計期間の年を使う（無ければ今年）
+    const wrap = document.querySelector("p.dateWrapper > span");
+    let year = new Date().getFullYear();
+    if (wrap) {
+      const my = text(wrap).match(/(\d{4})/);
+      if (my) year = parseInt(my[1], 10);
+    }
+    return `${year}-${pad(m[1])}-${pad(m[2])}`;
+  }
+
+  // ------------------------------------------------------------------
+  // ペイロード組み立て
+  // ------------------------------------------------------------------
+  async function buildPayload() {
     const header = extractHeader();
-    const main = extractMainMetrics();
-    const deviceBreakdown = extractDeviceBreakdown();
-    const dailyTrend = extractDailyTrend();
+    const openCard = extractMainCard("div.statsBlock.statsBlock01"); // 開封率
+    const visitCard = extractMainCard("div.statsBlock.statsBlock02"); // 送客率
+    const mini = extractMiniStats();
 
-    const sentDate =
-      (header.sentStartAt && parseSentDate(header.sentStartAt)) ||
-      (header.aggregateFrom ?? null);
+    await ensureDailyExpanded();
+    const dailyTrend = extractDailyTrend();
+    const deviceSoukyaku = extractDeviceSoukyaku();
+    const deviceTenkan = extractDeviceTenkan();
+    const deviceBreakdown = mergeDeviceMetrics(deviceSoukyaku, deviceTenkan);
 
     return {
       brandId: getBrandId(),
       rakutenMailId: header.mailId,
       subject: header.subject,
-      sentDate,
+      sentDate: toIsoDate(header.sentDateRaw),
       results: {
-        sentCount: main.sentCount,
-        openRate: main.openRate,
-        openCount: main.openCount,
-        clickCount: main.clickCount,
-        salesCount: main.transactionCount,
-        salesAmount: main.revenue,
+        sentCount: header.sentCount,
+        openRate: openCard?.rate,
+        openCount: openCard?.count,
+        clickCount: mini.clickCount,
+        salesCount: mini.transactionCount,
+        salesAmount: mini.revenue,
       },
       rakuten: {
         mailId: header.mailId,
         subject: header.subject,
-        sentStartAt: parseDateTime(header.sentStartAt),
-        sentEndAt: parseDateTime(header.sentEndAt),
+        sentStartAt: toIsoDateTime(header.sentStartAtRaw),
+        sentEndAt: toIsoDateTime(header.sentEndAtRaw),
         aggregateFrom: header.aggregateFrom,
         aggregateTo: header.aggregateTo,
-        conversionVisitRate: main.conversionVisitRate,
-        conversionVisitCount: main.conversionVisitCount,
-        openRateDiffPt: main.openRateDiffPt,
-        conversionVisitRateDiffPt: main.conversionVisitRateDiffPt,
-        favoriteCount: main.favoriteCount,
-        favoriteRate: main.favoriteRate,
-        transactionCount: main.transactionCount,
-        transactionRate: main.transactionRate,
-        revenuePerSent: main.revenuePerSent,
+        conversionVisitRate: visitCard?.rate,
+        conversionVisitCount: visitCard?.count,
+        openRateDiffPt:
+          openCard?.diffPt != null
+            ? (openCard.diffSign === "neg" ? -1 : 1) * Math.abs(openCard.diffPt)
+            : undefined,
+        conversionVisitRateDiffPt:
+          visitCard?.diffPt != null
+            ? (visitCard.diffSign === "neg" ? -1 : 1) *
+              Math.abs(visitCard.diffPt)
+            : undefined,
+        favoriteCount: mini.favoriteCount,
+        favoriteRate: mini.favoriteRate,
+        transactionCount: mini.transactionCount,
+        transactionRate: mini.transactionRate,
+        revenuePerSent: mini.revenuePerSent,
         deviceBreakdown,
         dailyTrend,
         sourceUrl: location.href,
       },
     };
-  }
-
-  function parseSentDate(text) {
-    if (!text) return null;
-    const m = text.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
-    if (!m) return null;
-    return `${m[1]}-${pad(m[2])}-${pad(m[3])}`;
-  }
-  function parseDateTime(text) {
-    if (!text) return null;
-    const m = text.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s*(\d{1,2}):(\d{2})(?::(\d{2}))?/);
-    if (!m) return parseSentDate(text);
-    return `${m[1]}-${pad(m[2])}-${pad(m[3])}T${pad(m[4])}:${m[5]}:${m[6] ?? "00"}+09:00`;
   }
 
   // ------------------------------------------------------------------
@@ -423,31 +484,36 @@
     #mm-import-panel {
       position: fixed; right: 16px; bottom: 16px; z-index: 999999;
       font-family: -apple-system, "Hiragino Sans", sans-serif;
-      width: 320px; background: #fff; border: 1px solid #ccc;
+      width: 340px; background: #fff; border: 1px solid #ccc;
       border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.15);
       font-size: 12px;
     }
     #mm-import-panel header {
       padding: 8px 12px; background: #8c7b6b; color: #fff;
       border-radius: 8px 8px 0 0; display: flex; justify-content: space-between;
-      align-items: center; cursor: move;
+      align-items: center;
     }
     #mm-import-panel .body { padding: 10px 12px; }
     #mm-import-panel button {
       cursor: pointer; padding: 6px 10px; border-radius: 4px;
-      border: 1px solid #ccc; background: #f7f5f1; margin-right: 4px;
+      border: 1px solid #ccc; background: #f7f5f1; margin-right: 4px; font-size: 12px;
     }
     #mm-import-panel button.primary { background: #8c7b6b; color: #fff; border-color: #8c7b6b; }
+    #mm-import-panel button:disabled { opacity: .4; cursor: not-allowed; }
     #mm-import-panel input { width: 100%; padding: 4px 6px; font-size: 11px; box-sizing: border-box; margin-top: 2px; }
-    #mm-import-panel pre { background: #f4f1ec; padding: 6px; border-radius: 4px; max-height: 200px; overflow: auto; font-size: 10px; }
+    #mm-import-panel pre { background: #f4f1ec; padding: 6px; border-radius: 4px; max-height: 220px; overflow: auto; font-size: 10px; }
     #mm-import-panel .row { margin-bottom: 6px; }
-    #mm-import-panel .log { color: #555; }
+    #mm-import-panel .log { color: #555; word-break: break-all; }
     #mm-import-panel .ok { color: #2e7d32; }
     #mm-import-panel .err { color: #c62828; }
+    #mm-import-panel .pageStatus { font-size: 10px; color: #999; }
   `);
 
   function mountUI() {
-    if (document.getElementById("mm-import-panel")) return;
+    if (document.getElementById("mm-import-panel")) {
+      updatePageStatus();
+      return;
+    }
     const root = document.createElement("div");
     root.id = "mm-import-panel";
     root.innerHTML = `
@@ -456,6 +522,7 @@
         <span style="cursor:pointer" data-act="toggle">_</span>
       </header>
       <div class="body">
+        <div class="row pageStatus" data-page-status></div>
         <div class="row">
           <button class="primary" data-act="dry">プレビュー</button>
           <button data-act="send">取り込み実行</button>
@@ -480,10 +547,11 @@
       </div>
     `;
     document.body.appendChild(root);
+    updatePageStatus();
 
     const log = (html, cls = "") => {
-      const el = root.querySelector("[data-log]");
-      el.innerHTML = `<span class="${cls}">${html}</span>`;
+      root.querySelector("[data-log]").innerHTML =
+        `<span class="${cls}">${html}</span>`;
     };
 
     root.addEventListener("click", async (e) => {
@@ -491,6 +559,7 @@
       if (!(t instanceof HTMLElement)) return;
       const act = t.getAttribute("data-act");
       if (!act) return;
+
       if (act === "settings") {
         const s = root.querySelector(".settings");
         s.style.display = s.style.display === "none" ? "block" : "none";
@@ -505,32 +574,31 @@
         log("設定を保存しました", "ok");
       }
       if (act === "dry" || act === "send") {
+        if (!isPerformancePage()) {
+          log("このページは分析画面ではありません (#/performance/{ID})", "err");
+          return;
+        }
         try {
-          const payload = buildPayload();
-          if (!payload.rakutenMailId && !payload.subject) {
-            log("ID も件名も取得できませんでした。ページを確認してください", "err");
+          log(act === "dry" ? "DOM をスキャン中..." : "送信中...");
+          const payload = await buildPayload();
+          if (!payload.rakutenMailId) {
+            log("メルマガIDを URL から取得できませんでした", "err");
             return;
           }
-          log(
-            `${act === "dry" ? "プレビュー中..." : "送信中..."} (mailId=${payload.rakutenMailId ?? "?"})`,
-          );
           const res = await send(payload, act === "dry");
           if (act === "dry") {
             log(
-              `マッチ: ${res.matched?.title ?? "?"} (${res.matched?.reason ?? "?"})<br><pre>${escapeHtml(JSON.stringify(payload, null, 2))}</pre>`,
+              `マッチ: ${escapeHtml(res.matched?.title ?? "?")} (${res.matched?.reason ?? "?"})<br><pre>${escapeHtml(JSON.stringify(payload, null, 2))}</pre>`,
               "ok",
             );
           } else {
             log(
-              `取り込み完了: ${res.matched?.title ?? "?"} (${res.matched?.reason ?? "?"})`,
+              `取り込み完了: ${escapeHtml(res.matched?.title ?? "?")} (${res.matched?.reason ?? "?"})`,
               "ok",
             );
           }
         } catch (err) {
-          log(
-            `失敗: ${escapeHtml(JSON.stringify(err))}`,
-            "err",
-          );
+          log(`失敗: ${escapeHtml(JSON.stringify(err))}`, "err");
         }
       }
       if (act === "toggle") {
@@ -538,6 +606,17 @@
         body.style.display = body.style.display === "none" ? "block" : "none";
       }
     });
+  }
+
+  function updatePageStatus() {
+    const root = document.getElementById("mm-import-panel");
+    if (!root) return;
+    const el = root.querySelector("[data-page-status]");
+    if (!el) return;
+    const id = getMailIdFromHash();
+    el.textContent = id
+      ? `現在のメルマガID: ${id}`
+      : "分析画面に移動してください (#/performance/{ID})";
   }
 
   function escapeAttr(s) {
@@ -551,13 +630,12 @@
   }
 
   // ------------------------------------------------------------------
-  // 起動
+  // 起動 + SPA 監視
   // ------------------------------------------------------------------
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mountUI);
-  } else {
-    mountUI();
-  }
-  // SPA 対応で 1.5 秒後に再マウントを試みる
+  mountUI();
   setTimeout(mountUI, 1500);
+  window.addEventListener("hashchange", updatePageStatus);
+  // body の差し替えに追従
+  const mo = new MutationObserver(() => mountUI());
+  mo.observe(document.body, { childList: true });
 })();
