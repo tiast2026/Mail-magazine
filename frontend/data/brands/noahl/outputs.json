@@ -256,10 +256,10 @@
     "event": {
       "type": "custom",
       "name": "5/5 ポイントDAY＋5/6-5/7 2点55%OFF",
-      "startDate": "2026-05-05T00:00:00+09:00",
-      "endDate": "2026-05-07T23:59:59+09:00"
+      "startDate": "2026-05-05T00:00:00.000Z",
+      "endDate": "2026-05-07T00:00:00.000Z"
     },
-    "scheduledAt": "2026-05-04T20:00:00+09:00"
+    "scheduledAt": "2026-05-05T11:00:00.000Z"
   },
   {
     "id": "20260509-nlwp230-camisole-marathon",
