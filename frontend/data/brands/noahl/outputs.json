@@ -528,5 +528,37 @@
         "importedAt": "2026-04-30T13:40:34.585Z"
       }
     }
+  },
+  {
+    "id": "rmail-26396984",
+    "title": "【 New arrivals 】春をまとう、新作4アイテム。本日限定ポイント4倍＆50%OFFクーポン配布中。",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:36.003Z",
+    "sentAt": "2026-04-10T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 13387,
+      "openRate": 57.3,
+      "openCount": 7676,
+      "clickCount": 491,
+      "salesCount": 10,
+      "salesAmount": 83290,
+      "rakuten": {
+        "mailId": "26396984",
+        "subject": "【 New arrivals 】春をまとう、新作4アイテム。本日限定ポイント4倍＆50%OFFクーポン配布中。",
+        "conversionVisitRate": 2.6,
+        "conversionVisitCount": 350,
+        "transactionCount": 10,
+        "transactionRate": 2.9,
+        "revenuePerSent": 6.2,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:36.003Z"
+      }
+    }
   }
 ]
