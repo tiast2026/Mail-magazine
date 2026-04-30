@@ -3,24 +3,31 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import type { BrandConfig, Template } from "@/lib/types";
+import type { BrandConfig, MailOutput, Template } from "@/lib/types";
 import { applyBrandToHtml } from "@/lib/brand";
-import { useOptimisticTemplate } from "@/lib/optimistic";
+import {
+  useOptimisticOutputs,
+  useOptimisticTemplate,
+} from "@/lib/optimistic";
 import HtmlPreview from "./HtmlPreview";
 import CopyButton from "./CopyButton";
 import TemplateEditor from "./TemplateEditor";
+import EventBadge from "./EventBadge";
 
 export default function TemplateDetailContent({
   brandId,
   brand,
   initialTemplate,
+  outputs: initialOutputs = [],
 }: {
   brandId: string;
   brand: BrandConfig;
   initialTemplate: Template;
+  outputs?: MailOutput[];
 }) {
   const router = useRouter();
   const { data: template, isDeleted } = useOptimisticTemplate(initialTemplate);
+  const outputs = useOptimisticOutputs(initialOutputs);
 
   useEffect(() => {
     if (isDeleted) {
@@ -125,6 +132,57 @@ export default function TemplateDetailContent({
           )}
         </section>
       )}
+
+      <section>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-lg font-semibold">
+            このテンプレで作ったメルマガ
+          </h2>
+          <span className="text-xs text-stone-500">{outputs.length} 件</span>
+        </div>
+        {outputs.length === 0 ? (
+          <div className="card border-dashed p-6 text-center text-xs text-stone-500">
+            このテンプレで作成されたメルマガはまだありません
+          </div>
+        ) : (
+          <ul className="card divide-y divide-stone-100">
+            {outputs.map((o) => (
+              <li key={o.id}>
+                <Link
+                  href={`/outputs/${o.id}/`}
+                  className="block p-4 hover:bg-stone-50 transition"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-stone-900 truncate">
+                        {o.title}
+                      </div>
+                      <div className="text-xs text-stone-500 mt-1 flex items-center gap-2 flex-wrap">
+                        {o.event && <EventBadge event={o.event} />}
+                        <span>
+                          {new Date(
+                            o.scheduledAt ?? o.createdAt,
+                          ).toLocaleString("ja-JP", {
+                            month: "numeric",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                    {o.results?.openRate != null && (
+                      <div className="text-xs text-right shrink-0 text-stone-700">
+                        開封 {o.results.openRate.toFixed(1)}%
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <section>
         <h2 className="text-lg font-semibold mb-2">HTML ソース（ブランド変数あり）</h2>
