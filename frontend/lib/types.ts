@@ -135,6 +135,8 @@ export type OutputResults = {
   salesCount?: number;
   salesAmount?: number;
   notes?: string;
+  /** 振り返り評価 (1-5) */
+  rating?: number;
   /** 楽天 R-Mail から自動取り込みしたメトリクス */
   rakuten?: RakutenRMailMetrics;
 };
