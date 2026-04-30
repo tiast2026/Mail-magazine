@@ -496,5 +496,37 @@
         "importedAt": "2026-04-30T13:40:33.141Z"
       }
     }
+  },
+  {
+    "id": "rmail-26393267",
+    "title": "【再販】5,000枚突破の冷感シアーシャツが復活 ＊ 合わせたいインナーも最大55%OFF",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:34.585Z",
+    "sentAt": "2026-04-11T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 34488,
+      "openRate": 51.4,
+      "openCount": 17724,
+      "clickCount": 493,
+      "salesCount": 18,
+      "salesAmount": 115680,
+      "rakuten": {
+        "mailId": "26393267",
+        "subject": "【再販】5,000枚突破の冷感シアーシャツが復活 ＊ 合わせたいインナーも最大55%OFF",
+        "conversionVisitRate": 0.9,
+        "conversionVisitCount": 311,
+        "transactionCount": 18,
+        "transactionRate": 5.8,
+        "revenuePerSent": 3.4,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:34.585Z"
+      }
+    }
   }
 ]
