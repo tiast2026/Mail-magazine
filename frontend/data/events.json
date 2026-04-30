@@ -1,8 +1,168 @@
 {
   "source": "https://docs.google.com/spreadsheets/d/1XzHo3EGAnBIIt_1Ww44kiuwYbaNW8bvSfgOjvJt_pvg/",
-  "lastSynced": "2026-04-30T02:11:19.091Z",
+  "lastSynced": "2026-04-30T02:20:00.267Z",
   "note": "告知解禁日時 (announcementDate) でユニーク化。「×ポイントアップ」等の派生イベントは除外。",
   "events": [
+    {
+      "type": "fiveday",
+      "category": "5と0のつく日",
+      "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2025/10",
+      "announcementDate": null,
+      "startDate": "2025-10-05T00:00:00+09:00",
+      "endDate": "2025-10-30T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2025/10/18)",
+      "announcementDate": null,
+      "startDate": "2025-10-18T00:00:00+09:00",
+      "endDate": "2025-10-18T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "fiveday",
+      "category": "5と0のつく日",
+      "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2025/11",
+      "announcementDate": null,
+      "startDate": "2025-11-05T00:00:00+09:00",
+      "endDate": "2025-11-30T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2025/11/18)",
+      "announcementDate": null,
+      "startDate": "2025-11-18T00:00:00+09:00",
+      "endDate": "2025-11-18T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "fiveday",
+      "category": "5と0のつく日",
+      "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2025/12",
+      "announcementDate": null,
+      "startDate": "2025-12-05T00:00:00+09:00",
+      "endDate": "2025-12-30T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2025/12/18)",
+      "announcementDate": null,
+      "startDate": "2025-12-18T00:00:00+09:00",
+      "endDate": "2025-12-18T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "yearend",
+      "category": "大感謝祭",
+      "name": "EMP登録用【学割】U25冬の大感謝祭 楽天市場のお買い物が全ショップポイント2倍!楽天モバイル契約者なら5倍!（1/1～1/13分）",
+      "announcementDate": null,
+      "startDate": "2026-01-01T00:00:00+09:00",
+      "endDate": "2026-01-13T09:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/young/campaign/winter/point/?l-id=ich_rgw_shoppage_winter2025-point"
+    },
+    {
+      "type": "fiveday",
+      "category": "5と0のつく日",
+      "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2026/01",
+      "announcementDate": null,
+      "startDate": "2026-01-05T00:00:00+09:00",
+      "endDate": "2026-01-30T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2026/01/18)",
+      "announcementDate": null,
+      "startDate": "2026-01-18T00:00:00+09:00",
+      "endDate": "2026-01-18T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "fiveday",
+      "category": "5と0のつく日",
+      "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2026/02",
+      "announcementDate": null,
+      "startDate": "2026-02-05T00:00:00+09:00",
+      "endDate": "2026-02-25T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2026/02/18)",
+      "announcementDate": null,
+      "startDate": "2026-02-18T00:00:00+09:00",
+      "endDate": "2026-02-18T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "supersale",
+      "category": "楽天スーパーSALE",
+      "name": "楽天スーパーSALE エントリー＆1注文10,000円(税込)以上の購入でポイント3倍",
+      "announcementDate": null,
+      "startDate": "2026-03-04T20:00:00+09:00",
+      "endDate": "2026-03-11T01:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/supersale/20260304wofmq/high3/"
+    },
+    {
+      "type": "fiveday",
+      "category": "5と0のつく日",
+      "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2026/04",
+      "announcementDate": null,
+      "startDate": "2026-04-05T00:00:00+09:00",
+      "endDate": "2026-04-30T23:59:00+09:00",
+      "status": "開催中",
+      "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2026/04/18)",
+      "announcementDate": null,
+      "startDate": "2026-04-18T00:00:00+09:00",
+      "endDate": "2026-04-18T23:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
+    {
+      "type": "fiveday",
+      "category": "5と0のつく日",
+      "name": "毎月5と0のつく日は 楽天市場のお買い物に楽天カードのご利用で楽天カード特典+3倍で4倍 2026/05",
+      "announcementDate": null,
+      "startDate": "2026-05-05T00:00:00+09:00",
+      "endDate": "2026-05-30T23:59:00+09:00",
+      "status": "開催前",
+      "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
+    },
+    {
+      "type": "loyalty18",
+      "category": "18日ご愛顧感謝デー",
+      "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2026/05/18)",
+      "announcementDate": null,
+      "startDate": "2026-05-18T00:00:00+09:00",
+      "endDate": "2026-05-18T23:59:00+09:00",
+      "status": "開催前",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/rank/point/"
+    },
     {
       "type": "blackfriday",
       "category": "ブラックフライデー",
