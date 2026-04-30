@@ -560,5 +560,37 @@
         "importedAt": "2026-04-30T13:40:36.003Z"
       }
     }
+  },
+  {
+    "id": "rmail-26393092",
+    "title": "【ラスト5時間】今夜21時から60%OFF ＊ マラソン最後の特別クーポン",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:37.523Z",
+    "sentAt": "2026-04-09T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 34583,
+      "openRate": 51.4,
+      "openCount": 17776,
+      "clickCount": 753,
+      "salesCount": 33,
+      "salesAmount": 263270,
+      "rakuten": {
+        "mailId": "26393092",
+        "subject": "【ラスト5時間】今夜21時から60%OFF ＊ マラソン最後の特別クーポン",
+        "conversionVisitRate": 1.4,
+        "conversionVisitCount": 469,
+        "transactionCount": 33,
+        "transactionRate": 7,
+        "revenuePerSent": 7.6,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:37.523Z"
+      }
+    }
   }
 ]
