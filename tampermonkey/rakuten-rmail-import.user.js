@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.2.0
-// @description  楽天 R-Mail (Angular SPA) の実績ページから開封率・送客数・売上などを抽出し、Mail-magazine の outputs.json に取り込みます
+// @version      0.3.0
+// @description  楽天 RMS トップ / R-Mail 一覧 / 個別分析画面のどこからでもメルマガ実績を Mail-magazine へ取り込み（一括取り込み対応）
 // @author       Mail-magazine
-// @match        https://rmail.rms.rakuten.co.jp/*
+// @match        https://*.rms.rakuten.co.jp/*
+// @match        https://rms.rakuten.co.jp/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
@@ -478,13 +479,172 @@
   }
 
   // ------------------------------------------------------------------
+  // ページ種別判定
+  // ------------------------------------------------------------------
+  function isRMailHost() {
+    return location.host === "rmail.rms.rakuten.co.jp";
+  }
+  function isTrendPage() {
+    return isRMailHost() && /^#\/trend/.test(location.hash || "");
+  }
+  function pageContext() {
+    if (isPerformancePage()) return "performance";
+    if (isTrendPage()) return "trend";
+    if (isRMailHost()) return "rmail-other";
+    return "rms";
+  }
+
+  // ------------------------------------------------------------------
+  // R-Mail 一覧から全メルマガIDを抽出
+  // ------------------------------------------------------------------
+  function extractMailIdsFromTrend() {
+    const ids = new Set();
+    // ハッシュリンク経由
+    document
+      .querySelectorAll('a[href*="#/performance/"]')
+      .forEach((a) => {
+        const m = (a.getAttribute("href") || "").match(/#\/performance\/(\d+)/);
+        if (m) ids.add(m[1]);
+      });
+    // routerLink 属性
+    document.querySelectorAll("[routerlink]").forEach((el) => {
+      const v = el.getAttribute("routerlink") || "";
+      const m = v.match(/performance\/(\d+)/);
+      if (m) ids.add(m[1]);
+    });
+    // テーブル内の数字セル（フォールバック: 8桁前後の数字）
+    if (ids.size === 0) {
+      document
+        .querySelectorAll("table.type1 tbody td, table.type2 tbody td")
+        .forEach((td) => {
+          const t = (td.textContent || "").trim();
+          if (/^\d{6,10}$/.test(t)) ids.add(t);
+        });
+    }
+    return Array.from(ids);
+  }
+
+  // ------------------------------------------------------------------
+  // 一括取り込み: sessionStorage で状態管理
+  // ------------------------------------------------------------------
+  const STATE_KEY = "mm-bulk-state";
+  const QUEUE_KEY = "mm-bulk-queue";
+  const RESULT_KEY = "mm-bulk-results";
+  const READY_TIMEOUT_MS = 12000;
+
+  function getBulkState() {
+    return sessionStorage.getItem(STATE_KEY) || "idle"; // idle | running | done
+  }
+  function setBulkState(s) {
+    sessionStorage.setItem(STATE_KEY, s);
+  }
+  function getQueue() {
+    try {
+      return JSON.parse(sessionStorage.getItem(QUEUE_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  }
+  function setQueue(q) {
+    sessionStorage.setItem(QUEUE_KEY, JSON.stringify(q));
+  }
+  function getResults() {
+    try {
+      return JSON.parse(sessionStorage.getItem(RESULT_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  }
+  function setResults(r) {
+    sessionStorage.setItem(RESULT_KEY, JSON.stringify(r));
+  }
+  function resetBulk() {
+    sessionStorage.removeItem(STATE_KEY);
+    sessionStorage.removeItem(QUEUE_KEY);
+    sessionStorage.removeItem(RESULT_KEY);
+  }
+
+  /** Performance ページの DOM 描画完了を待つ */
+  async function waitForPerformanceReady() {
+    const start = Date.now();
+    while (Date.now() - start < READY_TIMEOUT_MS) {
+      if (
+        document.querySelector("table.type1.table01 tbody td") &&
+        document.querySelector("div.statsBlock.statsBlock01 p.percent")
+      ) {
+        // さらに少し待ってデータ反映を確実に
+        await new Promise((r) => setTimeout(r, 400));
+        return true;
+      }
+      await new Promise((r) => setTimeout(r, 250));
+    }
+    return false;
+  }
+
+  async function bulkProcessOne(logFn) {
+    const queue = getQueue();
+    if (queue.length === 0) {
+      setBulkState("done");
+      logFn("一括取り込み完了", "ok");
+      // トレンド画面に戻る
+      if (location.hash !== "#/trend") location.hash = "#/trend";
+      return;
+    }
+    const id = queue[0];
+    if (!isPerformancePage() || getMailIdFromHash() !== id) {
+      // 該当 ID のページに移動
+      location.hash = `#/performance/${id}`;
+      // hashchange 後に再走するため、ここでは return
+      return;
+    }
+    logFn(`(${getResults().length + 1}/${getResults().length + queue.length}) ID ${id} 解析中...`);
+    const ready = await waitForPerformanceReady();
+    if (!ready) {
+      const results = getResults();
+      results.push({ id, ok: false, error: "DOM not ready" });
+      setResults(results);
+      setQueue(queue.slice(1));
+      // 次へ
+      bulkProcessOne(logFn);
+      return;
+    }
+    try {
+      const payload = await buildPayload();
+      const res = await send(payload, false);
+      const results = getResults();
+      results.push({ id, ok: true, matched: res.matched });
+      setResults(results);
+    } catch (err) {
+      const results = getResults();
+      results.push({ id, ok: false, error: String(err?.error || err?.detail || JSON.stringify(err)) });
+      setResults(results);
+    }
+    setQueue(queue.slice(1));
+    // SPA を傷めない短い待機を挟んで次へ
+    await new Promise((r) => setTimeout(r, 300));
+    bulkProcessOne(logFn);
+  }
+
+  function startBulk(ids, logFn) {
+    if (!ids.length) {
+      logFn("メルマガIDが見つかりませんでした", "err");
+      return;
+    }
+    setQueue(ids);
+    setResults([]);
+    setBulkState("running");
+    logFn(`一括取り込み開始 (${ids.length}件)`);
+    bulkProcessOne(logFn);
+  }
+
+  // ------------------------------------------------------------------
   // UI
   // ------------------------------------------------------------------
   GM_addStyle(`
     #mm-import-panel {
       position: fixed; right: 16px; bottom: 16px; z-index: 999999;
       font-family: -apple-system, "Hiragino Sans", sans-serif;
-      width: 340px; background: #fff; border: 1px solid #ccc;
+      width: 360px; background: #fff; border: 1px solid #ccc;
       border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.15);
       font-size: 12px;
     }
@@ -503,7 +663,7 @@
     #mm-import-panel input { width: 100%; padding: 4px 6px; font-size: 11px; box-sizing: border-box; margin-top: 2px; }
     #mm-import-panel pre { background: #f4f1ec; padding: 6px; border-radius: 4px; max-height: 220px; overflow: auto; font-size: 10px; }
     #mm-import-panel .row { margin-bottom: 6px; }
-    #mm-import-panel .log { color: #555; word-break: break-all; }
+    #mm-import-panel .log { color: #555; word-break: break-all; max-height: 200px; overflow: auto; }
     #mm-import-panel .ok { color: #2e7d32; }
     #mm-import-panel .err { color: #c62828; }
     #mm-import-panel .pageStatus { font-size: 10px; color: #999; }
@@ -511,7 +671,7 @@
 
   function mountUI() {
     if (document.getElementById("mm-import-panel")) {
-      updatePageStatus();
+      updatePanel();
       return;
     }
     const root = document.createElement("div");
@@ -523,11 +683,7 @@
       </header>
       <div class="body">
         <div class="row pageStatus" data-page-status></div>
-        <div class="row">
-          <button class="primary" data-act="dry">プレビュー</button>
-          <button data-act="send">取り込み実行</button>
-          <button data-act="settings">⚙</button>
-        </div>
+        <div class="row" data-actions></div>
         <div class="log" data-log></div>
         <div class="settings" style="display:none">
           <div class="row">
@@ -547,7 +703,6 @@
       </div>
     `;
     document.body.appendChild(root);
-    updatePageStatus();
 
     const log = (html, cls = "") => {
       root.querySelector("[data-log]").innerHTML =
@@ -572,6 +727,12 @@
         GM_setValue("token", tk);
         GM_setValue("brandId", br || "noahl");
         log("設定を保存しました", "ok");
+      }
+      if (act === "open-rmail") {
+        location.href = "https://rmail.rms.rakuten.co.jp/#/trend";
+      }
+      if (act === "go-trend") {
+        location.hash = "#/trend";
       }
       if (act === "dry" || act === "send") {
         if (!isPerformancePage()) {
@@ -601,22 +762,103 @@
           log(`失敗: ${escapeHtml(JSON.stringify(err))}`, "err");
         }
       }
+      if (act === "bulk-start") {
+        const ids = extractMailIdsFromTrend();
+        if (ids.length === 0) {
+          log("一覧からメルマガIDが取れませんでした。一覧を表示してから押してください", "err");
+          return;
+        }
+        if (!confirm(`${ids.length} 件のメルマガを順番に取り込みます。よろしいですか？`)) return;
+        startBulk(ids, log);
+      }
+      if (act === "bulk-stop") {
+        resetBulk();
+        log("一括取り込みを中止しました", "ok");
+        updatePanel();
+      }
+      if (act === "bulk-summary") {
+        const r = getResults();
+        const ok = r.filter((x) => x.ok).length;
+        const ng = r.length - ok;
+        log(
+          `完了: 成功 ${ok} / 失敗 ${ng}<br><pre>${escapeHtml(JSON.stringify(r, null, 2))}</pre>`,
+          ng ? "err" : "ok",
+        );
+      }
+      if (act === "bulk-clear") {
+        resetBulk();
+        updatePanel();
+        log("結果をクリアしました", "ok");
+      }
       if (act === "toggle") {
         const body = root.querySelector(".body");
         body.style.display = body.style.display === "none" ? "block" : "none";
       }
     });
+
+    updatePanel();
+
+    // 一括取り込み中なら自動継続
+    if (getBulkState() === "running") {
+      setTimeout(() => bulkProcessOne(log), 500);
+    } else if (getBulkState() === "done") {
+      const r = getResults();
+      const ok = r.filter((x) => x.ok).length;
+      log(`一括取り込み完了: 成功 ${ok} / 失敗 ${r.length - ok}`, "ok");
+    }
   }
 
-  function updatePageStatus() {
+  function updatePanel() {
     const root = document.getElementById("mm-import-panel");
     if (!root) return;
-    const el = root.querySelector("[data-page-status]");
-    if (!el) return;
-    const id = getMailIdFromHash();
-    el.textContent = id
-      ? `現在のメルマガID: ${id}`
-      : "分析画面に移動してください (#/performance/{ID})";
+    const status = root.querySelector("[data-page-status]");
+    const actions = root.querySelector("[data-actions]");
+    if (!status || !actions) return;
+
+    const ctx = pageContext();
+    const bulkState = getBulkState();
+    const queueLen = getQueue().length;
+    const resultLen = getResults().length;
+
+    // ステータス文
+    let statusText = "";
+    if (bulkState === "running") {
+      statusText = `一括取り込み中: 残り ${queueLen} 件 / 完了 ${resultLen} 件`;
+    } else if (ctx === "performance") {
+      statusText = `現在のメルマガID: ${getMailIdFromHash()}`;
+    } else if (ctx === "trend") {
+      statusText = `R-Mail 一覧画面`;
+    } else if (ctx === "rmail-other") {
+      statusText = `R-Mail (${location.hash || "/"})`;
+    } else {
+      statusText = `RMS: ${location.host}`;
+    }
+    status.textContent = statusText;
+
+    // ボタン構成
+    const btns = [];
+    if (bulkState === "running") {
+      btns.push(`<button data-act="bulk-stop">一括取り込みを中止</button>`);
+    } else {
+      if (ctx === "performance") {
+        btns.push(`<button class="primary" data-act="dry">プレビュー</button>`);
+        btns.push(`<button data-act="send">取り込み実行</button>`);
+        btns.push(`<button data-act="go-trend">一覧へ</button>`);
+      } else if (ctx === "trend") {
+        btns.push(`<button class="primary" data-act="bulk-start">全件取り込み</button>`);
+      } else if (ctx === "rmail-other") {
+        btns.push(`<button class="primary" data-act="go-trend">一覧を開く</button>`);
+      } else {
+        // RMS top
+        btns.push(`<button class="primary" data-act="open-rmail">R-Mail を開く</button>`);
+      }
+      if (bulkState === "done" && resultLen > 0) {
+        btns.push(`<button data-act="bulk-summary">結果サマリー</button>`);
+        btns.push(`<button data-act="bulk-clear">結果クリア</button>`);
+      }
+    }
+    btns.push(`<button data-act="settings">⚙</button>`);
+    actions.innerHTML = btns.join("");
   }
 
   function escapeAttr(s) {
@@ -634,7 +876,19 @@
   // ------------------------------------------------------------------
   mountUI();
   setTimeout(mountUI, 1500);
-  window.addEventListener("hashchange", updatePageStatus);
+  window.addEventListener("hashchange", () => {
+    updatePanel();
+    // 一括取り込み中で performance ページに来たら処理を継続
+    if (getBulkState() === "running" && isPerformancePage()) {
+      const root = document.getElementById("mm-import-panel");
+      const log = (html, cls = "") => {
+        if (!root) return;
+        root.querySelector("[data-log]").innerHTML =
+          `<span class="${cls}">${html}</span>`;
+      };
+      setTimeout(() => bulkProcessOne(log), 600);
+    }
+  });
   // body の差し替えに追従
   const mo = new MutationObserver(() => mountUI());
   mo.observe(document.body, { childList: true });

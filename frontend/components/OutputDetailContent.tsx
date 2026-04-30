@@ -8,7 +8,6 @@ import { applyBrandToHtml } from "@/lib/brand";
 import { useOptimisticOutput } from "@/lib/optimistic";
 import HtmlPreview from "./HtmlPreview";
 import CopyButton from "./CopyButton";
-import ResultsForm from "./ResultsForm";
 import EventBadge from "./EventBadge";
 import OutputEditor from "./OutputEditor";
 import RakutenResultsPanel from "./RakutenResultsPanel";
@@ -175,12 +174,14 @@ export default function OutputDetailContent({
 
       <section>
         <h2 className="text-lg font-semibold mb-2">配信実績</h2>
-        {output.results?.rakuten && (
-          <div className="mb-4">
-            <RakutenResultsPanel metrics={output.results.rakuten} />
+        {output.results?.rakuten ? (
+          <RakutenResultsPanel metrics={output.results.rakuten} />
+        ) : (
+          <div className="border border-dashed border-stone-300 rounded bg-stone-50 px-5 py-8 text-center text-sm text-stone-500">
+            まだ R-Mail から実績が取り込まれていません。<br />
+            配信完了後、Tampermonkey スクリプトで取り込むとここに表示されます。
           </div>
         )}
-        <ResultsForm outputId={output.id} initial={output.results ?? {}} />
       </section>
 
       <section>
