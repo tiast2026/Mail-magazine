@@ -299,16 +299,15 @@ function CouponsSection({
           { cache: "no-store" },
         );
         if (!r.ok) return;
-        const data = (await r.json()) as {
-          coupons?: Array<{
-            couponCode?: string;
-            name?: string;
-            startTime?: string | null;
-            endTime?: string | null;
-            discountRate?: number | null;
-          }>;
+        type RmsCoupon = {
+          couponCode?: string;
+          name?: string;
+          startTime?: string | null;
+          endTime?: string | null;
+          discountRate?: number | null;
         };
-        const byCode = new Map<string, (typeof data.coupons)[number]>();
+        const data = (await r.json()) as { coupons?: RmsCoupon[] };
+        const byCode = new Map<string, RmsCoupon>();
         for (const c of data.coupons ?? []) {
           if (c.couponCode) byCode.set(c.couponCode, c);
         }
