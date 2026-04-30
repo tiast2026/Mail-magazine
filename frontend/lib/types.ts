@@ -53,6 +53,8 @@ export type Template = {
   bestFor?: string[];
   notRecommendedFor?: string[];
   exampleScenario?: string;
+  /** 完成版プレビュー用のサンプルデータ */
+  sampleVariables?: Record<string, string>;
 };
 
 export type Product = {

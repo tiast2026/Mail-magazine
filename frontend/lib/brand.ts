@@ -28,3 +28,19 @@ export function applyBrandToHtml(html: string, brand: BrandConfig): string {
   }
   return out;
 }
+
+/**
+ * テンプレ HTML 内の {{KEY}} を sampleVariables の値で置換する。
+ * 完成版プレビュー表示用。
+ */
+export function applyVariablesToHtml(
+  html: string,
+  variables: Record<string, string>,
+): string {
+  let out = html;
+  for (const [k, v] of Object.entries(variables)) {
+    out = out.split(`{{${k}}}`).join(v);
+  }
+  return out;
+}
+
