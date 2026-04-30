@@ -190,13 +190,19 @@ export default function SettingsForm({
 
   async function saveButtons() {
     setSaveButtonState({ state: "saving" });
+    // 既知の type のみ送る（API バリデーションは未知キーを拒否する）
+    const cleanButtons: BrandButtons = {
+      coupon: buttons.coupon,
+      product: buttons.product,
+      secondary: buttons.secondary,
+    };
     try {
       const res = await fetch(
         `/api/brands/${encodeURIComponent(brandId)}/config`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ buttons }),
+          body: JSON.stringify({ buttons: cleanButtons }),
         },
       );
       const data = await res.json();
@@ -215,17 +221,18 @@ export default function SettingsForm({
 
   const colorsDirty = useMemo(() => {
     if (!initialConfig) return false;
-    return (Object.keys(colors) as Array<keyof BrandColors>).some(
-      (k) => colors[k] !== initialConfig.colors[k],
+    return COLOR_FIELDS.some(
+      (f) => colors[f.key] !== initialConfig.colors[f.key],
     );
   }, [colors, initialConfig]);
 
   const buttonsDirty = useMemo(() => {
     const initial =
       initialConfig?.buttons ?? defaultButtons(initialConfig.colors);
-    return (Object.keys(buttons) as Array<keyof BrandButtons>).some((k) => {
-      const a = buttons[k];
-      const b = initial[k];
+    return BUTTON_TYPES.some((bt) => {
+      const a = buttons[bt.key];
+      const b = initial[bt.key];
+      if (!a || !b) return !!a !== !!b;
       return (
         a.bg !== b.bg ||
         a.fg !== b.fg ||
@@ -730,14 +737,15 @@ function SaveStatus({ state }: { state: SaveState }) {
 }
 
 function allHex(c: BrandColors): boolean {
-  return (Object.values(c) as string[]).every((v) => HEX_RE.test(v));
+  return COLOR_FIELDS.every((f) => HEX_RE.test(c[f.key] ?? ""));
 }
 
 function allButtonsHex(b: BrandButtons): boolean {
-  return (Object.values(b) as ButtonStyle[]).every(
-    (s) =>
-      HEX_RE.test(s.bg) &&
-      HEX_RE.test(s.fg) &&
-      (s.border == null || HEX_RE.test(s.border)),
-  );
+  return BUTTON_TYPES.every((bt) => {
+    const s = b[bt.key];
+    if (!s || typeof s !== "object") return false;
+    if (!HEX_RE.test(s.bg) || !HEX_RE.test(s.fg)) return false;
+    if (s.border != null && !HEX_RE.test(s.border)) return false;
+    return true;
+  });
 }
