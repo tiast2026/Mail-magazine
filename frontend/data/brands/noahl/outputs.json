@@ -304,5 +304,37 @@
         "url": "https://coupon.rakuten.co.jp/getCoupon?getkey=OThROC05WEZELUhPWUktWDBCRw--&rt="
       }
     ]
+  },
+  {
+    "id": "rmail-26431856",
+    "title": "【ALL50%OFF】初夏の新作4点に、人気シャツも。＊「今だけ2,990円」で待望の再入荷！",
+    "templateId": "external",
+    "createdAt": "2026-04-30T13:40:24.830Z",
+    "sentAt": "2026-04-29T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 13164,
+      "openRate": 28.1,
+      "openCount": 3693,
+      "clickCount": 488,
+      "salesCount": 5,
+      "salesAmount": 14950,
+      "rakuten": {
+        "mailId": "26431856",
+        "subject": "【ALL50%OFF】初夏の新作4点に、人気シャツも。＊「今だけ2,990円」で待望の再入荷！",
+        "conversionVisitRate": 2.3,
+        "conversionVisitCount": 298,
+        "transactionCount": 5,
+        "transactionRate": 1.7,
+        "revenuePerSent": 1.1,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-04-30T13:40:24.830Z"
+      }
+    }
   }
 ]
