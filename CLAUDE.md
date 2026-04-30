@@ -308,6 +308,54 @@ NOAHL（ナチュラル・カジュアル女性服）に合うもの：
 
 ## 重要な制約
 
+### 楽天 R-Mail で使える HTML だけ使う（厳守）
+
+メルマガ HTML は楽天 RMS のメルマガ管理画面に貼り付けて配信します。**楽天環境でレンダリングできない記法は絶対に使わない**：
+
+#### ✅ 使ってよいもの
+- `<table>` ベースのレイアウト（`width` `cellpadding` `cellspacing` `align` `bgcolor` 属性 OK）
+- `<font color size>`（テキストの色とサイズ）
+- `<b>` `<strike>` `<br>` `<a target href>`
+- `<img width src alt border>`
+- インライン `style=""` の **基本プロパティのみ**（`padding` `line-height` `letter-spacing` `border-top` `text-decoration: none`）
+- `<!-- コメント -->`
+
+#### ❌ 使ってはいけないもの
+- `<style>` ブロック・外部 CSS
+- `<script>` ・`<iframe>` ・`<form>` ・`<video>`
+- `class=""` （楽天側で剥がされる前提で書かない）
+- CSS Grid / Flexbox / `display: flex` / `display: grid`
+- `position: absolute` / `position: fixed`
+- `border-radius` を多用しない（一部メールクライアントで無視される。装飾用途なら可、ボタン形状などは正方形寄りで設計）
+- `background-image` （表示されない端末が多い）
+- `@media` クエリ
+- Web フォント `@font-face`
+- SVG 直書き
+
+#### 判断に迷ったとき
+- 既存テンプレ（`brands/<brandId>/templates.json` の A/B/C/D）は楽天で配信実績のある書き方ベース。新規生成時もこのパターンを踏襲する
+- 「装飾を凝りたい」場合は CSS ではなく **画像（楽天 cabinet）で表現**する
+
+### 価格訴求時は割引率（%OFF）を必ず入れる
+
+クーポン適用や割引を提案する際は、商品ブロックに **`◯◯%OFF` を必ず明示**する。Web ダッシュボードの「使用商品」セクションは `regularPrice` / `salePrice` から自動計算してバッジ表示されるが、配信用 HTML 側では Claude が生成時に直接書く：
+
+```html
+<font color="{{COLOR_MUTED}}" size="1"><strike>5,900円</strike></font>
+<font color="{{COLOR_ACCENT}}" size="2"><b> → 2,950円</b></font>
+<font color="{{COLOR_ACCENT}}" size="1"><b>（50%OFF）</b></font>
+```
+
+色付きバッジ風にしたい場合は、`bgcolor` 付きの 1セル `<table>` を使う（`<span>` の `background-color` は楽天で効かない端末あり）：
+
+```html
+<table cellpadding="0" cellspacing="0" align="center" style="display:inline-block;"><tr>
+  <td bgcolor="{{COLOR_ACCENT}}" style="padding:3px 8px;"><font color="#ffffff" size="1"><b>50%OFF</b></font></td>
+</tr></table>
+```
+
+割引率の計算は元値・割引後価格から「(元値 − 割引後) / 元値 × 100」を四捨五入。
+
 ### 画像の出所（厳守）
 
 **メルマガに使う画像は必ず楽天 RMS から取得したものを使う。ネット上の画像、プレースホルダー（placehold.jp 等）、フリー素材を勝手に使わない。**
