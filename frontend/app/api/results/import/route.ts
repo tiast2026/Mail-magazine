@@ -112,6 +112,35 @@ function mergeResults(
   return next;
 }
 
+/** R-Mail 直配信メルマガ用のスタブエントリを生成 */
+function createStubFromImport(body: ImportPayload): MailOutput {
+  const now = new Date().toISOString();
+  const id =
+    body.outputId ||
+    (body.rakutenMailId ? `rmail-${body.rakutenMailId}` : `rmail-${Date.now()}`);
+  const sentAt = body.sentDate
+    ? `${body.sentDate}T20:00:00+09:00`
+    : undefined;
+  return {
+    id,
+    title: body.subject || "(R-Mail 直配信・件名不明)",
+    templateId: "external",
+    createdAt: now,
+    sentAt,
+    products: [],
+    variables: {},
+    html: "",
+    tags: ["R-Mail直配信"],
+    results: {
+      ...(body.results ?? {}),
+      rakuten: {
+        ...(body.rakuten ?? {}),
+        importedAt: now,
+      },
+    },
+  };
+}
+
 export async function OPTIONS(req: NextRequest) {
   return new Response(null, {
     status: 204,
@@ -148,7 +177,16 @@ export async function POST(req: NextRequest) {
     const mutator = (outputs: MailOutput[]): MailOutput[] => {
       const m = findMatch(outputs, body);
       if (!m) {
-        throw Object.assign(new Error("no-match"), { code: "no-match" });
+        // マッチしない場合: R-Mail 直配信のメルマガとして新規スタブを作成
+        if (!body.rakutenMailId && !body.subject) {
+          throw Object.assign(new Error("no-match"), { code: "no-match" });
+        }
+        const stub = createStubFromImport(body);
+        matched = { id: stub.id, reason: "created", title: stub.title };
+        mergedPreview = stub.results ?? null;
+        if (body.dryRun) return outputs;
+        outputs.push(stub);
+        return outputs;
       }
       const merged = mergeResults(outputs[m.index].results, body);
       matched = {
