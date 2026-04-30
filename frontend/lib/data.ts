@@ -36,6 +36,15 @@ export function getBrandConfig(brandId: string): BrandConfig | undefined {
   return brandData[brandId]?.config;
 }
 
+/** すべての登録ブランドの config を返す（settings 画面の編集 UI 用） */
+export function getAllBrandConfigs(): Record<string, BrandConfig> {
+  const out: Record<string, BrandConfig> = {};
+  for (const [id, data] of Object.entries(brandData)) {
+    out[id] = data.config;
+  }
+  return out;
+}
+
 export function getTemplates(brandId: string): Template[] {
   return brandData[brandId]?.templates ?? [];
 }
