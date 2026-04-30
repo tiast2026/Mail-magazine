@@ -11,6 +11,7 @@ import CopyButton from "./CopyButton";
 import ResultsForm from "./ResultsForm";
 import EventBadge from "./EventBadge";
 import OutputEditor from "./OutputEditor";
+import RakutenResultsPanel from "./RakutenResultsPanel";
 
 export default function OutputDetailContent({
   brandId,
@@ -174,6 +175,11 @@ export default function OutputDetailContent({
 
       <section>
         <h2 className="text-lg font-semibold mb-2">配信実績</h2>
+        {output.results?.rakuten && (
+          <div className="mb-4">
+            <RakutenResultsPanel metrics={output.results.rakuten} />
+          </div>
+        )}
         <ResultsForm outputId={output.id} initial={output.results ?? {}} />
       </section>
 
