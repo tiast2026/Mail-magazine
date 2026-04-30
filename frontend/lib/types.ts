@@ -161,6 +161,15 @@ export type CampaignEvent = {
   endDate?: string; // ISO 日付（イベント終了）
 };
 
+export type Coupon = {
+  label: string; // 表示名（例: "50%OFF クーポン"）
+  url: string; // 楽天クーポン取得URL
+  rate?: number; // 割引率（%）
+  startDate?: string; // ISO
+  endDate?: string; // ISO
+  note?: string; // 補足（例: "5/5 のみ" 等）
+};
+
 export type MailOutput = {
   id: string;
   title: string;
@@ -171,6 +180,7 @@ export type MailOutput = {
   event?: CampaignEvent;
   products: Product[];
   variables: Record<string, string>;
+  coupons?: Coupon[]; // 使用したクーポン
   html: string;
   results?: OutputResults;
   tags?: string[];

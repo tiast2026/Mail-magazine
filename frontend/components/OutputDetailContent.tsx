@@ -127,9 +127,11 @@ export default function OutputDetailContent({
         )}
       </section>
 
+      <CouponsSection output={output} />
+
       <section>
         <h2 className="text-lg font-semibold mb-2">使用商品</h2>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {output.products.map((p, i) => (
             <li
               key={i}
@@ -229,5 +231,67 @@ export default function OutputDetailContent({
         </pre>
       </section>
     </div>
+  );
+}
+
+/** vars.COUPON_URL_<SUFFIX> → 表示ラベル */
+function deriveLabelFromKey(key: string): string {
+  // COUPON_URL_50OFF → "50%OFF"
+  // COUPON_URL_2POINT_55OFF → "2点で55%OFF"
+  const suffix = key.replace(/^COUPON_URL_/, "");
+  return suffix
+    .replace(/_/g, " ")
+    .replace(/(\d+)POINT/i, "$1点で")
+    .replace(/(\d+)OFF/i, "$1%OFF")
+    .trim();
+}
+
+function CouponsSection({ output }: { output: MailOutput }) {
+  // 1. output.coupons があればそれを使う
+  // 2. なければ vars.COUPON_URL_* を抽出して自動生成（既存データ互換）
+  let coupons = output.coupons ?? [];
+  if (coupons.length === 0) {
+    const vars = (output.variables ?? {}) as Record<string, string>;
+    coupons = Object.entries(vars)
+      .filter(([k, v]) => /^COUPON_URL_/.test(k) && v)
+      .map(([k, v]) => ({ label: deriveLabelFromKey(k), url: v }));
+  }
+  if (coupons.length === 0) return null;
+  return (
+    <section>
+      <h2 className="text-lg font-semibold mb-2">使用クーポン</h2>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {coupons.map((c, i) => (
+          <li
+            key={i}
+            className="border border-stone-200 rounded bg-white p-3 text-sm"
+          >
+            <div className="font-medium text-stone-900">{c.label}</div>
+            {(c.startDate || c.endDate) && (
+              <div className="text-xs text-stone-500 mt-1">
+                {c.startDate
+                  ? new Date(c.startDate).toLocaleDateString("ja-JP")
+                  : ""}
+                {c.endDate
+                  ? ` 〜 ${new Date(c.endDate).toLocaleDateString("ja-JP")}`
+                  : ""}
+              </div>
+            )}
+            {c.note && (
+              <div className="text-xs text-stone-600 mt-1">{c.note}</div>
+            )}
+            <a
+              href={c.url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs mt-2 inline-block break-all"
+              style={{ color: "var(--brand-accent)" }}
+            >
+              クーポンURL →
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
