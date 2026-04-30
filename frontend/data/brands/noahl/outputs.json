@@ -1,55 +1,49 @@
 [
   {
-    "id": "20260509-nlwp230-camisole-marathon",
-    "title": "再入荷｜1万枚突破のキャミワンピが、半額",
+    "id": "20260429-nlwp315-mothersday",
+    "title": "母の日に贈る、楊柳のワンピース｜クロシェ編みドッキング",
     "templateId": "A",
-    "createdAt": "2026-04-30T10:00:00+09:00",
+    "createdAt": "2026-04-29T15:00:00+09:00",
     "tags": [
-      "MIXツイルキャミワンピ",
-      "50%OFFクーポン",
-      "再入荷",
-      "1万枚突破",
-      "4色展開"
+      "母の日",
+      "ギフト",
+      "楊柳ワンピース"
     ],
     "products": [
       {
-        "manageNumber": "nlwp230-2501",
-        "name": "MIXツイル キャミソールワンピース",
-        "url": "https://item.rakuten.co.jp/noahl/nlwp230-2501/",
-        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-1r.jpg",
+        "manageNumber": "nlwp315-2505",
+        "name": "クロシェ編みドッキングワンピース",
+        "url": "https://item.rakuten.co.jp/noahl/nlwp315-2505/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-1r.jpg",
         "regularPrice": "8,980円",
-        "salePrice": "4,490円",
-        "color": "ベージュ / オートミール / ブラウン / ブラック"
+        "salePrice": "5,388円",
+        "color": "アイボリー / ブラック"
       }
     ],
     "variables": {
-      "LIMIT_LABEL": "期間限定クーポン",
-      "HEADLINE": "1万枚突破の名品が、再入荷。<br>マラソン期間中、50%OFF",
-      "DEADLINE": "お買い物マラソン期間中限定",
-      "PRODUCT1_URL": "https://item.rakuten.co.jp/noahl/nlwp230-2501/",
-      "PRODUCT1_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-1r.jpg",
-      "PRODUCT1_NAME": "MIXツイル キャミソールワンピース",
+      "LIMIT_LABEL": "母の日ギフト特集",
+      "HEADLINE": "母の日に贈る、<br>楊柳のワンピース",
+      "DEADLINE": "5/10（日）母の日まで、お届けまだ間に合います",
+      "PRODUCT1_URL": "https://item.rakuten.co.jp/noahl/nlwp315-2505/",
+      "PRODUCT1_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-1r.jpg",
+      "PRODUCT1_NAME": "クロシェ編みドッキングワンピース",
       "PRODUCT1_REGULAR_PRICE": "8,980円",
-      "PRODUCT1_SALE_PRICE": "4,490円",
-      "PRODUCT1_DISCOUNT": "50%OFFクーポン適用",
-      "CTA1_TEXT": "50%OFFクーポンで購入 →",
-      "COLOR1_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202508/nlwp230-be1.jpg",
-      "COLOR1_NAME": "ベージュ",
-      "COLOR2_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202506/nlwp230-om1.jpg",
-      "COLOR2_NAME": "オートミール",
-      "COLOR3_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-45.jpg",
-      "COLOR3_NAME": "ブラウン",
-      "COLOR4_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-70.jpg",
-      "COLOR4_NAME": "ブラック"
+      "PRODUCT1_SALE_PRICE": "5,388円",
+      "PRODUCT1_DISCOUNT": "40%OFFクーポン適用",
+      "CTA1_TEXT": "母の日に贈る →",
+      "COLOR1_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-iv1.jpg",
+      "COLOR1_NAME": "アイボリー",
+      "COLOR2_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-bk1.jpg",
+      "COLOR2_NAME": "ブラック"
     },
-    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートA -->\n<!-- 商品フォーカス型（1〜2商品） -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メインメッセージ（今日送る理由） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 28px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">＼ 期間限定クーポン ／</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>1万枚突破の名品が、再入荷。<br>マラソン期間中、50%OFF</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">お買い物マラソン期間中限定</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メイン商品画像（1枚のみ・最も映えるカット） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 0 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-1r.jpg\" width=\"90%\" border=\"0\" alt=\"MIXツイル キャミソールワンピース\">\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ リード文（1万枚突破ストーリー） -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px 15px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">これまでに1万人を超える方の<br>クローゼットへ届いた、夏のお守り。<br><br>軽やかなMIXツイル素材と、<br>すっきり美しいアシンメトリーライン。<br>1枚でも、レイヤードでも。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ カラー見本（4色） -->\n<table width=\"95%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- 4 colors -</font>\n    </td>\n  </tr>\n</table>\n\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202508/nlwp230-be1.jpg\" border=\"0\" alt=\"ベージュ\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">ベージュ</font>\n    </td>\n    <td width=\"2%\"></td>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202506/nlwp230-om1.jpg\" border=\"0\" alt=\"オートミール\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">オートミール</font>\n    </td>\n  </tr>\n</table>\n\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-45.jpg\" border=\"0\" alt=\"ブラウン\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">ブラウン</font>\n    </td>\n    <td width=\"2%\"></td>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-70.jpg\" border=\"0\" alt=\"ブラック\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">ブラック</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 価格表示 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 5px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\"><strike>8,980円</strike></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"5\"><b>4,490円</b></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\">（50%OFFクーポン適用）</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ CTAボタン -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"80%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 16px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"3\"><b>50%OFFクーポンで購入 →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ NOAHLの新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO}} ( ノアル )</font>\n    </td>\n  </tr>\n</table>",
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートA -->\n<!-- 商品フォーカス型（母の日ギフト訴求） -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メインメッセージ（今日送る理由） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 28px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">＼ 母の日ギフト特集 ／</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>母の日に贈る、<br>楊柳のワンピース</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">5/10（日）母の日まで、お届けまだ間に合います</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メイン商品画像（1枚のみ・最も映えるカット） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 0 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp315-2505/\">\n        <img src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-1r.jpg\" width=\"90%\" border=\"0\" alt=\"クロシェ編みドッキングワンピース\">\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ギフト訴求メッセージ -->\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px 15px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">いつもありがとう、を素直に伝えるのは少しだけ難しい。<br>そんな日に、ふんわり優しい一着を。<br><br>楊柳のしぼ感とクロシェ編みの繊細さが<br>大人の女性をやわらかく彩ります。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ カラー見本（最大2色） -->\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 10px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp315-2505/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-iv1.jpg\" border=\"0\" alt=\"アイボリー\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">アイボリー</font>\n    </td>\n    <td width=\"2%\"></td>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 10px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp315-2505/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202505/nlwp315-bk1.jpg\" border=\"0\" alt=\"ブラック\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">ブラック</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 価格表示 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0 5px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\"><strike>8,980円</strike></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"5\"><b>5,388円</b></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\">（40%OFFクーポン適用）</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ CTAボタン -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"80%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 16px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp315-2505/\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"3\"><b>母の日に贈る →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ご自身用にも、というさりげない一言 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 0 25px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">＊ ご自身用にも、ぜひ。＊</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ NOAHLの新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO}} ( ノアル )</font>\n    </td>\n  </tr>\n</table>",
     "event": {
-      "type": "marathon",
-      "name": "2026年5月お買い物マラソン",
-      "startDate": "2026-05-09T20:00:00+09:00",
-      "endDate": "2026-05-16T01:59:00+09:00"
+      "type": "custom",
+      "name": "母の日ギフト訴求 2026",
+      "startDate": "2026-04-30T00:00:00+09:00",
+      "endDate": "2026-05-10T23:59:59+09:00"
     },
-    "scheduledAt": "2026-05-09T20:00:00+09:00"
+    "scheduledAt": "2026-04-30T20:00:00+09:00"
   },
   {
     "id": "20260429-yoryu-story",
@@ -138,5 +132,182 @@
       "endDate": "2026-04-28T01:59:59+09:00"
     },
     "scheduledAt": "2026-04-28T19:00:00+09:00"
+  },
+  {
+    "id": "20260505-points-day-may-promo",
+    "title": "5/5ポイントDAY × 5/6-5/7 連動セール｜春の主役トップス10型",
+    "templateId": "B",
+    "createdAt": "2026-04-30T15:00:00+09:00",
+    "tags": [
+      "5と0のつく日",
+      "ポイントDAY",
+      "クーポン",
+      "セール",
+      "春トップス"
+    ],
+    "products": [
+      {
+        "manageNumber": "nlc077-2406",
+        "name": "接触冷感シアーボリュームシャツ",
+        "url": "https://item.rakuten.co.jp/noahl/nlc077-2406/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/202406/nlc077-1.jpg",
+        "regularPrice": "5,900円",
+        "salePrice": "2,950円",
+        "discount": "50%OFFクーポン（5/5限定）"
+      },
+      {
+        "manageNumber": "nltp031-2307",
+        "name": "シアーボリュームシャツ",
+        "url": "https://item.rakuten.co.jp/noahl/nltp031-2307/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/2402/nltp031-1.jpg",
+        "regularPrice": "5,390円",
+        "salePrice": "2,695円",
+        "discount": "50%OFFクーポン（5/5限定）"
+      },
+      {
+        "manageNumber": "nltp155-2406",
+        "name": "ショート丈シアーシャツ",
+        "url": "https://item.rakuten.co.jp/noahl/nltp155-2406/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/202405/nltp155-1.jpg",
+        "regularPrice": "6,980円",
+        "salePrice": "2,792円",
+        "discount": "60%OFFクーポン（5/5限定）"
+      },
+      {
+        "manageNumber": "njtp514-2603",
+        "name": "ピンストライプオーバーシャツ",
+        "url": "https://item.rakuten.co.jp/noahl/njtp514-2603/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202603/njtp514-1r.jpg",
+        "regularPrice": "7,980円",
+        "salePrice": "3,192円",
+        "discount": "60%OFFクーポン（5/5限定）"
+      },
+      {
+        "manageNumber": "nlbi016-18s14-220409",
+        "name": "ヴィンテージライク刺繍オーバーT",
+        "url": "https://item.rakuten.co.jp/noahl/nlbi016-18s14-220409/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2023/202306/nlbi016-1.jpg",
+        "regularPrice": "4,400円",
+        "salePrice": "1,980円",
+        "discount": "2点で55%OFFクーポン（5/6-5/7）"
+      },
+      {
+        "manageNumber": "nlda342068-65y06-210524",
+        "name": "クラッシュジャガードT",
+        "url": "https://item.rakuten.co.jp/noahl/nlda342068-65y06-210524/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2023/202306/nlda342068-1.jpg",
+        "regularPrice": "4,900円",
+        "salePrice": "2,205円",
+        "discount": "2点で55%OFFクーポン（5/6-5/7）"
+      },
+      {
+        "manageNumber": "nltp168-2505",
+        "name": "シアーレース半袖トップス",
+        "url": "https://item.rakuten.co.jp/noahl/nltp168-2505/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/2407/nltp168-1r.jpg",
+        "regularPrice": "4,900円",
+        "salePrice": "2,205円",
+        "discount": "2点で55%OFFクーポン（5/6-5/7）"
+      },
+      {
+        "manageNumber": "nltp527-2603",
+        "name": "薄手ポンチVネックパフスリーブトップス",
+        "url": "https://item.rakuten.co.jp/noahl/nltp527-2603/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202604/nltp527-1r.jpg",
+        "regularPrice": "6,980円",
+        "salePrice": "3,141円",
+        "discount": "2点で55%OFFクーポン（5/6-5/7）"
+      },
+      {
+        "manageNumber": "nltp526-2604",
+        "name": "シアーレースドッキングキャミソール",
+        "url": "https://item.rakuten.co.jp/noahl/nltp526-2604/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202604/nltp526-1r.jpg",
+        "regularPrice": "4,980円",
+        "salePrice": "2,241円",
+        "discount": "2点で55%OFFクーポン（5/6-5/7）"
+      },
+      {
+        "manageNumber": "nltp486-2602",
+        "name": "ソフトタッチラウンドカットタンクトップ",
+        "url": "https://item.rakuten.co.jp/noahl/nltp486-2602/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202602/nltp486-1r.jpg",
+        "regularPrice": "3,500円",
+        "salePrice": "1,575円",
+        "discount": "2点で55%OFFクーポン（5/6-5/7）"
+      }
+    ],
+    "variables": {
+      "EVENT_LABEL": "5と0のつく日",
+      "HEADLINE": "5/5 ポイントDAY 2日間限定クーポンセール",
+      "PERIOD_DAY1": "5/5（火） 0:00 〜 23:59",
+      "PERIOD_DAY2": "5/6（水） 〜 5/7（木）",
+      "DAY1_OFFER_A": "50%OFF クーポン（2型）",
+      "DAY1_OFFER_B": "60%OFF クーポン（2型）",
+      "DAY2_OFFER": "対象商品から2点で55%OFF クーポン（6型）",
+      "CTA_DAY1_A": "50%OFF クーポンを使う →",
+      "CTA_DAY1_B": "60%OFF クーポンを使う →",
+      "CTA_DAY2": "2点で55%OFFの商品を見る →"
+    },
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガ -->\n<!-- 5/5 ポイントDAY × 5/6-5/7 連動セール -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メインメッセージ -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 32px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\" style=\"letter-spacing: 2px;\">＼ 5と0のつく日 ／</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"5\"><b>5/5 ポイントDAY</b></font><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>2日間限定クーポンセール</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"line-height: 1.8;\">この春、まず一着。<br>軽やかなトップスを、いつもよりやさしい価格で。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ セクション1 見出し: 5/5限定 50%OFF -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 35px 15px 5px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 3px;\">- 5/5 ポイントDAY 限定 -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 15px 8px 15px;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"5\"><b>50%OFF クーポン</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 0 15px 20px 15px;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\">5/5（火） 0:00 〜 23:59 まで</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 50%OFF 商品 2点 -->\n<table width=\"92%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlc077-2406/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/202406/nlc077-1.jpg\" border=\"0\" alt=\"接触冷感シアーボリュームシャツ\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>接触冷感<br>シアーボリュームシャツ</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>5,900円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 2,950円</b></font>\n    </td>\n    <td width=\"4%\"></td>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nltp031-2307/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/2402/nltp031-1.jpg\" border=\"0\" alt=\"シアーボリュームシャツ\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>シアーボリュームシャツ<br>（定番）</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>5,390円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 2,695円</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 50%OFF CTA -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 10px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"78%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 14px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{URL_SALE}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>50%OFF クーポンを使う →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 区切り線 -->\n<table width=\"60%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td style=\"border-top: 1px solid {{COLOR_BORDER}}; padding: 25px 0 0 0;\"></td>\n  </tr>\n</table>\n\n<!-- ■ セクション2 見出し: 5/5限定 60%OFF -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px 5px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 3px;\">- 5/5 ポイントDAY 限定 -</font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 5px 15px 8px 15px;\">\n      <font color=\"{{COLOR_ACCENT}}\" size=\"5\"><b>60%OFF クーポン</b></font>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" style=\"padding: 0 15px 10px 15px;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\">特別カテゴリの2型に</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 60%OFF 商品 2点 -->\n<table width=\"92%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nltp155-2406/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/202405/nltp155-1.jpg\" border=\"0\" alt=\"ショート丈シアーシャツ\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>ショート丈<br>シアーシャツ</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>6,980円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 2,792円</b></font>\n    </td>\n    <td width=\"4%\"></td>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/njtp514-2603/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202603/njtp514-1r.jpg\" border=\"0\" alt=\"ストライプシャツ\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>ピンストライプ<br>オーバーシャツ</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>7,980円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 3,192円</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 60%OFF CTA -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 30px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"78%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 14px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{URL_SALE}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"2\"><b>60%OFF クーポンを使う →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ ブリッジパネル -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 30px 15px;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- and more -</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"3\"><b>5/6（水） 〜 5/7（木）</b></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"4\"><b>2点で 55%OFF クーポン</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"line-height: 1.8;\">対象商品の中から、お好きな2点を組み合わせて。<br>春の主役にも、デイリーのインナーにも。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 2点55%OFF 商品6点 -->\n<table width=\"92%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <!-- 1段目 -->\n  <tr>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 18px 0 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlbi016-18s14-220409/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2023/202306/nlbi016-1.jpg\" border=\"0\" alt=\"ヴィンテージライク刺繍オーバーT\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>ヴィンテージライク<br>刺繍オーバーT</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>4,400円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 1,980円</b></font>\n    </td>\n    <td width=\"4%\"></td>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 18px 0 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlda342068-65y06-210524/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2023/202306/nlda342068-1.jpg\" border=\"0\" alt=\"クラッシュジャガードT\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>クラッシュ<br>ジャガードT</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>4,900円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 2,205円</b></font>\n    </td>\n  </tr>\n  <!-- 2段目 -->\n  <tr>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 18px 0 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nltp168-2505/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2024/2407/nltp168-1r.jpg\" border=\"0\" alt=\"シアーレース半袖トップス\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>シアーレース<br>半袖トップス</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>4,900円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 2,205円</b></font>\n    </td>\n    <td width=\"4%\"></td>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 18px 0 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nltp527-2603/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202604/nltp527-1r.jpg\" border=\"0\" alt=\"薄手ポンチVネックパフスリーブトップス\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>薄手ポンチVネック<br>パフスリーブトップス</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>6,980円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 3,141円</b></font>\n    </td>\n  </tr>\n  <!-- 3段目 -->\n  <tr>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 18px 0 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nltp526-2604/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202604/nltp526-1r.jpg\" border=\"0\" alt=\"シアーレースドッキングキャミソール\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>シアーレース<br>ドッキングキャミ</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>4,980円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 2,241円</b></font>\n    </td>\n    <td width=\"4%\"></td>\n    <td width=\"48%\" align=\"center\" valign=\"top\" style=\"padding: 18px 0 8px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nltp486-2602/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2026/202602/nltp486-1r.jpg\" border=\"0\" alt=\"ソフトタッチラウンドカットタンクトップ\">\n      </a><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.6;\"><b>ソフトタッチ<br>ラウンドカットタンク</b></font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\"><strike>3,500円</strike></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\"><b> → 1,575円</b></font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 2点55%OFF CTA -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 28px 0 35px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"80%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_ACCENT}}\" style=\"padding: 16px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"{{URL_SALE}}\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"3\"><b>2点で55%OFFの商品を見る →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 注意書き -->\n<table width=\"85%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 0 15px 25px 15px;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"line-height: 1.7;\">※50%OFF・60%OFFクーポンは5/5（火）23:59まで。<br>※2点55%OFFクーポンは5/6（水）〜5/7（木）の対象商品が対象です。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ {{BRAND_LOGO}}の新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO_FULL}}</font>\n    </td>\n  </tr>\n</table>\n",
+    "event": {
+      "type": "custom",
+      "name": "5/5 ポイントDAY＋5/6-5/7 2点55%OFF",
+      "startDate": "2026-05-05T00:00:00+09:00",
+      "endDate": "2026-05-07T23:59:59+09:00"
+    },
+    "scheduledAt": "2026-05-04T20:00:00+09:00"
+  },
+  {
+    "id": "20260509-nlwp230-camisole-marathon",
+    "title": "再入荷｜1万枚突破のキャミワンピが、半額",
+    "templateId": "A",
+    "createdAt": "2026-04-30T10:00:00+09:00",
+    "tags": [
+      "MIXツイルキャミワンピ",
+      "50%OFFクーポン",
+      "再入荷",
+      "1万枚突破",
+      "4色展開"
+    ],
+    "products": [
+      {
+        "manageNumber": "nlwp230-2501",
+        "name": "MIXツイル キャミソールワンピース",
+        "url": "https://item.rakuten.co.jp/noahl/nlwp230-2501/",
+        "imageUrl": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-1r.jpg",
+        "regularPrice": "8,980円",
+        "salePrice": "4,490円",
+        "color": "ベージュ / オートミール / ブラウン / ブラック"
+      }
+    ],
+    "variables": {
+      "LIMIT_LABEL": "期間限定クーポン",
+      "HEADLINE": "1万枚突破の名品が、再入荷。<br>マラソン期間中、50%OFF",
+      "DEADLINE": "お買い物マラソン期間中限定",
+      "PRODUCT1_URL": "https://item.rakuten.co.jp/noahl/nlwp230-2501/",
+      "PRODUCT1_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-1r.jpg",
+      "PRODUCT1_NAME": "MIXツイル キャミソールワンピース",
+      "PRODUCT1_REGULAR_PRICE": "8,980円",
+      "PRODUCT1_SALE_PRICE": "4,490円",
+      "PRODUCT1_DISCOUNT": "50%OFFクーポン適用",
+      "CTA1_TEXT": "50%OFFクーポンで購入 →",
+      "COLOR1_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202508/nlwp230-be1.jpg",
+      "COLOR1_NAME": "ベージュ",
+      "COLOR2_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202506/nlwp230-om1.jpg",
+      "COLOR2_NAME": "オートミール",
+      "COLOR3_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-45.jpg",
+      "COLOR3_NAME": "ブラウン",
+      "COLOR4_IMAGE": "https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-70.jpg",
+      "COLOR4_NAME": "ブラック"
+    },
+    "html": "<!-- ============================== -->\n<!-- NOAHL メルマガテンプレートA -->\n<!-- 商品フォーカス型（1〜2商品） -->\n<!-- ============================== -->\n\n<!-- ■ ヘッダー -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 0 20px 0;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"3\" style=\"letter-spacing: 4px;\">{{BRAND_LOGO}}</font><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_TAGLINE}}</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メインメッセージ（今日送る理由） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 28px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\">＼ 期間限定クーポン ／</font><br><br>\n      <font color=\"{{COLOR_TEXT}}\" size=\"4\"><b>1万枚突破の名品が、再入荷。<br>マラソン期間中、50%OFF</b></font><br><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">お買い物マラソン期間中限定</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ メイン商品画像（1枚のみ・最も映えるカット） -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 0 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-1r.jpg\" width=\"90%\" border=\"0\" alt=\"MIXツイル キャミソールワンピース\">\n      </a>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ リード文（1万枚突破ストーリー） -->\n<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px 15px 15px;\">\n      <font color=\"{{COLOR_TEXT}}\" size=\"2\" style=\"line-height: 1.9;\">これまでに1万人を超える方の<br>クローゼットへ届いた、夏のお守り。<br><br>軽やかなMIXツイル素材と、<br>すっきり美しいアシンメトリーライン。<br>1枚でも、レイヤードでも。</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ カラー見本（4色） -->\n<table width=\"95%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n  <tr>\n    <td align=\"center\" style=\"padding: 15px 0 10px 0;\">\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\" style=\"letter-spacing: 2px;\">- 4 colors -</font>\n    </td>\n  </tr>\n</table>\n\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202508/nlwp230-be1.jpg\" border=\"0\" alt=\"ベージュ\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">ベージュ</font>\n    </td>\n    <td width=\"2%\"></td>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202506/nlwp230-om1.jpg\" border=\"0\" alt=\"オートミール\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">オートミール</font>\n    </td>\n  </tr>\n</table>\n\n<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n  <tr>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-45.jpg\" border=\"0\" alt=\"ブラウン\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">ブラウン</font>\n    </td>\n    <td width=\"2%\"></td>\n    <td width=\"49%\" align=\"center\" valign=\"top\" style=\"padding: 5px 0;\">\n      <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\">\n        <img width=\"100%\" src=\"https://image.rakuten.co.jp/noahl/cabinet/shohin/2025/202501/nlwp230-70.jpg\" border=\"0\" alt=\"ブラック\">\n      </a><br>\n      <font color=\"{{COLOR_SUBTEXT}}\" size=\"2\">ブラック</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ 価格表示 -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0 5px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"2\"><strike>8,980円</strike></font><br>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"5\"><b>4,490円</b></font>\n      <font color=\"{{COLOR_ACCENT}}\" size=\"2\">（50%OFFクーポン適用）</font>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ CTAボタン -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"80%\">\n        <tr>\n          <td align=\"center\" bgcolor=\"{{COLOR_PRIMARY}}\" style=\"padding: 16px 0; border-radius: 4px;\">\n            <a target=\"_blank\" href=\"https://item.rakuten.co.jp/noahl/nlwp230-2501/\" style=\"color: #ffffff; text-decoration: none; display: block;\">\n              <font color=\"#ffffff\" size=\"3\"><b>50%OFFクーポンで購入 →</b></font>\n            </a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>\n\n<!-- ■ フッター -->\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"{{COLOR_PANEL}}\">\n  <tr>\n    <td align=\"center\" style=\"padding: 25px 15px;\">\n      <font color=\"{{COLOR_PRIMARY}}\" size=\"2\"><b>▽ NOAHLの新作をチェック ▽</b></font><br><br>\n      <a target=\"_blank\" href=\"{{URL_NEW_ARRIVALS}}\">\n        <font color=\"{{COLOR_TEXT}}\" size=\"2\">新作一覧を見る →</font>\n      </a><br><br>\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\">──────────────</font><br><br>\n      <a target=\"_blank\" href=\"{{URL_REVIEW}}\">\n        <font color=\"{{COLOR_SUBTEXT}}\" size=\"1\">レビュー投稿でプレゼント♪ 詳しくはこちら →</font>\n      </a>\n    </td>\n  </tr>\n</table>\n\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n  <tr>\n    <td align=\"center\" style=\"padding: 20px 0;\">\n      <font color=\"{{COLOR_MUTED}}\" size=\"1\" style=\"letter-spacing: 2px;\">{{BRAND_LOGO}} ( ノアル )</font>\n    </td>\n  </tr>\n</table>",
+    "event": {
+      "type": "marathon",
+      "name": "2026年5月お買い物マラソン",
+      "startDate": "2026-05-09T20:00:00+09:00",
+      "endDate": "2026-05-16T01:59:00+09:00"
+    },
+    "scheduledAt": "2026-05-09T20:00:00+09:00"
   }
 ]
