@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.3.0
-// @description  楽天 RMS トップ / R-Mail 一覧 / 個別分析画面のどこからでもメルマガ実績を Mail-magazine へ取り込み（一括取り込み対応）
+// @version      0.3.1
+// @description  楽天 RMS トップ / R-Mail 一覧 / 個別分析画面のどこからでもメルマガ実績を Mail-magazine へ取り込み（一括取り込み対応・左上配置）
 // @author       Mail-magazine
 // @match        https://*.rms.rakuten.co.jp/*
 // @match        https://rms.rakuten.co.jp/*
@@ -642,7 +642,7 @@
   // ------------------------------------------------------------------
   GM_addStyle(`
     #mm-import-panel {
-      position: fixed; right: 16px; bottom: 16px; z-index: 999999;
+      position: fixed; left: 16px; top: 80px; z-index: 999999;
       font-family: -apple-system, "Hiragino Sans", sans-serif;
       width: 360px; background: #fff; border: 1px solid #ccc;
       border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.15);
