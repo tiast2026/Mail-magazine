@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import {
   getBrandConfig,
   getDefaultBrandId,
+  getOutputs,
   getTemplate,
   getTemplates,
 } from "@/lib/data";
@@ -25,11 +26,16 @@ export default async function TemplateDetailPage({
   const template = getTemplate(brandId, id);
   if (!template) notFound();
 
+  const outputsForTemplate = getOutputs(brandId).filter(
+    (o) => o.templateId === id,
+  );
+
   return (
     <TemplateDetailContent
       brandId={brandId}
       brand={brand}
       initialTemplate={template}
+      outputs={outputsForTemplate}
     />
   );
 }
