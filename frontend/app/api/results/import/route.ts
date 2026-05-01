@@ -23,6 +23,8 @@ type ImportPayload = {
   results?: Partial<OutputResults>;
   /** 楽天専用の詳細指標 */
   rakuten?: Partial<RakutenRMailMetrics>;
+  /** メルマガ HTML 本文（R-Mail コンテンツ分析画面のソース） */
+  html?: string;
   /** dry run（マッチ確認のみ、書き込まない） */
   dryRun?: boolean;
 };
@@ -129,7 +131,7 @@ function createStubFromImport(body: ImportPayload): MailOutput {
     sentAt,
     products: [],
     variables: {},
-    html: "",
+    html: body.html ?? "",
     tags: ["R-Mail直配信"],
     results: {
       ...(body.results ?? {}),
@@ -196,7 +198,14 @@ export async function POST(req: NextRequest) {
       };
       mergedPreview = merged;
       if (body.dryRun) return outputs;
-      outputs[m.index] = { ...outputs[m.index], results: merged };
+      // html が新規提供されたら上書き（既存が空の場合のみ）
+      const nextHtml =
+        body.html && !outputs[m.index].html ? body.html : outputs[m.index].html;
+      outputs[m.index] = {
+        ...outputs[m.index],
+        results: merged,
+        html: nextHtml,
+      };
       return outputs;
     };
 
