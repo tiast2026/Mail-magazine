@@ -21,6 +21,7 @@ function computeDiscountPercent(
 }
 import CopyButton from "./CopyButton";
 import EventBadge from "./EventBadge";
+import HtmlSourceEditor from "./HtmlSourceEditor";
 import OutputEditor from "./OutputEditor";
 import RakutenResultsPanel from "./RakutenResultsPanel";
 import ReflectionEditor from "./ReflectionEditor";
@@ -36,12 +37,19 @@ export default function OutputDetailContent({
 }) {
   const router = useRouter();
   const { data: output, isDeleted } = useOptimisticOutput(initialOutput);
+  // 編集中の HTML をローカル管理。プレビューはこちらをリアルタイム反映する。
+  const [editingHtml, setEditingHtml] = useState(output.html);
 
   useEffect(() => {
     if (isDeleted) {
       router.push("/outputs/");
     }
   }, [isDeleted, router]);
+
+  // 外部から output.html が更新された場合（保存後の最適化更新）も同期
+  useEffect(() => {
+    setEditingHtml(output.html);
+  }, [output.html]);
 
   if (isDeleted) {
     return (
@@ -51,7 +59,22 @@ export default function OutputDetailContent({
     );
   }
 
-  const htmlWithBrand = applyBrandToHtml(output.html, brand);
+  const htmlWithBrand = applyBrandToHtml(editingHtml, brand);
+
+  async function saveHtml(html: string): Promise<void> {
+    const res = await fetch(
+      `/api/brands/${encodeURIComponent(brandId)}/outputs/${encodeURIComponent(output.id)}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html }),
+      },
+    );
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error ?? `HTTP ${res.status}`);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -235,10 +258,15 @@ export default function OutputDetailContent({
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-2">HTML ソース</h2>
-        <pre className="bg-stone-900 text-stone-100 text-xs rounded p-4 overflow-auto max-h-96">
-          {htmlWithBrand}
-        </pre>
+        <h2 className="text-lg font-semibold mb-2">HTML ソース編集</h2>
+        <p className="text-xs text-stone-500 mb-2">
+          編集すると右のプレビューがリアルタイムで反映されます。⌘S（Ctrl+S）で保存できます。
+        </p>
+        <HtmlSourceEditor
+          initial={output.html}
+          onChange={setEditingHtml}
+          onSave={saveHtml}
+        />
       </section>
         </div>
 
