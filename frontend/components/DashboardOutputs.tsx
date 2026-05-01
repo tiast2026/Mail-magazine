@@ -90,26 +90,35 @@ export default function DashboardOutputs({
                       </div>
                     </div>
                     {o.results?.openRate != null && (
-                      <div className="text-xs text-right shrink-0 self-start space-y-0.5 text-stone-700">
+                      <div className="text-right shrink-0 self-start space-y-1 text-stone-700 min-w-[150px]">
                         {o.results.sentCount != null && (
-                          <div>
-                            <span className="text-stone-500">配信</span>{" "}
-                            {o.results.sentCount.toLocaleString()}通
+                          <div className="text-sm">
+                            <span className="text-xs text-stone-500">配信</span>{" "}
+                            <span className="font-medium">
+                              {o.results.sentCount.toLocaleString()}
+                            </span>
+                            <span className="text-xs text-stone-500">通</span>
                           </div>
                         )}
-                        <div>
-                          <span className="text-stone-500">開封</span>{" "}
-                          {o.results.openRate.toFixed(1)}%
+                        <div className="text-sm">
+                          <span className="text-xs text-stone-500">開封</span>{" "}
+                          <span className="font-medium">
+                            {o.results.openRate.toFixed(1)}
+                          </span>
+                          <span className="text-xs text-stone-500">%</span>
                         </div>
                         {o.results.rakuten?.transactionRate != null && (
-                          <div>
-                            <span className="text-stone-500">転換</span>{" "}
-                            {o.results.rakuten.transactionRate.toFixed(1)}%
+                          <div className="text-sm">
+                            <span className="text-xs text-stone-500">転換</span>{" "}
+                            <span className="font-medium">
+                              {o.results.rakuten.transactionRate.toFixed(1)}
+                            </span>
+                            <span className="text-xs text-stone-500">%</span>
                           </div>
                         )}
                         {o.results.salesAmount != null && (
                           <div
-                            className="font-semibold mt-0.5"
+                            className="text-lg font-bold mt-1"
                             style={{ color: "var(--brand-accent)" }}
                           >
                             ￥{o.results.salesAmount.toLocaleString()}

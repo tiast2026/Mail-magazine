@@ -63,28 +63,37 @@ export default function OutputsListClient({
               </div>
             )}
           </div>
-          <div className="shrink-0 text-right text-xs self-start">
+          <div className="shrink-0 text-right self-start min-w-[150px]">
             {o.results?.openRate != null ? (
-              <div className="space-y-0.5 text-stone-700">
+              <div className="space-y-1 text-stone-700">
                 {o.results.sentCount != null && (
-                  <div>
-                    <span className="text-stone-500">配信</span>{" "}
-                    {o.results.sentCount.toLocaleString()}通
+                  <div className="text-sm">
+                    <span className="text-xs text-stone-500">配信</span>{" "}
+                    <span className="font-medium">
+                      {o.results.sentCount.toLocaleString()}
+                    </span>
+                    <span className="text-xs text-stone-500">通</span>
                   </div>
                 )}
-                <div>
-                  <span className="text-stone-500">開封</span>{" "}
-                  {o.results.openRate.toFixed(1)}%
+                <div className="text-sm">
+                  <span className="text-xs text-stone-500">開封</span>{" "}
+                  <span className="font-medium">
+                    {o.results.openRate.toFixed(1)}
+                  </span>
+                  <span className="text-xs text-stone-500">%</span>
                 </div>
                 {o.results.rakuten?.transactionRate != null && (
-                  <div>
-                    <span className="text-stone-500">転換</span>{" "}
-                    {o.results.rakuten.transactionRate.toFixed(1)}%
+                  <div className="text-sm">
+                    <span className="text-xs text-stone-500">転換</span>{" "}
+                    <span className="font-medium">
+                      {o.results.rakuten.transactionRate.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-stone-500">%</span>
                   </div>
                 )}
                 {o.results.salesAmount != null && (
                   <div
-                    className="font-semibold mt-1"
+                    className="text-lg font-bold mt-1"
                     style={{ color: "var(--brand-accent)" }}
                   >
                     ￥{o.results.salesAmount.toLocaleString()}
@@ -92,7 +101,7 @@ export default function OutputsListClient({
                 )}
               </div>
             ) : (
-              <span className="text-stone-400">実績未入力</span>
+              <span className="text-xs text-stone-400">実績未入力</span>
             )}
           </div>
         </li>
