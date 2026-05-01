@@ -127,9 +127,9 @@ export default function ResultsClient({
 
           {/* TOP3 セクション */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <TopBox title="🏆 開封率 TOP3" items={top3OpenRate} unit="%" valueKey="openRate" />
-            <TopBox title="💰 売上 TOP3" items={top3Sales} unit="円" valueKey="revenue" prefix="¥" />
-            <TopBox title="🎯 転換率 TOP3" items={top3Conversion} unit="%" valueKey="txRate" />
+            <TopBox title="🏆 開封率 TOP3" items={top3OpenRate} unit="%" valueKey="openRate" allItems={filtered} />
+            <TopBox title="💰 売上 TOP3" items={top3Sales} unit="円" valueKey="revenue" prefix="¥" allItems={filtered} />
+            <TopBox title="🎯 転換率 TOP3" items={top3Conversion} unit="%" valueKey="txRate" allItems={filtered} />
           </section>
 
           {/* 月別集計（クリックでフィルター適用） */}
@@ -371,32 +371,111 @@ function FilterField({ label, children }: { label: string; children: React.React
 }
 
 function TopBox({
-  title, items, unit, valueKey, prefix,
+  title, items, unit, valueKey, prefix, allItems,
 }: {
   title: string;
   items: MailOutput[];
   unit: string;
   valueKey: SortKey;
   prefix?: string;
+  /** 平均値計算用の母集団。指定された場合「平均比」を表示 */
+  allItems?: MailOutput[];
 }) {
+  // 1位の値（バーの正規化用）
+  const topValue =
+    items.length > 0 ? Number(getSortValue(items[0], valueKey)) || 0 : 0;
+  // 平均値
+  const avgValue =
+    allItems && allItems.length > 0
+      ? allItems
+          .map((o) => Number(getSortValue(o, valueKey)) || 0)
+          .filter((v) => v > 0)
+          .reduce((sum, v, _, arr) => sum + v / arr.length, 0)
+      : 0;
+
+  const isPercent = valueKey === "openRate" || valueKey === "txRate";
+
   return (
     <div className="border border-stone-200 rounded bg-white p-4">
-      <h3 className="text-sm font-semibold mb-2">{title}</h3>
+      <h3 className="text-sm font-semibold mb-3">{title}</h3>
       {items.length === 0 ? (
         <div className="text-xs text-stone-400 py-2">データなし</div>
       ) : (
-        <ol className="space-y-1.5">
+        <ol className="space-y-3">
           {items.map((o, i) => {
-            const v = getSortValue(o, valueKey);
+            const v = Number(getSortValue(o, valueKey)) || 0;
+            const barRatio = topValue > 0 ? Math.max(0.05, v / topValue) : 0;
+            const diffFromAvg = avgValue > 0 ? v - avgValue : 0;
+            const dateStr = (
+              o.results?.rakuten?.sentStartAt ??
+              o.sentAt ??
+              o.scheduledAt ??
+              o.createdAt
+            ).slice(0, 10);
             return (
-              <li key={o.id} className="text-xs flex items-baseline gap-2">
-                <span className="text-stone-400 w-4">{i + 1}.</span>
-                <Link href={`/outputs/${o.id}/`} className="flex-1 truncate hover:underline">
-                  {o.title}
-                </Link>
-                <span className="font-semibold text-stone-800">
-                  {prefix}{typeof v === "number" ? (valueKey === "openRate" || valueKey === "txRate" ? v.toFixed(1) : fmt(v)) : "—"}{unit}
-                </span>
+              <li key={o.id}>
+                <div className="flex items-start gap-2">
+                  <span
+                    className={`shrink-0 w-7 text-center text-base ${
+                      i === 0
+                        ? "font-bold"
+                        : i === 1
+                          ? "font-semibold"
+                          : ""
+                    }`}
+                    title={`${i + 1}位`}
+                  >
+                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      href={`/outputs/${o.id}/`}
+                      className="text-xs leading-snug hover:underline block"
+                      title={o.title}
+                    >
+                      {o.title}
+                    </Link>
+                    <div className="text-[10px] text-stone-400 mt-0.5">
+                      {dateStr} ・ テンプレ {o.templateId}
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-base font-bold text-stone-900 leading-none">
+                      {prefix}
+                      {isPercent ? v.toFixed(1) : fmt(v)}
+                      <span className="text-xs text-stone-500 font-normal ml-0.5">
+                        {unit}
+                      </span>
+                    </div>
+                    {avgValue > 0 && Math.abs(diffFromAvg) > 0.01 && (
+                      <div
+                        className={`text-[10px] mt-0.5 ${diffFromAvg >= 0 ? "text-emerald-700" : "text-rose-700"}`}
+                        title="平均比"
+                      >
+                        {diffFromAvg >= 0 ? "+" : ""}
+                        {isPercent
+                          ? diffFromAvg.toFixed(1) + "pt"
+                          : prefix
+                            ? prefix + fmt(Math.round(diffFromAvg))
+                            : fmt(Math.round(diffFromAvg))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="ml-9 mt-1.5 h-1 bg-stone-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${barRatio * 100}%`,
+                      backgroundColor:
+                        i === 0
+                          ? "#f59e0b"
+                          : i === 1
+                            ? "#a3a3a3"
+                            : "#cd7f32",
+                    }}
+                  />
+                </div>
               </li>
             );
           })}
