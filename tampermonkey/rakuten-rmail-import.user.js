@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.14
-// @description  R-Mail #/trend 一括取り込み（HTML コンテンツ取得対応）
+// @version      0.7.15
+// @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
 // @match        https://rmail.rms.rakuten.co.jp/*
@@ -15,7 +15,7 @@
 (function () {
   "use strict";
 
-  const SCRIPT_VERSION = "0.7.14";
+  const SCRIPT_VERSION = "0.7.15";
   const DEFAULT_ENDPOINT = "https://mail-magazine.vercel.app/api/results/import";
   const IMPORTED_ENDPOINT = "https://mail-magazine.vercel.app/api/results/imported";
   const TREND_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
@@ -387,17 +387,28 @@
 
     setBtn("⏳ 取込済みリスト確認…");
     const importedSet = await fetchImportedIds();
-    const pending = rows.filter((r) => !importedSet.has(r.id));
-    const skipped = rows.length - pending.length;
+    const detailMode = getDetailMode();
 
-    if (pending.length === 0) {
+    let pending = rows.filter((r) => !importedSet.has(r.id));
+    let skipped = rows.length - pending.length;
+
+    if (detailMode && pending.length === 0 && rows.length > 0) {
+      // 詳細モード ON で全件取込済み: 再実行して詳細データを追加するか確認
+      const yes = confirm(
+        `全 ${rows.length} 件すべて取込済みですが、詳細モード ON です。\n` +
+        `既存データに HTML・デバイス別データを追加するため、全 ${rows.length} 件を再実行しますか？\n\n` +
+        `（時間がかかります: 約 ${Math.ceil(rows.length * 5 / 60)} 分）`
+      );
+      if (!yes) return;
+      pending = rows;
+      skipped = 0;
+    } else if (pending.length === 0) {
       alert(`全 ${rows.length} 件すべて取り込み済みです`);
       return;
+    } else {
+      const msg = `全 ${rows.length} 件中 ${skipped} 件は取込済み。\n未取込 ${pending.length} 件を取り込みます。\n\n詳細モード: ${detailMode ? "ON（HTML+デバイス別も取得・遅い）" : "OFF（基本データのみ・速い）"}\n\nよろしいですか？`;
+      if (!confirm(msg)) return;
     }
-
-    const detailMode = getDetailMode();
-    const msg = `全 ${rows.length} 件中 ${skipped} 件は取込済み。\n未取込 ${pending.length} 件を取り込みます。\n\n詳細モード: ${detailMode ? "ON（デバイス別データも取得・遅い）" : "OFF（基本データのみ・速い）"}\n\nよろしいですか？`;
-    if (!confirm(msg)) return;
 
     let ok = 0, ng = 0;
     const errors = [];

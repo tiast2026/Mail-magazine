@@ -198,9 +198,8 @@ export async function POST(req: NextRequest) {
       };
       mergedPreview = merged;
       if (body.dryRun) return outputs;
-      // html が新規提供されたら上書き（既存が空の場合のみ）
-      const nextHtml =
-        body.html && !outputs[m.index].html ? body.html : outputs[m.index].html;
+      // html が新規提供されたら上書き（再取込で詳細追加できるよう）
+      const nextHtml = body.html ? body.html : outputs[m.index].html;
       outputs[m.index] = {
         ...outputs[m.index],
         results: merged,
