@@ -89,11 +89,23 @@ export default function OutputDetailContent({
               </dd>
             </div>
           )}
-          {output.sentAt && (
+          {(output.results?.rakuten?.sentStartAt || output.sentAt) && (
             <div className="card p-3">
-              <dt className="text-stone-500">実配信</dt>
+              <dt className="text-stone-500">
+                実配信
+                {output.results?.rakuten?.sentStartAt && (
+                  <span
+                    className="text-[10px] text-emerald-700 ml-1"
+                    title="楽天 R-Mail から取得した実際の配信時刻"
+                  >
+                    RMS
+                  </span>
+                )}
+              </dt>
               <dd className="mt-1 font-medium">
-                {new Date(output.sentAt).toLocaleString("ja-JP", {
+                {new Date(
+                  output.results?.rakuten?.sentStartAt ?? output.sentAt!,
+                ).toLocaleString("ja-JP", {
                   month: "numeric",
                   day: "numeric",
                   hour: "2-digit",
@@ -123,6 +135,22 @@ export default function OutputDetailContent({
                 {tag}
               </span>
             ))}
+          </div>
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-2">配信実績</h2>
+        {output.results?.rakuten ? (
+          <RakutenResultsPanel
+            results={output.results}
+            brandId={brandId}
+            outputId={output.id}
+          />
+        ) : (
+          <div className="border border-dashed border-stone-300 rounded bg-stone-50 px-5 py-8 text-center text-sm text-stone-500">
+            まだ R-Mail から実績が取り込まれていません。<br />
+            配信完了後、Tampermonkey スクリプトで取り込むとここに表示されます。
           </div>
         )}
       </section>
@@ -200,18 +228,6 @@ export default function OutputDetailContent({
           <CopyButton text={htmlWithBrand} label="HTMLをコピー" />
         </div>
         <HtmlPreview html={htmlWithBrand} />
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold mb-2">配信実績</h2>
-        {output.results?.rakuten ? (
-          <RakutenResultsPanel metrics={output.results.rakuten} />
-        ) : (
-          <div className="border border-dashed border-stone-300 rounded bg-stone-50 px-5 py-8 text-center text-sm text-stone-500">
-            まだ R-Mail から実績が取り込まれていません。<br />
-            配信完了後、Tampermonkey スクリプトで取り込むとここに表示されます。
-          </div>
-        )}
       </section>
 
       <section>

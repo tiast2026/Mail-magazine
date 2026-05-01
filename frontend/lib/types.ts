@@ -157,6 +157,25 @@ export type RakutenRMailMetrics = {
   sourceUrl?: string;
 };
 
+export type AiAnalysis = {
+  /** ISO 8601 */
+  analyzedAt: string;
+  /** 使用モデル ID（例: "claude-sonnet-4-6"） */
+  model: string;
+  /** 1〜5 の総合スコア（5: 大成功 / 1: 大苦戦） */
+  score: number;
+  /** 1〜2行の総括。リスト先頭で表示 */
+  summary: string;
+  /** 良かった点（コピー・件名・タイミング・商品力など切り口別） */
+  strengths: string[];
+  /** 改善余地のある点（数値根拠付き） */
+  weaknesses: string[];
+  /** 次回への具体的アクション提案 */
+  nextActions: string[];
+  /** 比較に使った過去メルマガの id 一覧（再現性確保） */
+  comparedAgainst?: string[];
+};
+
 export type OutputResults = {
   sentCount?: number;
   openRate?: number;
@@ -170,6 +189,8 @@ export type OutputResults = {
   rating?: number;
   /** 楽天 R-Mail から自動取り込みしたメトリクス */
   rakuten?: RakutenRMailMetrics;
+  /** AI による配信実績の自動分析（配信から7日以上経過後に生成） */
+  aiAnalysis?: AiAnalysis;
 };
 
 export type CampaignEventType =
