@@ -9,6 +9,7 @@ import type {
   Template,
 } from "./types";
 import { extractRakutenProducts } from "./extract-rakuten-products";
+import { extractRakutenCoupons } from "./extract-rakuten-coupons";
 
 export { applyBrandToHtml } from "./brand";
 
@@ -59,7 +60,8 @@ export function getOutputs(brandId: string): MailOutput[] {
   return (brandData[brandId]?.outputs ?? [])
     .slice()
     .sort((a, b) => deliveryKey(b).localeCompare(deliveryKey(a)))
-    .map((o) => enrichWithExtractedProducts(o, shop));
+    .map((o) => enrichWithExtractedProducts(o, shop))
+    .map((o) => enrichWithExtractedCoupons(o));
 }
 
 /**
@@ -87,5 +89,24 @@ function enrichWithExtractedProducts(
   const extracted = extractRakutenProducts(output.html, shopUrl);
   if (extracted.length === 0) return output;
   return { ...output, products: extracted };
+}
+
+/**
+ * coupons[] が空のエントリ（R-Mail 直配信など）について、
+ * HTML 本文からクーポン URL を抽出して埋める。
+ * クーポン名は表示時に RMS API（CouponsSection 内）で解決される。
+ */
+function enrichWithExtractedCoupons(output: MailOutput): MailOutput {
+  if (output.coupons && output.coupons.length > 0) return output;
+  // 旧形式 vars.COUPON_URL_* も既存値とみなし、二重抽出は避ける
+  const vars = (output.variables ?? {}) as Record<string, string>;
+  const hasLegacyCoupon = Object.entries(vars).some(
+    ([k, v]) => /^COUPON_URL_/.test(k) && v,
+  );
+  if (hasLegacyCoupon) return output;
+  if (!output.html) return output;
+  const extracted = extractRakutenCoupons(output.html);
+  if (extracted.length === 0) return output;
+  return { ...output, coupons: extracted };
 }
 
