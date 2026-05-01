@@ -75,11 +75,14 @@ export function extractRakutenProducts(
     });
     if (!matchedImage) continue; // 画像なしは本文外言及とみなして除外
     const alt = imageAltMap.get(matchedImage);
+    const imgIdx = html.indexOf(matchedImage);
+    const prices = imgIdx >= 0 ? extractPricesNear(html, imgIdx) : {};
     products.push({
       manageNumber: mgmt,
       name: alt ?? mgmt,
       url: `https://item.rakuten.co.jp/${shopUrl}/${mgmt}/`,
       imageUrl: matchedImage,
+      ...prices,
     });
   }
 
@@ -98,4 +101,30 @@ function isLikelyCategoryPath(id: string): boolean {
   if (id.length <= 2) return true;
   if (/^(c|category|search|item|list)$/i.test(id)) return true;
   return false;
+}
+
+/**
+ * 画像位置からHTMLを後方に走査して、その商品の価格情報を抽出する。
+ * 楽天メルマガのよくあるパターン:
+ *   <strike>6,900円</strike> ... <b> 2,070円</b> ... （70%OFF）
+ *   <strike>5,900円</strike> ... → 2,950円
+ */
+function extractPricesNear(
+  html: string,
+  fromIdx: number,
+): { regularPrice?: string; salePrice?: string } {
+  // 画像直後の 800 文字を価格抽出ウィンドウとする（次商品ブロックの先頭まで含めない範囲）
+  const window = html.substring(fromIdx, fromIdx + 800);
+  // <strike>NNN,NNN円</strike> パターン
+  const strikeMatch = window.match(/<strike>\s*([\d,]+\s*円)\s*<\/strike>/);
+  if (!strikeMatch) return {};
+  const regularPrice = strikeMatch[1].replace(/\s+/g, "");
+  // strike 以降のセール価格: 任意の "[\d,]+円" を、strike 終了位置の後で最初に見つかったものを採用
+  const afterStrikeIdx = window.indexOf(strikeMatch[0]) + strikeMatch[0].length;
+  const after = window.substring(afterStrikeIdx);
+  // タグ・空白・記号を挟んで出てくる NNN円 を採用
+  const saleMatch = after.match(/(?:→|\b|\s|>)\s*([\d,]+\s*円)/);
+  if (!saleMatch) return { regularPrice };
+  const salePrice = saleMatch[1].replace(/\s+/g, "");
+  return { regularPrice, salePrice };
 }
