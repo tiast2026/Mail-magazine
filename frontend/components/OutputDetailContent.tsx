@@ -142,7 +142,11 @@ export default function OutputDetailContent({
       <section>
         <h2 className="text-lg font-semibold mb-2">配信実績</h2>
         {output.results?.rakuten ? (
-          <RakutenResultsPanel results={output.results} />
+          <RakutenResultsPanel
+            results={output.results}
+            brandId={brandId}
+            outputId={output.id}
+          />
         ) : (
           <div className="border border-dashed border-stone-300 rounded bg-stone-50 px-5 py-8 text-center text-sm text-stone-500">
             まだ R-Mail から実績が取り込まれていません。<br />

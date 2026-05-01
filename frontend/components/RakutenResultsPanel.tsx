@@ -1,6 +1,11 @@
 "use client";
 
-import type { OutputResults, RakutenRMailMetrics } from "@/lib/types";
+import { useState } from "react";
+import type {
+  AiAnalysis,
+  OutputResults,
+  RakutenRMailMetrics,
+} from "@/lib/types";
 
 const DEVICE_LABEL: Record<string, string> = {
   pc: "PC",
@@ -12,8 +17,12 @@ const DEVICE_LABEL: Record<string, string> = {
 
 export default function RakutenResultsPanel({
   results,
+  brandId,
+  outputId,
 }: {
   results: OutputResults;
+  brandId?: string;
+  outputId?: string;
 }) {
   const metrics: RakutenRMailMetrics = results.rakuten ?? {};
   const hasAny =
@@ -365,6 +374,13 @@ export default function RakutenResultsPanel({
         </section>
       )}
 
+      {/* AI 分析 */}
+      <AiAnalysisSection
+        analysis={results.aiAnalysis}
+        brandId={brandId}
+        outputId={outputId}
+      />
+
       {metrics.sourceUrl && (
         <div className="text-xs text-stone-500">
           <a
@@ -376,6 +392,182 @@ export default function RakutenResultsPanel({
             R-Mail 元ページを開く →
           </a>
         </div>
+      )}
+    </div>
+  );
+}
+
+function AiAnalysisSection({
+  analysis,
+  brandId,
+  outputId,
+}: {
+  analysis?: AiAnalysis;
+  brandId?: string;
+  outputId?: string;
+}) {
+  const [running, setRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const canTrigger = Boolean(brandId && outputId);
+
+  async function runAnalysis() {
+    if (!brandId || !outputId) return;
+    setRunning(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        `/api/analyze/${encodeURIComponent(brandId)}/${encodeURIComponent(outputId)}`,
+        { method: "POST" },
+      );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? `HTTP ${res.status}`);
+      }
+      // 反映のためリロード
+      if (typeof window !== "undefined") window.location.reload();
+    } catch (e) {
+      setError(String(e instanceof Error ? e.message : e));
+      setRunning(false);
+    }
+  }
+
+  if (!analysis) {
+    return (
+      <section className="border border-dashed border-stone-300 rounded p-4 bg-stone-50">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h3 className="text-sm font-semibold text-stone-700">
+              🤖 AI 分析
+            </h3>
+            <p className="text-xs text-stone-500 mt-1">
+              配信から 7日経過後、毎日 09:00 JST に自動生成されます。手動でも実行できます。
+            </p>
+          </div>
+          {canTrigger && (
+            <button
+              onClick={runAnalysis}
+              disabled={running}
+              className="text-xs px-3 py-1.5 rounded border border-stone-400 bg-white hover:bg-stone-100 disabled:opacity-50"
+            >
+              {running ? "分析中..." : "今すぐ分析"}
+            </button>
+          )}
+        </div>
+        {error && <div className="text-xs text-rose-700 mt-2">{error}</div>}
+      </section>
+    );
+  }
+
+  return (
+    <section className="border border-stone-200 rounded p-4 bg-amber-50/30">
+      <header className="flex items-start justify-between gap-3 flex-wrap mb-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <h3 className="text-sm font-semibold text-stone-800">🤖 AI 分析</h3>
+          <ScoreBadge score={analysis.score} />
+          <span className="text-[10px] text-stone-500">
+            {new Date(analysis.analyzedAt).toLocaleString("ja-JP")} ・{" "}
+            {analysis.model}
+          </span>
+        </div>
+        {canTrigger && (
+          <button
+            onClick={runAnalysis}
+            disabled={running}
+            className="text-[11px] text-stone-500 hover:text-stone-800 underline disabled:opacity-50"
+          >
+            {running ? "分析中..." : "再分析"}
+          </button>
+        )}
+      </header>
+
+      <p className="text-sm text-stone-800 leading-relaxed mb-3">
+        {analysis.summary}
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <BulletBox
+          title="✅ 良かった点"
+          tone="emerald"
+          items={analysis.strengths}
+        />
+        <BulletBox
+          title="⚠️ 改善余地"
+          tone="rose"
+          items={analysis.weaknesses}
+        />
+        <BulletBox
+          title="🎯 次回アクション"
+          tone="indigo"
+          items={analysis.nextActions}
+        />
+      </div>
+
+      {analysis.comparedAgainst && analysis.comparedAgainst.length > 0 && (
+        <div className="text-[10px] text-stone-400 mt-3">
+          比較対象: {analysis.comparedAgainst.length}件の過去配信
+        </div>
+      )}
+
+      {error && <div className="text-xs text-rose-700 mt-2">{error}</div>}
+    </section>
+  );
+}
+
+function ScoreBadge({ score }: { score: number }) {
+  const label =
+    score === 5
+      ? "大成功"
+      : score === 4
+        ? "好調"
+        : score === 3
+          ? "平均並"
+          : score === 2
+            ? "やや低調"
+            : "苦戦";
+  const color =
+    score >= 4
+      ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+      : score === 3
+        ? "bg-stone-100 text-stone-700 border-stone-200"
+        : "bg-rose-100 text-rose-700 border-rose-200";
+  return (
+    <span
+      className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${color}`}
+    >
+      {"★".repeat(score)} {label}
+    </span>
+  );
+}
+
+function BulletBox({
+  title,
+  tone,
+  items,
+}: {
+  title: string;
+  tone: "emerald" | "rose" | "indigo";
+  items: string[];
+}) {
+  const border = {
+    emerald: "border-emerald-200",
+    rose: "border-rose-200",
+    indigo: "border-indigo-200",
+  }[tone];
+  return (
+    <div className={`bg-white rounded border ${border} p-3`}>
+      <div className="text-xs font-semibold text-stone-700 mb-1.5">
+        {title}
+      </div>
+      {items.length === 0 ? (
+        <div className="text-stone-400">—</div>
+      ) : (
+        <ul className="space-y-1 text-stone-700">
+          {items.map((it, i) => (
+            <li key={i} className="leading-snug">
+              ・{it}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
