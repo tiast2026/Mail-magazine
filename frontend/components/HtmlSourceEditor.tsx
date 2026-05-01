@@ -155,7 +155,7 @@ export default function HtmlSourceEditor({
           <pre
             ref={preRef}
             aria-hidden
-            className="absolute inset-0 m-0 px-3 py-3 text-[12px] leading-[1.6] font-mono pointer-events-none whitespace-pre overflow-auto"
+            className="absolute inset-0 m-0 px-3 py-3 text-[12px] leading-[1.6] font-mono pointer-events-none whitespace-pre overflow-auto text-stone-200"
             style={{ tabSize: 2 }}
             dangerouslySetInnerHTML={{ __html: highlighted + "\n" }}
           />
