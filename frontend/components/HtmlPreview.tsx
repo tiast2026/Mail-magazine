@@ -2,7 +2,17 @@
 
 import { useEffect, useRef } from "react";
 
-export default function HtmlPreview({ html }: { html: string }) {
+export default function HtmlPreview({
+  html,
+  maxHeight,
+  fitToViewport,
+}: {
+  html: string;
+  /** 縦方向の最大高さ（px）。指定すると幅と高さの両方でフィットするよう縮小する */
+  maxHeight?: number;
+  /** true のとき window.innerHeight - 96px を maxHeight として使う */
+  fitToViewport?: boolean;
+}) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
@@ -24,18 +34,30 @@ export default function HtmlPreview({ html }: { html: string }) {
       const content = doc.getElementById("__preview-content");
       if (!content) return;
       const naturalWidth = content.scrollWidth;
+      const naturalHeight = content.scrollHeight;
       const containerWidth = iframe.clientWidth;
       if (containerWidth === 0 || naturalWidth === 0) return;
-      // 自然幅 > 表示幅 のときだけ縮小（拡大はしない）
-      const scale = naturalWidth > containerWidth ? containerWidth / naturalWidth : 1;
+      // 幅にフィット
+      const widthScale =
+        naturalWidth > containerWidth ? containerWidth / naturalWidth : 1;
+      // 高さにフィット
+      const effectiveMax =
+        maxHeight ??
+        (fitToViewport && typeof window !== "undefined"
+          ? window.innerHeight - 96
+          : 0);
+      let heightScale = 1;
+      if (effectiveMax > 0) {
+        const scaledH = naturalHeight * widthScale;
+        if (scaledH > effectiveMax) heightScale = effectiveMax / scaledH;
+      }
+      const scale = widthScale * heightScale;
       content.style.transform = `scale(${scale})`;
       content.style.width = `${naturalWidth}px`;
-      // body 自体のサイズも縮小後サイズに合わせる
-      // → iframe 内に横スクロール/縦スクロールが出ないようにする
-      const scaledH = content.scrollHeight * scale;
+      const scaledHFinal = naturalHeight * scale;
       doc.body.style.width = `${containerWidth}px`;
-      doc.body.style.height = `${scaledH}px`;
-      iframe.style.height = `${scaledH + 4}px`;
+      doc.body.style.height = `${scaledHFinal}px`;
+      iframe.style.height = `${scaledHFinal + 4}px`;
     };
 
     fit();
@@ -46,7 +68,7 @@ export default function HtmlPreview({ html }: { html: string }) {
       clearInterval(interval);
       window.removeEventListener("resize", onResize);
     };
-  }, [html]);
+  }, [html, maxHeight, fitToViewport]);
 
   return (
     <div className="border border-stone-200 rounded bg-white overflow-hidden">

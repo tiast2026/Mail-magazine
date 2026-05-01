@@ -303,9 +303,9 @@ export default function OutputDetailContent({
             <h2 className="text-lg font-semibold">プレビュー</h2>
             <CopyButton text={htmlWithBrand} label="HTMLをコピー" />
           </div>
-          <div className="lg:max-h-[calc(100vh-6rem)] lg:overflow-auto rounded border border-stone-200 bg-white">
-            <HtmlPreview html={htmlWithBrand} />
-          </div>
+          {/* 高さは viewport - 96px を上限にして、HtmlPreview 内で
+              幅と高さ両方にフィットさせる。これでメルマガ全体が常に1画面で見える。 */}
+          <HtmlPreview html={htmlWithBrand} fitToViewport />
         </aside>
       </div>
     </div>

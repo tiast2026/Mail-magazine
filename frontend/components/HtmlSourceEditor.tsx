@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { highlightHtml } from "@/lib/highlight-html";
 
 /**
- * HTML ソース編集エディタ。
+ * HTML ソース編集エディタ（行番号 + シンタックスハイライト）。
  * - 行番号付きの textarea
+ * - 透明な textarea を highlighted <pre> に重ねる layered 方式
  * - Tab キーで2スペース挿入
  * - リアルタイムで onChange を通知（プレビューに反映）
- * - 保存ボタンで onSave 実行
+ * - 保存ボタンで onSave 実行（⌘S/Ctrl+S）
  */
 export default function HtmlSourceEditor({
   initial,
@@ -23,6 +25,7 @@ export default function HtmlSourceEditor({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
+  const preRef = useRef<HTMLPreElement>(null);
   const lineNumRef = useRef<HTMLDivElement>(null);
 
   const dirty = value !== savedValue;
@@ -32,20 +35,26 @@ export default function HtmlSourceEditor({
     onChange(value);
   }, [value, onChange]);
 
-  // initial が外部から変わったら同期
+  // 親から渡される initial が変わったら同期（保存後など）
   useEffect(() => {
     setSavedValue(initial);
-    setValue(initial);
+    setValue((cur) => (cur === savedValue ? initial : cur));
+    // 編集中は上書きしない（dirty な内容を吹き飛ばさないため）
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial]);
 
-  // 行番号スクロール同期
+  // テキストエリアと pre / 行番号のスクロール同期
   function handleScroll(e: React.UIEvent<HTMLTextAreaElement>) {
-    if (lineNumRef.current) {
-      lineNumRef.current.scrollTop = e.currentTarget.scrollTop;
+    const top = e.currentTarget.scrollTop;
+    const left = e.currentTarget.scrollLeft;
+    if (lineNumRef.current) lineNumRef.current.scrollTop = top;
+    if (preRef.current) {
+      preRef.current.scrollTop = top;
+      preRef.current.scrollLeft = left;
     }
   }
 
-  // Tab キーで2スペース挿入
+  // Tab → 2スペース、⌘S → 保存
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     const ta = taRef.current;
     if (!ta) return;
@@ -55,7 +64,6 @@ export default function HtmlSourceEditor({
       const end = ta.selectionEnd;
       const newValue = value.substring(0, start) + "  " + value.substring(end);
       setValue(newValue);
-      // カーソル位置調整は次フレームで
       requestAnimationFrame(() => {
         ta.selectionStart = ta.selectionEnd = start + 2;
       });
@@ -85,6 +93,9 @@ export default function HtmlSourceEditor({
   function discard() {
     setValue(savedValue);
   }
+
+  // ハイライト適用結果（メモ化はしない、入力ごとに計算）
+  const highlighted = highlightHtml(value);
 
   return (
     <div className="border border-stone-700 rounded overflow-hidden bg-stone-900">
@@ -123,29 +134,53 @@ export default function HtmlSourceEditor({
         </div>
       )}
 
+      {/* ハイライト用カラー定義（CSS） */}
+      <style>{HIGHLIGHT_CSS}</style>
+
       <div className="flex relative" style={{ height: 480 }}>
+        {/* 行番号 */}
         <div
           ref={lineNumRef}
           aria-hidden
-          className="select-none text-right pr-2 py-3 text-[11px] leading-[1.6] text-stone-600 bg-stone-950/50 border-r border-stone-800 overflow-hidden font-mono shrink-0"
+          className="select-none text-right pr-2 py-3 text-[12px] leading-[1.6] text-stone-600 bg-stone-950/50 border-r border-stone-800 overflow-hidden font-mono shrink-0"
           style={{ width: 48 }}
         >
           {Array.from({ length: lineCount }, (_, i) => (
             <div key={i}>{i + 1}</div>
           ))}
         </div>
-        <textarea
-          ref={taRef}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onScroll={handleScroll}
-          spellCheck={false}
-          className="flex-1 bg-stone-900 text-stone-100 text-[11px] leading-[1.6] font-mono resize-none outline-none px-3 py-3 caret-amber-400"
-          style={{ tabSize: 2 }}
-          wrap="off"
-        />
+
+        {/* layered editor: pre (背景, ハイライト) + textarea (前面, 透明テキスト) */}
+        <div className="relative flex-1 overflow-hidden">
+          <pre
+            ref={preRef}
+            aria-hidden
+            className="absolute inset-0 m-0 px-3 py-3 text-[12px] leading-[1.6] font-mono pointer-events-none whitespace-pre overflow-auto"
+            style={{ tabSize: 2 }}
+            dangerouslySetInnerHTML={{ __html: highlighted + "\n" }}
+          />
+          <textarea
+            ref={taRef}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onScroll={handleScroll}
+            spellCheck={false}
+            className="absolute inset-0 w-full h-full bg-transparent text-transparent caret-amber-300 text-[12px] leading-[1.6] font-mono resize-none outline-none px-3 py-3"
+            style={{ tabSize: 2 }}
+            wrap="off"
+          />
+        </div>
       </div>
     </div>
   );
 }
+
+const HIGHLIGHT_CSS = `
+.hl-comment { color: #78716c; font-style: italic; }
+.hl-bracket { color: #fb7185; }
+.hl-tag { color: #fda4af; }
+.hl-attr { color: #6ee7b7; }
+.hl-equals { color: #a8a29e; }
+.hl-string { color: #fcd34d; }
+`;
