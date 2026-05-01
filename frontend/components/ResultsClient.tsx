@@ -16,7 +16,10 @@ type SortKey =
   | "txCount"
   | "txRate"
   | "revenue"
-  | "rating";
+  | "rating"
+  | "revenuePerSent" // 売上/通
+  | "ctr" // クリック数 / 開封数
+  | "favoriteRate";
 
 type SortDir = "asc" | "desc";
 
@@ -77,9 +80,15 @@ export default function ResultsClient({
   }, [filtered, sortKey, sortDir]);
 
   const totals = aggregateTotals(filtered);
-  const top3OpenRate = topN(filtered, "openRate", 3);
-  const top3Sales = topN(filtered, "revenue", 3);
-  const top3Conversion = topN(filtered, "txRate", 3);
+  const [showWorst, setShowWorst] = useState(false);
+  const rank = (key: SortKey) =>
+    showWorst ? bottomN(filtered, key, 3) : topN(filtered, key, 3);
+  const top3OpenRate = rank("openRate");
+  const top3Sales = rank("revenue");
+  const top3Conversion = rank("txRate");
+  const top3RevPerSent = rank("revenuePerSent");
+  const top3CTR = rank("ctr");
+  const top3Favorite = rank("favoriteRate");
   const byTemplate = aggregateBy(filtered, (o) => o.templateId);
   const byEvent = aggregateBy(filtered, (o) => o.event?.type ?? "(なし)");
   // 月別集計はフィルター適用前（withResults）で出して、月セレクトの前提値とする
@@ -125,11 +134,70 @@ export default function ResultsClient({
             <Stat label="合計売上" value={`¥${fmt(totals.revenue)}`} unit="" />
           </section>
 
-          {/* TOP3 セクション */}
-          <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <TopBox title="🏆 開封率 TOP3" items={top3OpenRate} unit="%" valueKey="openRate" allItems={filtered} />
-            <TopBox title="💰 売上 TOP3" items={top3Sales} unit="円" valueKey="revenue" prefix="¥" allItems={filtered} />
-            <TopBox title="🎯 転換率 TOP3" items={top3Conversion} unit="%" valueKey="txRate" allItems={filtered} />
+          {/* ランキング セクション（6カテゴリ） */}
+          <section className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">
+                ランキング {showWorst ? "ワースト3" : "TOP3"}
+              </h2>
+              <button
+                onClick={() => setShowWorst(!showWorst)}
+                className="text-xs px-3 py-1.5 rounded border border-stone-300 hover:bg-stone-100"
+              >
+                {showWorst ? "🏆 TOP3 を表示" : "📉 ワースト3 を表示"}
+              </button>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <TopBox
+                title={`${showWorst ? "📉" : "🏆"} 開封率 ${showWorst ? "ワースト3" : "TOP3"}`}
+                items={top3OpenRate}
+                unit="%"
+                valueKey="openRate"
+                allItems={filtered}
+                isWorst={showWorst}
+              />
+              <TopBox
+                title={`${showWorst ? "📉" : "💰"} 売上 ${showWorst ? "ワースト3" : "TOP3"}`}
+                items={top3Sales}
+                unit="円"
+                valueKey="revenue"
+                prefix="¥"
+                allItems={filtered}
+                isWorst={showWorst}
+              />
+              <TopBox
+                title={`${showWorst ? "📉" : "🎯"} 転換率 ${showWorst ? "ワースト3" : "TOP3"}`}
+                items={top3Conversion}
+                unit="%"
+                valueKey="txRate"
+                allItems={filtered}
+                isWorst={showWorst}
+              />
+              <TopBox
+                title={`${showWorst ? "📉" : "💎"} 売上/通 ${showWorst ? "ワースト3" : "TOP3"}`}
+                items={top3RevPerSent}
+                unit="円"
+                valueKey="revenuePerSent"
+                allItems={filtered}
+                isWorst={showWorst}
+              />
+              <TopBox
+                title={`${showWorst ? "📉" : "👆"} CTR ${showWorst ? "ワースト3" : "TOP3"}`}
+                items={top3CTR}
+                unit="%"
+                valueKey="ctr"
+                allItems={filtered}
+                isWorst={showWorst}
+              />
+              <TopBox
+                title={`${showWorst ? "📉" : "❤️"} お気に入り率 ${showWorst ? "ワースト3" : "TOP3"}`}
+                items={top3Favorite}
+                unit="%"
+                valueKey="favoriteRate"
+                allItems={filtered}
+                isWorst={showWorst}
+              />
+            </div>
           </section>
 
           {/* 月別集計（クリックでフィルター適用） */}
@@ -371,7 +439,7 @@ function FilterField({ label, children }: { label: string; children: React.React
 }
 
 function TopBox({
-  title, items, unit, valueKey, prefix, allItems,
+  title, items, unit, valueKey, prefix, allItems, isWorst,
 }: {
   title: string;
   items: MailOutput[];
@@ -380,6 +448,8 @@ function TopBox({
   prefix?: string;
   /** 平均値計算用の母集団。指定された場合「平均比」を表示 */
   allItems?: MailOutput[];
+  /** ワースト表示モード（メダル無し、棒グラフ色を rose に） */
+  isWorst?: boolean;
 }) {
   // 1位の値（バーの正規化用）
   const topValue =
@@ -393,7 +463,11 @@ function TopBox({
           .reduce((sum, v, _, arr) => sum + v / arr.length, 0)
       : 0;
 
-  const isPercent = valueKey === "openRate" || valueKey === "txRate";
+  const isPercent =
+    valueKey === "openRate" ||
+    valueKey === "txRate" ||
+    valueKey === "ctr" ||
+    valueKey === "favoriteRate";
 
   return (
     <div className="border border-stone-200 rounded bg-white p-4">
@@ -425,7 +499,15 @@ function TopBox({
                     }`}
                     title={`${i + 1}位`}
                   >
-                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`}
+                    {isWorst
+                      ? `${i + 1}.`
+                      : i === 0
+                        ? "🥇"
+                        : i === 1
+                          ? "🥈"
+                          : i === 2
+                            ? "🥉"
+                            : `${i + 1}.`}
                   </span>
                   <div className="min-w-0 flex-1">
                     <Link
@@ -467,8 +549,9 @@ function TopBox({
                     className="h-full rounded-full"
                     style={{
                       width: `${barRatio * 100}%`,
-                      backgroundColor:
-                        i === 0
+                      backgroundColor: isWorst
+                        ? "#f43f5e"
+                        : i === 0
                           ? "#f59e0b"
                           : i === 1
                             ? "#a3a3a3"
@@ -574,12 +657,33 @@ function getSortValue(o: MailOutput, key: SortKey): number | string {
     case "txRate": return rk?.transactionRate ?? 0;
     case "revenue": return r?.salesAmount ?? 0;
     case "rating": return r?.rating ?? 0;
+    case "revenuePerSent": return rk?.revenuePerSent ?? 0;
+    case "ctr":
+      return r?.openCount && r?.clickCount
+        ? (r.clickCount / r.openCount) * 100
+        : 0;
+    case "favoriteRate": return rk?.favoriteRate ?? 0;
   }
 }
 
 function compareVals(a: number | string, b: number | string): number {
   if (typeof a === "string" && typeof b === "string") return a.localeCompare(b);
   return (a as number) > (b as number) ? 1 : (a as number) < (b as number) ? -1 : 0;
+}
+
+function bottomN(outputs: MailOutput[], key: SortKey, n: number): MailOutput[] {
+  return [...outputs]
+    .filter((o) => {
+      const v = getSortValue(o, key);
+      // 0 や未測定値は除外（実績が無いものをワーストにしても意味がない）
+      return typeof v === "number" && v > 0;
+    })
+    .sort((a, b) => {
+      const av = getSortValue(a, key) as number;
+      const bv = getSortValue(b, key) as number;
+      return av - bv; // 昇順 = 小さい順
+    })
+    .slice(0, n);
 }
 
 function topN(outputs: MailOutput[], key: SortKey, n: number): MailOutput[] {
