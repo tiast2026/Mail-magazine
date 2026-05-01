@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import type { BrandConfig, Coupon, MailOutput } from "@/lib/types";
 import { applyBrandToHtml } from "@/lib/brand";
 import { useOptimisticOutput } from "@/lib/optimistic";
+import {
+  findApplicableCoupon,
+  useEnrichedCoupons,
+  type EnrichedCoupon,
+} from "@/lib/use-enriched-coupons";
 import HtmlPreview from "./HtmlPreview";
 
 /** "5,900円" / "¥5900" 等から数値を抽出して割引率（整数%）を返す */
@@ -60,6 +65,16 @@ export default function OutputDetailContent({
   }
 
   const htmlWithBrand = applyBrandToHtml(editingHtml, brand);
+
+  // クーポン情報を enrich（CouponsSection と 使用商品セクションで共有）
+  const baseCoupons: Coupon[] = (() => {
+    if (output.coupons && output.coupons.length > 0) return output.coupons;
+    const vars = (output.variables ?? {}) as Record<string, string>;
+    return Object.entries(vars)
+      .filter(([k, v]) => /^COUPON_URL_/.test(k) && v)
+      .map(([k, v]): Coupon => ({ label: deriveLabelFromKey(k), url: v }));
+  })();
+  const enrichedCoupons = useEnrichedCoupons(baseCoupons, brandId, output.id);
 
   async function saveHtml(html: string): Promise<void> {
     const res = await fetch(
@@ -180,70 +195,83 @@ export default function OutputDetailContent({
         )}
       </section>
 
-      <CouponsSection output={output} brandId={brandId} />
+      <CouponsSection coupons={enrichedCoupons} />
 
       <section>
         <h2 className="text-lg font-semibold mb-2">使用商品</h2>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {output.products.map((p, i) => (
-            <li
-              key={i}
-              className="border border-stone-200 rounded bg-white p-3 flex gap-3 items-start"
-            >
-              {p.imageUrl && (
-                <img
-                  src={p.imageUrl}
-                  alt={p.name}
-                  className="w-16 h-16 object-cover rounded shrink-0"
-                />
-              )}
-              <div className="min-w-0 text-sm">
-                <a
-                  href={p.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-medium hover:underline block truncate"
-                >
-                  {p.name}
-                </a>
-                {p.manageNumber && (
-                  <div className="text-xs text-stone-500 mt-0.5">
-                    品番: {p.manageNumber}
-                  </div>
+          {output.products.map((p, i) => {
+            const off = computeDiscountPercent(p.regularPrice, p.salePrice);
+            const applied = findApplicableCoupon(
+              p.manageNumber,
+              off,
+              enrichedCoupons,
+            );
+            return (
+              <li
+                key={i}
+                className="border border-stone-200 rounded bg-white p-3 flex gap-3 items-start"
+              >
+                {p.imageUrl && (
+                  <img
+                    src={p.imageUrl}
+                    alt={p.name}
+                    className="w-16 h-16 object-cover rounded shrink-0"
+                  />
                 )}
-                <div className="text-xs mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  {p.regularPrice && (
-                    <span className="text-stone-500 line-through">
-                      {p.regularPrice}
-                    </span>
+                <div className="min-w-0 text-sm flex-1">
+                  <a
+                    href={p.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium hover:underline block truncate"
+                  >
+                    {p.name}
+                  </a>
+                  {p.manageNumber && (
+                    <div className="text-xs text-stone-500 mt-0.5">
+                      品番: {p.manageNumber}
+                    </div>
                   )}
-                  {p.salePrice && (
-                    <span
-                      className="font-semibold"
-                      style={{ color: "var(--brand-accent)" }}
-                    >
-                      {p.salePrice}
-                    </span>
-                  )}
-                  {(() => {
-                    const off = computeDiscountPercent(
-                      p.regularPrice,
-                      p.salePrice,
-                    );
-                    if (off == null) return null;
-                    return (
+                  <div className="text-xs mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    {p.regularPrice && (
+                      <span className="text-stone-500 line-through">
+                        {p.regularPrice}
+                      </span>
+                    )}
+                    {p.salePrice && (
+                      <span
+                        className="font-semibold"
+                        style={{ color: "var(--brand-accent)" }}
+                      >
+                        {p.salePrice}
+                      </span>
+                    )}
+                    {off != null && (
                       <span
                         className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white"
                         style={{ backgroundColor: "var(--brand-accent)" }}
                       >
                         {off}%OFF
                       </span>
-                    );
-                  })()}
+                    )}
+                  </div>
+                  {applied && (
+                    <div
+                      className="text-[10px] mt-1.5 px-2 py-1 rounded bg-amber-50 border border-amber-200 text-amber-900"
+                      title={applied.rmsName ?? applied.label}
+                    >
+                      <span className="font-semibold">適用:</span>{" "}
+                      {applied.rate != null ? `${applied.rate}%OFF` : ""}{" "}
+                      <span className="text-stone-600">
+                        {(applied.rmsName ?? applied.label).slice(0, 30)}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -296,109 +324,7 @@ function deriveLabelFromKey(key: string): string {
     .trim();
 }
 
-/** クーポンURLから getkey を抽出 */
-function extractGetKey(url: string): string | null {
-  const m = url.match(/[?&]getkey=([^&]+)/);
-  return m ? decodeURIComponent(m[1]) : null;
-}
-
-/**
- * getkey を couponCode に逆変換。
- * 楽天は `couponCode` の最初の2セグメントを入れ替えて base64 した文字列の `==` を `--` に置換したものを getkey にしている：
- *   AAAA-BBBB-CCCC-DDDD → BBBB-AAAA-CCCC-DDDD → base64 → "..==" → ".." 末尾を `--` に置換
- */
-function getKeyToCouponCode(getKey: string): string | null {
-  try {
-    const padded = getKey.replace(/--$/, "==").replace(/-$/, "=");
-    const decoded =
-      typeof atob === "function"
-        ? atob(padded)
-        : Buffer.from(padded, "base64").toString("utf8");
-    const parts = decoded.split("-");
-    if (parts.length < 2) return decoded;
-    [parts[0], parts[1]] = [parts[1], parts[0]];
-    return parts.join("-");
-  } catch {
-    return null;
-  }
-}
-
-type CouponDisplay = Coupon & {
-  /** RMS から取得したフル名（あればこちらを優先表示） */
-  rmsName?: string;
-};
-
-function CouponsSection({
-  output,
-  brandId,
-}: {
-  output: MailOutput;
-  brandId: string;
-}) {
-  // 1. output.coupons があればそれを表示
-  // 2. なければ vars.COUPON_URL_* から後方互換でフォールバック
-  const baseCoupons: Coupon[] = (() => {
-    if (output.coupons && output.coupons.length > 0) return output.coupons;
-    const vars = (output.variables ?? {}) as Record<string, string>;
-    return Object.entries(vars)
-      .filter(([k, v]) => /^COUPON_URL_/.test(k) && v)
-      .map(([k, v]): Coupon => ({ label: deriveLabelFromKey(k), url: v }));
-  })();
-
-  const [coupons, setCoupons] = useState<CouponDisplay[]>(baseCoupons);
-
-  // 楽天 RMS からクーポン名を取得して enrich（couponCode で 1 件ずつ取得）
-  useEffect(() => {
-    if (baseCoupons.length === 0) return;
-    let cancelled = false;
-    (async () => {
-      type RmsCoupon = {
-        couponCode?: string;
-        name?: string;
-        startTime?: string | null;
-        endTime?: string | null;
-        discountFactor?: number | null;
-      };
-      const fetchOne = async (
-        couponCode: string,
-      ): Promise<RmsCoupon | null> => {
-        try {
-          const r = await fetch(
-            `/api/rakuten/${encodeURIComponent(brandId)}/coupons?status=all&couponCode=${encodeURIComponent(couponCode)}`,
-            { cache: "no-store" },
-          );
-          if (!r.ok) return null;
-          const data = (await r.json()) as { coupons?: RmsCoupon[] };
-          return data.coupons?.[0] ?? null;
-        } catch {
-          return null;
-        }
-      };
-      const results = await Promise.all(
-        baseCoupons.map(async (c) => {
-          const key = extractGetKey(c.url);
-          if (!key) return c;
-          const code = getKeyToCouponCode(key);
-          if (!code) return c;
-          const matched = await fetchOne(code);
-          if (!matched) return c;
-          return {
-            ...c,
-            rmsName: matched.name ?? undefined,
-            rate: c.rate ?? matched.discountFactor ?? undefined,
-            startDate: c.startDate ?? matched.startTime ?? undefined,
-            endDate: c.endDate ?? matched.endTime ?? undefined,
-          } as CouponDisplay;
-        }),
-      );
-      if (!cancelled) setCoupons(results);
-    })();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [brandId, output.id]);
-
+function CouponsSection({ coupons }: { coupons: EnrichedCoupon[] }) {
   if (coupons.length === 0) return null;
 
   return (
