@@ -752,5 +752,37 @@
         "importedAt": "2026-04-30T13:40:45.725Z"
       }
     }
+  },
+  {
+    "id": "rmail-26433905",
+    "title": "【24時間限定70%OFF】春アイテム7点 ＊ 3,000枚突破ワンピの予約も本日スタート",
+    "templateId": "external",
+    "createdAt": "2026-05-01T01:08:07.566Z",
+    "sentAt": "2026-05-01T20:00:00+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 34352,
+      "openRate": 0,
+      "openCount": 0,
+      "clickCount": 0,
+      "salesCount": 0,
+      "salesAmount": 0,
+      "rakuten": {
+        "mailId": "26433905",
+        "subject": "【24時間限定70%OFF】春アイテム7点 ＊ 3,000枚突破ワンピの予約も本日スタート",
+        "conversionVisitRate": 0,
+        "conversionVisitCount": 0,
+        "transactionCount": 0,
+        "transactionRate": 0,
+        "revenuePerSent": 0,
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-05-01T01:08:07.566Z"
+      }
+    }
   }
 ]
