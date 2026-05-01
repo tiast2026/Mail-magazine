@@ -108,22 +108,25 @@ function isLikelyCategoryPath(id: string): boolean {
  * 楽天メルマガのよくあるパターン:
  *   <strike>6,900円</strike> ... <b> 2,070円</b> ... （70%OFF）
  *   <strike>5,900円</strike> ... → 2,950円
+ *
+ * 商品ブロックのレイアウトには「画像 → タイトル → 説明文 → 価格」の順で
+ * 説明文が長いとデフォルトのウィンドウを超えるため、抽出範囲は広めに取る。
+ * 同時にセール価格は strike 直後 300 文字以内に限定して、
+ * 次商品の価格を取らないようにする。
  */
 function extractPricesNear(
   html: string,
   fromIdx: number,
 ): { regularPrice?: string; salePrice?: string } {
-  // 画像直後の 800 文字を価格抽出ウィンドウとする（次商品ブロックの先頭まで含めない範囲）
-  const window = html.substring(fromIdx, fromIdx + 800);
-  // <strike>NNN,NNN円</strike> パターン
+  const REGULAR_WINDOW = 1800; // 画像 → 価格 までの最大距離
+  const SALE_WINDOW = 300; // strike 終了 → セール価格までの最大距離
+  const window = html.substring(fromIdx, fromIdx + REGULAR_WINDOW);
   const strikeMatch = window.match(/<strike>\s*([\d,]+\s*円)\s*<\/strike>/);
   if (!strikeMatch) return {};
   const regularPrice = strikeMatch[1].replace(/\s+/g, "");
-  // strike 以降のセール価格: 任意の "[\d,]+円" を、strike 終了位置の後で最初に見つかったものを採用
   const afterStrikeIdx = window.indexOf(strikeMatch[0]) + strikeMatch[0].length;
-  const after = window.substring(afterStrikeIdx);
-  // タグ・空白・記号を挟んで出てくる NNN円 を採用
-  const saleMatch = after.match(/(?:→|\b|\s|>)\s*([\d,]+\s*円)/);
+  const afterScope = window.substring(afterStrikeIdx, afterStrikeIdx + SALE_WINDOW);
+  const saleMatch = afterScope.match(/(?:→|\b|\s|>)\s*([\d,]+\s*円)/);
   if (!saleMatch) return { regularPrice };
   const salePrice = saleMatch[1].replace(/\s+/g, "");
   return { regularPrice, salePrice };
