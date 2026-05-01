@@ -120,9 +120,11 @@ function createStubFromImport(body: ImportPayload): MailOutput {
   const id =
     body.outputId ||
     (body.rakutenMailId ? `rmail-${body.rakutenMailId}` : `rmail-${Date.now()}`);
-  const sentAt = body.sentDate
-    ? `${body.sentDate}T20:00:00+09:00`
-    : undefined;
+  // 実配信時刻の優先度: rakuten.sentStartAt（RMS 実時刻） > sentDate（日付のみ、20:00 仮設定）
+  // 実時刻が分かれば真値、未取得なら仮値（20:00）でソート・カレンダー表示が崩れないようにする
+  const sentAt =
+    body.rakuten?.sentStartAt ??
+    (body.sentDate ? `${body.sentDate}T20:00:00+09:00` : undefined);
   return {
     id,
     title: body.subject || "(R-Mail 直配信・件名不明)",
@@ -200,10 +202,14 @@ export async function POST(req: NextRequest) {
       if (body.dryRun) return outputs;
       // html が新規提供されたら上書き（再取込で詳細追加できるよう）
       const nextHtml = body.html ? body.html : outputs[m.index].html;
+      // RMS から実時刻が来ていれば、過去の仮値（YYYY-MM-DDT20:00:00+09:00）を上書き
+      const nextSentAt =
+        body.rakuten?.sentStartAt ?? outputs[m.index].sentAt;
       outputs[m.index] = {
         ...outputs[m.index],
         results: merged,
         html: nextHtml,
+        sentAt: nextSentAt,
       };
       return outputs;
     };

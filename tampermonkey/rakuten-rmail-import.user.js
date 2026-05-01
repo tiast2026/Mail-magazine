@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.15
+// @version      0.7.16
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -247,7 +247,32 @@
       else if (label === "売上/通") out.revenuePerSent = main;
     });
     out.deviceBreakdown = scrapeDeviceTables();
+    // 送信開始日時 / 送信完了日時 を thead-tbody テーブルから抽出
+    document.querySelectorAll("table").forEach((tbl) => {
+      const thead = tbl.querySelector("thead tr");
+      if (!thead) return;
+      const ths = Array.from(thead.querySelectorAll("th")).map((th) =>
+        text(th).replace(/\s+/g, ""),
+      );
+      const tr = tbl.querySelector("tbody tr");
+      if (!tr) return;
+      const tds = Array.from(tr.querySelectorAll("td"));
+      ths.forEach((th, i) => {
+        if (th === "送信開始日時") out.sentStartAt = parseDateTimeJP(text(tds[i]));
+        else if (th === "送信完了日時") out.sentEndAt = parseDateTimeJP(text(tds[i]));
+      });
+    });
     return out;
+  }
+
+  /** "2026/05/01 08:10:01" 形式を ISO8601(+09:00) に変換 */
+  function parseDateTimeJP(s) {
+    if (!s) return null;
+    const m = s.match(
+      /(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/,
+    );
+    if (!m) return null;
+    return `${m[1]}-${pad(m[2])}-${pad(m[3])}T${pad(m[4])}:${m[5]}:${m[6] || "00"}+09:00`;
   }
 
   function scrapeDeviceTables() {
@@ -325,6 +350,8 @@
       rakuten: {
         mailId: row.id,
         subject: row.subject,
+        sentStartAt: detail?.sentStartAt,
+        sentEndAt: detail?.sentEndAt,
         conversionVisitRate: detail?.conversionVisitRate ?? row.sendRate ?? undefined,
         conversionVisitCount: detail?.conversionVisitCount ?? row.sendCount ?? undefined,
         transactionCount: detail?.transactionCount ?? row.txCount ?? undefined,
