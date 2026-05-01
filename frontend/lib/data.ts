@@ -58,8 +58,16 @@ export function getOutputs(brandId: string): MailOutput[] {
   const shop = brandData[brandId]?.config.rakutenShopUrl;
   return (brandData[brandId]?.outputs ?? [])
     .slice()
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .sort((a, b) => deliveryKey(b).localeCompare(deliveryKey(a)))
     .map((o) => enrichWithExtractedProducts(o, shop));
+}
+
+/**
+ * 並び替えキー: 実配信時刻 > 配信予定 > 作成日 の優先順
+ * 新しい配信日のメルマガを一覧上部に出すため。
+ */
+function deliveryKey(o: MailOutput): string {
+  return o.results?.rakuten?.sentStartAt ?? o.sentAt ?? o.scheduledAt ?? o.createdAt;
 }
 
 export function getOutput(brandId: string, id: string): MailOutput | undefined {
