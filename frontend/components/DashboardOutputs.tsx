@@ -90,10 +90,23 @@ export default function DashboardOutputs({
                       </div>
                     </div>
                     {o.results?.openRate != null && (
-                      <div className="text-xs text-right shrink-0 self-start">
-                        <div className="text-stone-700 font-medium">
-                          開封 {o.results.openRate.toFixed(1)}%
+                      <div className="text-xs text-right shrink-0 self-start space-y-0.5 text-stone-700">
+                        {o.results.sentCount != null && (
+                          <div>
+                            <span className="text-stone-500">配信</span>{" "}
+                            {o.results.sentCount.toLocaleString()}通
+                          </div>
+                        )}
+                        <div>
+                          <span className="text-stone-500">開封</span>{" "}
+                          {o.results.openRate.toFixed(1)}%
                         </div>
+                        {o.results.rakuten?.transactionRate != null && (
+                          <div>
+                            <span className="text-stone-500">転換</span>{" "}
+                            {o.results.rakuten.transactionRate.toFixed(1)}%
+                          </div>
+                        )}
                         {o.results.salesAmount != null && (
                           <div
                             className="font-semibold mt-0.5"

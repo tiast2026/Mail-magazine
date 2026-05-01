@@ -66,13 +66,25 @@ export default function OutputsListClient({
           <div className="shrink-0 text-right text-xs self-start">
             {o.results?.openRate != null ? (
               <div className="space-y-0.5 text-stone-700">
-                <div>開封 {o.results.openRate.toFixed(1)}%</div>
-                {o.results.clickRate != null && (
-                  <div>クリック {o.results.clickRate.toFixed(1)}%</div>
+                {o.results.sentCount != null && (
+                  <div>
+                    <span className="text-stone-500">配信</span>{" "}
+                    {o.results.sentCount.toLocaleString()}通
+                  </div>
+                )}
+                <div>
+                  <span className="text-stone-500">開封</span>{" "}
+                  {o.results.openRate.toFixed(1)}%
+                </div>
+                {o.results.rakuten?.transactionRate != null && (
+                  <div>
+                    <span className="text-stone-500">転換</span>{" "}
+                    {o.results.rakuten.transactionRate.toFixed(1)}%
+                  </div>
                 )}
                 {o.results.salesAmount != null && (
                   <div
-                    className="font-medium"
+                    className="font-semibold mt-1"
                     style={{ color: "var(--brand-accent)" }}
                   >
                     ￥{o.results.salesAmount.toLocaleString()}
