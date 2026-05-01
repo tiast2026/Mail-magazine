@@ -72,7 +72,8 @@ export default function DashboardOutputs({
                   href={`/outputs/${o.id}/`}
                   className="block p-4 hover:bg-stone-50 transition"
                 >
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-stretch gap-4">
+                    <DateTile output={o} />
                     <div className="min-w-0 flex-1">
                       <div className="font-medium text-stone-900 truncate">
                         {o.title}
@@ -85,20 +86,11 @@ export default function DashboardOutputs({
                           テンプレ {o.templateId}
                         </span>
                         {o.event && <EventBadge event={o.event} />}
-                        <span>
-                          {new Date(
-                            o.scheduledAt ?? o.createdAt,
-                          ).toLocaleString("ja-JP", {
-                            month: "numeric",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
+                        <span>商品 {o.products.length} 点</span>
                       </div>
                     </div>
                     {o.results?.openRate != null && (
-                      <div className="text-xs text-right shrink-0">
+                      <div className="text-xs text-right shrink-0 self-start">
                         <div className="text-stone-700 font-medium">
                           開封 {o.results.openRate.toFixed(1)}%
                         </div>
@@ -120,6 +112,38 @@ export default function DashboardOutputs({
         )}
       </section>
     </>
+  );
+}
+
+function DateTile({ output: o }: { output: MailOutput }) {
+  const iso =
+    o.results?.rakuten?.sentStartAt ?? o.sentAt ?? o.scheduledAt ?? o.createdAt;
+  const d = new Date(iso);
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  const weekday = ["日", "月", "火", "水", "木", "金", "土"][d.getDay()];
+  const time = d.toLocaleTimeString("ja-JP", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  let status: { label: string; color: string };
+  if (o.results?.rakuten?.sentStartAt || o.sentAt) {
+    status = { label: "配信済", color: "text-emerald-700" };
+  } else if (o.scheduledAt && new Date(o.scheduledAt).getTime() > Date.now()) {
+    status = { label: "予定", color: "text-amber-700" };
+  } else {
+    status = { label: "下書き", color: "text-stone-500" };
+  }
+  return (
+    <div className="shrink-0 w-16 text-center border-r border-stone-200 pr-3 flex flex-col justify-center">
+      <div className="text-[10px] text-stone-500">{month}月</div>
+      <div className="text-2xl font-semibold leading-none mt-0.5">{day}</div>
+      <div className="text-[10px] text-stone-500 mt-0.5">({weekday})</div>
+      <div className="text-[10px] text-stone-600 mt-1">{time}</div>
+      <div className={`text-[10px] mt-0.5 font-medium ${status.color}`}>
+        {status.label}
+      </div>
+    </div>
   );
 }
 

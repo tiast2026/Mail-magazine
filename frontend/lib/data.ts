@@ -8,6 +8,7 @@ import type {
   MailOutput,
   Template,
 } from "./types";
+import { extractRakutenProducts } from "./extract-rakuten-products";
 
 export { applyBrandToHtml } from "./brand";
 
@@ -54,12 +55,29 @@ export function getTemplate(brandId: string, id: string): Template | undefined {
 }
 
 export function getOutputs(brandId: string): MailOutput[] {
+  const shop = brandData[brandId]?.config.rakutenShopUrl;
   return (brandData[brandId]?.outputs ?? [])
     .slice()
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .map((o) => enrichWithExtractedProducts(o, shop));
 }
 
 export function getOutput(brandId: string, id: string): MailOutput | undefined {
   return getOutputs(brandId).find((o) => o.id === id);
+}
+
+/**
+ * products[] が空のエントリ（R-Mail 直配信など）について、
+ * HTML 本文から商品を抽出して埋める。
+ */
+function enrichWithExtractedProducts(
+  output: MailOutput,
+  shopUrl: string | undefined,
+): MailOutput {
+  if (output.products.length > 0) return output;
+  if (!shopUrl || !output.html) return output;
+  const extracted = extractRakutenProducts(output.html, shopUrl);
+  if (extracted.length === 0) return output;
+  return { ...output, products: extracted };
 }
 

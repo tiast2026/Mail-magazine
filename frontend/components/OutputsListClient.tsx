@@ -27,8 +27,9 @@ export default function OutputsListClient({
       {outputs.map((o) => (
         <li
           key={o.id}
-          className="p-4 flex items-center justify-between gap-4"
+          className="p-4 flex items-stretch gap-4"
         >
+          <DateTile output={o} />
           <div className="min-w-0 flex-1">
             <Link
               href={`/outputs/${o.id}/`}
@@ -45,20 +46,6 @@ export default function OutputsListClient({
               </span>
               {o.event && <EventBadge event={o.event} />}
               <span>商品 {o.products.length} 点</span>
-              <span>
-                {new Date(o.scheduledAt ?? o.createdAt).toLocaleString("ja-JP", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-                {o.scheduledAt && o.sentAt
-                  ? " 配信済"
-                  : o.scheduledAt
-                    ? " 予定"
-                    : ""}
-              </span>
             </div>
             {o.event?.name && (
               <div className="text-xs text-stone-500 mt-1">{o.event.name}</div>
@@ -76,7 +63,7 @@ export default function OutputsListClient({
               </div>
             )}
           </div>
-          <div className="shrink-0 text-right text-xs">
+          <div className="shrink-0 text-right text-xs self-start">
             {o.results?.openRate != null ? (
               <div className="space-y-0.5 text-stone-700">
                 <div>開封 {o.results.openRate.toFixed(1)}%</div>
@@ -99,5 +86,41 @@ export default function OutputsListClient({
         </li>
       ))}
     </ul>
+  );
+}
+
+function DateTile({ output: o }: { output: MailOutput }) {
+  // 表示優先: 実配信時刻 > 配信予定 > 作成日
+  const iso =
+    o.results?.rakuten?.sentStartAt ?? o.sentAt ?? o.scheduledAt ?? o.createdAt;
+  const d = new Date(iso);
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  const weekday = ["日", "月", "火", "水", "木", "金", "土"][d.getDay()];
+  const time = d.toLocaleTimeString("ja-JP", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  // ステータス判定
+  let status: { label: string; color: string };
+  if (o.results?.rakuten?.sentStartAt || o.sentAt) {
+    status = { label: "配信済", color: "text-emerald-700" };
+  } else if (o.scheduledAt && new Date(o.scheduledAt).getTime() > Date.now()) {
+    status = { label: "予定", color: "text-amber-700" };
+  } else {
+    status = { label: "下書き", color: "text-stone-500" };
+  }
+
+  return (
+    <div className="shrink-0 w-16 text-center border-r border-stone-200 pr-3 flex flex-col justify-center">
+      <div className="text-[10px] text-stone-500">{month}月</div>
+      <div className="text-2xl font-semibold leading-none mt-0.5">{day}</div>
+      <div className="text-[10px] text-stone-500 mt-0.5">({weekday})</div>
+      <div className="text-[10px] text-stone-600 mt-1">{time}</div>
+      <div className={`text-[10px] mt-0.5 font-medium ${status.color}`}>
+        {status.label}
+      </div>
+    </div>
   );
 }

@@ -139,6 +139,8 @@ export default function OutputDetailContent({
         )}
       </section>
 
+      <div className="lg:grid lg:grid-cols-[1fr_minmax(380px,520px)] lg:gap-6 lg:items-start">
+        <div className="space-y-6 min-w-0">
       <section>
         <h2 className="text-lg font-semibold mb-2">配信実績</h2>
         {output.results?.rakuten ? (
@@ -159,7 +161,7 @@ export default function OutputDetailContent({
 
       <section>
         <h2 className="text-lg font-semibold mb-2">使用商品</h2>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {output.products.map((p, i) => (
             <li
               key={i}
@@ -223,14 +225,6 @@ export default function OutputDetailContent({
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-semibold">プレビュー</h2>
-          <CopyButton text={htmlWithBrand} label="HTMLをコピー" />
-        </div>
-        <HtmlPreview html={htmlWithBrand} />
-      </section>
-
-      <section>
         <h2 className="text-lg font-semibold mb-2">振り返り</h2>
         <ReflectionEditor brandId={brandId} output={output} />
       </section>
@@ -246,6 +240,18 @@ export default function OutputDetailContent({
           {htmlWithBrand}
         </pre>
       </section>
+        </div>
+
+        <aside className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start space-y-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">プレビュー</h2>
+            <CopyButton text={htmlWithBrand} label="HTMLをコピー" />
+          </div>
+          <div className="lg:max-h-[calc(100vh-6rem)] lg:overflow-auto rounded border border-stone-200 bg-white">
+            <HtmlPreview html={htmlWithBrand} />
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
