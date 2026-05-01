@@ -32,6 +32,7 @@ export default function ResultsClient({
   // フィルター
   const [filterEvent, setFilterEvent] = useState<CampaignEventType | "">("");
   const [filterTemplate, setFilterTemplate] = useState<string>("");
+  const [filterMonth, setFilterMonth] = useState<string>(""); // "YYYY-MM" 形式 / "" は全月
   const [minRating, setMinRating] = useState<number>(0);
   const [searchText, setSearchText] = useState<string>("");
 
@@ -43,16 +44,26 @@ export default function ResultsClient({
     return Array.from(new Set(withResults.map((o) => o.templateId))).sort();
   }, [withResults]);
 
+  const months = useMemo(() => {
+    const set = new Set<string>();
+    for (const o of withResults) {
+      const ym = monthOf(o);
+      if (ym) set.add(ym);
+    }
+    return Array.from(set).sort().reverse(); // 新しい月が上
+  }, [withResults]);
+
   const filtered = useMemo(() => {
     return withResults.filter((o) => {
       if (filterEvent && (o.event?.type ?? "") !== filterEvent) return false;
       if (filterTemplate && o.templateId !== filterTemplate) return false;
+      if (filterMonth && monthOf(o) !== filterMonth) return false;
       if (minRating > 0 && (o.results?.rating ?? 0) < minRating) return false;
       if (searchText && !o.title.toLowerCase().includes(searchText.toLowerCase()))
         return false;
       return true;
     });
-  }, [withResults, filterEvent, filterTemplate, minRating, searchText]);
+  }, [withResults, filterEvent, filterTemplate, filterMonth, minRating, searchText]);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
@@ -71,6 +82,10 @@ export default function ResultsClient({
   const top3Conversion = topN(filtered, "txRate", 3);
   const byTemplate = aggregateBy(filtered, (o) => o.templateId);
   const byEvent = aggregateBy(filtered, (o) => o.event?.type ?? "(なし)");
+  // 月別集計はフィルター適用前（withResults）で出して、月セレクトの前提値とする
+  const byMonth = aggregateBy(withResults, (o) => monthOf(o) ?? "(不明)").sort(
+    (a, b) => (a.key < b.key ? 1 : a.key > b.key ? -1 : 0),
+  );
 
   function changeSort(key: SortKey) {
     if (sortKey === key) {
@@ -84,6 +99,7 @@ export default function ResultsClient({
   function clearFilters() {
     setFilterEvent("");
     setFilterTemplate("");
+    setFilterMonth("");
     setMinRating(0);
     setSearchText("");
   }
@@ -116,6 +132,19 @@ export default function ResultsClient({
             <TopBox title="🎯 転換率 TOP3" items={top3Conversion} unit="%" valueKey="txRate" />
           </section>
 
+          {/* 月別集計（クリックでフィルター適用） */}
+          <section>
+            <AggBox
+              title="月別"
+              rows={byMonth}
+              labelMap={(k) => formatMonthLabel(k)}
+              activeKey={filterMonth || undefined}
+              onRowClick={(k) =>
+                setFilterMonth(filterMonth === k ? "" : k)
+              }
+            />
+          </section>
+
           {/* テンプレ別 / イベント別集計 */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <AggBox title="テンプレ別" rows={byTemplate} />
@@ -133,7 +162,7 @@ export default function ResultsClient({
                 クリア
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
               <FilterField label="件名検索">
                 <input
                   type="text"
@@ -142,6 +171,20 @@ export default function ResultsClient({
                   placeholder="例: マラソン"
                   className="w-full text-xs border border-stone-300 rounded px-2 py-1"
                 />
+              </FilterField>
+              <FilterField label="月">
+                <select
+                  value={filterMonth}
+                  onChange={(e) => setFilterMonth(e.target.value)}
+                  className="w-full text-xs border border-stone-300 rounded px-2 py-1"
+                >
+                  <option value="">全期間</option>
+                  {months.map((m) => (
+                    <option key={m} value={m}>
+                      {formatMonthLabel(m)}
+                    </option>
+                  ))}
+                </select>
               </FilterField>
               <FilterField label="イベント">
                 <select
@@ -364,15 +407,25 @@ function TopBox({
 }
 
 function AggBox({
-  title, rows, labelMap,
+  title, rows, labelMap, activeKey, onRowClick,
 }: {
   title: string;
   rows: Array<{ key: string; count: number; avgOpenRate: number; sumRevenue: number }>;
   labelMap?: (k: string) => string;
+  activeKey?: string;
+  onRowClick?: (key: string) => void;
 }) {
+  const clickable = !!onRowClick;
   return (
     <div className="border border-stone-200 rounded bg-white p-4">
-      <h3 className="text-sm font-semibold mb-2">{title}</h3>
+      <h3 className="text-sm font-semibold mb-2">
+        {title}
+        {clickable && (
+          <span className="text-[10px] text-stone-400 font-normal ml-2">
+            クリックでフィルター
+          </span>
+        )}
+      </h3>
       {rows.length === 0 ? (
         <div className="text-xs text-stone-400 py-2">データなし</div>
       ) : (
@@ -386,14 +439,26 @@ function AggBox({
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
-              <tr key={r.key} className="border-t border-stone-100">
-                <td className="py-1">{labelMap ? labelMap(r.key) : r.key}</td>
-                <td className="py-1 text-right">{r.count}</td>
-                <td className="py-1 text-right">{r.avgOpenRate.toFixed(1)}%</td>
-                <td className="py-1 text-right">¥{fmt(r.sumRevenue)}</td>
-              </tr>
-            ))}
+            {rows.map((r) => {
+              const isActive = activeKey === r.key;
+              return (
+                <tr
+                  key={r.key}
+                  onClick={clickable ? () => onRowClick!(r.key) : undefined}
+                  className={`border-t border-stone-100 ${
+                    clickable ? "cursor-pointer hover:bg-stone-50" : ""
+                  } ${isActive ? "bg-amber-50" : ""}`}
+                >
+                  <td className="py-1">
+                    {isActive && <span className="mr-1">●</span>}
+                    {labelMap ? labelMap(r.key) : r.key}
+                  </td>
+                  <td className="py-1 text-right">{r.count}</td>
+                  <td className="py-1 text-right">{r.avgOpenRate.toFixed(1)}%</td>
+                  <td className="py-1 text-right">¥{fmt(r.sumRevenue)}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
@@ -506,4 +571,20 @@ function fmt(n: number | undefined | null): string {
 function fmtPct(n: number | undefined | null): string {
   if (n == null) return "—";
   return `${n.toFixed(1)}%`;
+}
+
+/** 配信日(優先順位: sentAt > scheduledAt > createdAt)を YYYY-MM 形式で返す */
+function monthOf(o: MailOutput): string | null {
+  const iso = o.sentAt ?? o.scheduledAt ?? o.createdAt;
+  if (!iso) return null;
+  // ISO8601 文字列の先頭7文字 = YYYY-MM
+  const m = iso.match(/^(\d{4})-(\d{2})/);
+  return m ? `${m[1]}-${m[2]}` : null;
+}
+
+/** "2026-05" → "2026年5月" */
+function formatMonthLabel(ym: string): string {
+  const m = ym.match(/^(\d{4})-(\d{2})$/);
+  if (!m) return ym;
+  return `${m[1]}年${parseInt(m[2], 10)}月`;
 }
