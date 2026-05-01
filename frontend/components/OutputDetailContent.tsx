@@ -139,8 +139,8 @@ export default function OutputDetailContent({
         )}
       </section>
 
-      <div className="lg:grid lg:grid-cols-[1fr_minmax(380px,520px)] lg:gap-6 lg:items-start">
-        <div className="space-y-6 min-w-0">
+      <div className="lg:grid lg:grid-cols-5 lg:gap-6 lg:items-start">
+        <div className="space-y-6 min-w-0 lg:col-span-3">
       <section>
         <h2 className="text-lg font-semibold mb-2">配信実績</h2>
         {output.results?.rakuten ? (
@@ -242,7 +242,7 @@ export default function OutputDetailContent({
       </section>
         </div>
 
-        <aside className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start space-y-2">
+        <aside className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start lg:col-span-2 space-y-2">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">プレビュー</h2>
             <CopyButton text={htmlWithBrand} label="HTMLをコピー" />
