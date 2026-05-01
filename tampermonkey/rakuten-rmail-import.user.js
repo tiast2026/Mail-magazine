@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.13
-// @description  R-Mail #/trend 一括取り込み（楽天イベント取得と同レイアウト・詳細ドリル対応）
+// @version      0.7.14
+// @description  R-Mail #/trend 一括取り込み（HTML コンテンツ取得対応）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
 // @match        https://rmail.rms.rakuten.co.jp/*
@@ -15,7 +15,7 @@
 (function () {
   "use strict";
 
-  const SCRIPT_VERSION = "0.7.13";
+  const SCRIPT_VERSION = "0.7.14";
   const DEFAULT_ENDPOINT = "https://mail-magazine.vercel.app/api/results/import";
   const IMPORTED_ENDPOINT = "https://mail-magazine.vercel.app/api/results/imported";
   const TREND_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
@@ -188,6 +188,38 @@
     return detail;
   }
 
+  /** コンテンツ分析画面の「ソース」ボタンから HTML を取得 */
+  async function fetchHtmlContent(mailId) {
+    const startHash = location.hash;
+    location.hash = `#/content-analysis/${mailId}`;
+    const start = Date.now();
+    let html = null;
+    while (Date.now() - start < 12000) {
+      // ソースボタンを探す（class="btn"、テキスト「ソース」）
+      const srcBtn = Array.from(document.querySelectorAll("a.btn, button"))
+        .find((el) => text(el) === "ソース");
+      if (srcBtn) {
+        if (!srcBtn.classList.contains("active")) {
+          srcBtn.click();
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+        // pre > code in panel-content
+        const code =
+          document.querySelector("div.panel-content pre code") ||
+          document.querySelector("div.panel pre code") ||
+          document.querySelector("pre code");
+        if (code && (code.textContent || "").length > 100) {
+          html = code.textContent.trim();
+          break;
+        }
+      }
+      await new Promise((r) => setTimeout(r, 400));
+    }
+    location.hash = startHash || "#/trend";
+    await new Promise((r) => setTimeout(r, 600));
+    return html;
+  }
+
   function scrapePerformancePage() {
     const out = {};
     const openCard = document.querySelector("div.statsBlock.statsBlock01");
@@ -275,12 +307,13 @@
     return m ? `${m[1]}-${pad(m[2])}-${pad(m[3])}` : null;
   }
 
-  function buildPayload(row, detail) {
+  function buildPayload(row, detail, html) {
     return {
       brandId: getBrandId(),
       rakutenMailId: row.id,
       subject: row.subject,
       sentDate: toIsoDate(row.sentDateRaw),
+      html: html || undefined,
       results: {
         sentCount: row.sentCount ?? undefined,
         openRate: detail?.openRate ?? row.openRate ?? undefined,
@@ -373,10 +406,12 @@
       setBtn(`⏳ ${i + 1}/${pending.length}: ${row.id}`);
       try {
         let detail = null;
+        let html = null;
         if (detailMode) {
           try { detail = await fetchDetailMetrics(row.id); } catch {}
+          try { html = await fetchHtmlContent(row.id); } catch {}
         }
-        await send(buildPayload(row, detail));
+        await send(buildPayload(row, detail, html));
         ok++;
       } catch (err) {
         ng++;
