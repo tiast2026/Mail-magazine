@@ -13,7 +13,7 @@ export default function HtmlPreview({ html }: { html: string }) {
     doc.open();
     doc.write(
       `<!doctype html><html><head><meta charset="utf-8"><base target="_blank"><style>
-        html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;}
+        html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;overflow:hidden;}
         a{cursor:pointer;}
         #__preview-content{transform-origin:top left;}
       </style></head><body><div id="__preview-content">${html}</div></body></html>`,
@@ -30,8 +30,12 @@ export default function HtmlPreview({ html }: { html: string }) {
       const scale = naturalWidth > containerWidth ? containerWidth / naturalWidth : 1;
       content.style.transform = `scale(${scale})`;
       content.style.width = `${naturalWidth}px`;
-      // 縮小後の高さで iframe を調整
-      iframe.style.height = `${content.scrollHeight * scale + 20}px`;
+      // body 自体のサイズも縮小後サイズに合わせる
+      // → iframe 内に横スクロール/縦スクロールが出ないようにする
+      const scaledH = content.scrollHeight * scale;
+      doc.body.style.width = `${containerWidth}px`;
+      doc.body.style.height = `${scaledH}px`;
+      iframe.style.height = `${scaledH + 4}px`;
     };
 
     fit();
@@ -49,6 +53,7 @@ export default function HtmlPreview({ html }: { html: string }) {
       <iframe
         ref={iframeRef}
         className="w-full block"
+        scrolling="no"
         style={{ minHeight: 400 }}
         sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
         title="メルマガプレビュー"
