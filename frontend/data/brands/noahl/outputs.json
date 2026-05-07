@@ -374,22 +374,25 @@
     ],
     "results": {
       "sentCount": 34273,
-      "openRate": 51.1,
-      "openCount": 17519,
-      "clickCount": 358,
-      "salesCount": 9,
-      "salesAmount": 75330,
+      "openRate": 42.3,
+      "openCount": 14486,
+      "clickCount": 428,
+      "salesCount": 6,
+      "salesAmount": 44320,
       "rakuten": {
         "mailId": "26421978",
         "subject": "【2点で4,980円】きれいめスーツ4型 ＊ マラソン期間限定クーポン",
-        "conversionVisitRate": 0.6,
-        "conversionVisitCount": 215,
-        "transactionCount": 9,
-        "transactionRate": 4.2,
-        "revenuePerSent": 2.2,
+        "conversionVisitRate": 0.7,
+        "conversionVisitCount": 248,
+        "transactionCount": 6,
+        "transactionRate": 2.4,
+        "revenuePerSent": 1.3,
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-07T02:35:06.377Z",
-        "deviceBreakdown": []
+        "importedAt": "2026-05-07T03:00:44.891Z",
+        "deviceBreakdown": [],
+        "listCondition": "指定はありません すべてを見る▼閉じる▲",
+        "favoriteCount": 5,
+        "favoriteRate": 2
       }
     }
   },
