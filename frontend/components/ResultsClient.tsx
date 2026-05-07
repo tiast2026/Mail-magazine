@@ -1085,18 +1085,25 @@ function TimingBox({
         </div>
       ) : (
         <>
-          <table className="w-full text-xs mt-3">
+          <table className="w-full text-xs mt-3 table-fixed">
+            <colgroup>
+              <col />
+              <col className="w-9" />
+              <col className="w-12" />
+              <col className="w-10" />
+              <col className="w-14" />
+            </colgroup>
             <thead className="text-stone-500">
               <tr className="border-b border-stone-200">
                 <th className="text-left py-1.5 font-medium">区分</th>
-                <th className="text-right py-1.5 font-medium">件数</th>
-                <th className="text-right py-1.5 font-medium" title="平均開封率">
+                <th className="text-right py-1.5 font-medium whitespace-nowrap">件数</th>
+                <th className="text-right py-1.5 font-medium whitespace-nowrap" title="平均開封率">
                   開封
                 </th>
-                <th className="text-right py-1.5 font-medium" title="平均転換率">
+                <th className="text-right py-1.5 font-medium whitespace-nowrap" title="平均転換率">
                   転換
                 </th>
-                <th className="text-right py-1.5 font-medium" title="平均 売上/通">
+                <th className="text-right py-1.5 font-medium whitespace-nowrap" title="平均 売上/通">
                   売上/通
                 </th>
               </tr>
@@ -1112,9 +1119,9 @@ function TimingBox({
                       isRec ? "bg-amber-50" : ""
                     }`}
                   >
-                    <td className="py-1.5 pr-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="truncate" title={r.label}>
+                    <td className="py-1.5 pr-1 min-w-0">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="truncate min-w-0" title={r.label}>
                           {r.label}
                         </span>
                         {isRec && (
@@ -1125,27 +1132,27 @@ function TimingBox({
                       </div>
                     </td>
                     <td
-                      className={`py-1.5 text-right tabular-nums ${
+                      className={`py-1.5 text-right tabular-nums whitespace-nowrap ${
                         showCount ? "font-medium" : "text-stone-500"
                       }`}
                     >
                       {r.count}
                     </td>
-                    <td className="py-1.5 text-right tabular-nums">
-                      <div className="flex items-center justify-end gap-1.5">
+                    <td className="py-1.5 text-right tabular-nums whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1 min-w-0">
                         <div
-                          className="h-1 bg-emerald-200 rounded shrink-0"
-                          style={{ width: `${Math.max(barW * 0.3, 2)}px` }}
+                          className="h-1 bg-emerald-200 rounded shrink-0 hidden sm:block"
+                          style={{ width: `${Math.max(barW * 0.18, 2)}px` }}
                         />
                         <span>
                           {r.avgOpenRate > 0 ? r.avgOpenRate.toFixed(1) + "%" : "—"}
                         </span>
                       </div>
                     </td>
-                    <td className="py-1.5 text-right tabular-nums">
+                    <td className="py-1.5 text-right tabular-nums whitespace-nowrap">
                       {r.avgTxRate > 0 ? r.avgTxRate.toFixed(1) + "%" : "—"}
                     </td>
-                    <td className="py-1.5 text-right tabular-nums">
+                    <td className="py-1.5 text-right tabular-nums whitespace-nowrap">
                       {r.avgRevPerSent > 0
                         ? "¥" + r.avgRevPerSent.toFixed(1)
                         : "—"}
