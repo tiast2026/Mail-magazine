@@ -1178,8 +1178,9 @@
         "revenuePerSent": 3,
         "deviceBreakdown": [],
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-07T02:58:51.105Z",
-        "listCondition": "指定はありません すべてを見る▼閉じる▲"
+        "importedAt": "2026-05-07T03:40:07.406Z",
+        "listCondition": "指定はありません",
+        "isFreeQuota": false
       }
     }
   }
