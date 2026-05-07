@@ -109,14 +109,18 @@ export default function RakutenResultsPanel({
               RMS件名: {metrics.subject}
             </div>
           )}
-          {metrics.listCondition && (
-            <div
-              className="text-xs text-stone-500 mt-0.5 truncate max-w-xl"
-              title={metrics.listCondition}
-            >
-              配信先（リスト条件）: {metrics.listCondition}
-            </div>
-          )}
+          {metrics.listCondition && (() => {
+            const cleaned = cleanListCondition(metrics.listCondition);
+            if (!cleaned) return null;
+            return (
+              <div
+                className="text-xs text-stone-500 mt-0.5 truncate max-w-xl"
+                title={cleaned}
+              >
+                配信先: {cleaned}
+              </div>
+            );
+          })()}
         </div>
         <div className="text-right shrink-0">
           {importedAt && (
@@ -255,18 +259,18 @@ export default function RakutenResultsPanel({
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Metric
-              label="CTR"
+              label="CTR（開封クリック率）"
               value={ctr}
               unit="%"
               step={2}
-              hint="クリック数 ÷ 開封数"
+              hint="クリック数 ÷ 開封数（開いた人のうち何%がクリックしたか）"
             />
             <Metric
-              label="CVR"
+              label="CVR（転換率）"
               value={cvr}
               unit="%"
               step={2}
-              hint="転換数 ÷ 送客数"
+              hint="転換数 ÷ 送客数（来訪者のうち何%が購入したか）"
             />
           </div>
         </section>
@@ -595,6 +599,16 @@ function KV({ label, value }: { label: string; value: string }) {
       <div className="text-stone-800 font-medium mt-0.5">{value}</div>
     </div>
   );
+}
+
+/** リスト条件セルから折り畳みUI由来のテキスト（"すべてを見る▼/閉じる▲"等）を除去 */
+function cleanListCondition(s: string): string {
+  return s
+    .replace(/すべてを見る[▼▲△▽]?/g, "")
+    .replace(/閉じる[▼▲△▽]?/g, "")
+    .replace(/[▼▲△▽]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function fmt(n: number | undefined): string {

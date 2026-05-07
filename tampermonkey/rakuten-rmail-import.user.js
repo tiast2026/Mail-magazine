@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.19
+// @version      0.7.20
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -164,7 +164,7 @@
     const revPerSent = idx.revPerSent != null ? parseNum(text(cells[idx.revPerSent])) : null;
     const listCondition =
       idx.listCondition != null
-        ? text(cells[idx.listCondition]).replace(/\s+/g, " ").trim()
+        ? cleanListCondition(text(cells[idx.listCondition]))
         : null;
     // 「無料」バッジ判定: ID セル内（または行内）に「無料」表記があれば無料枠で配信
     const idCellHtml = cells[idx.id]?.textContent || "";
@@ -255,26 +255,58 @@
       else if (label === "売上/通") out.revenuePerSent = main;
     });
     out.deviceBreakdown = scrapeDeviceTables();
-    // 送信開始日時 / 送信完了日時 を thead-tbody テーブルから抽出
-    // 見出しにヘルプアイコン等の追加テキストが混じることがあるため、
-    // includes ベースで部分一致させる（"送信開始日時?" のようなケースを救う）。
-    document.querySelectorAll("table").forEach((tbl) => {
-      const thead = tbl.querySelector("thead tr");
-      if (!thead) return;
-      const ths = Array.from(thead.querySelectorAll("th")).map((th) =>
-        text(th).replace(/\s+/g, ""),
-      );
-      const tr = tbl.querySelector("tbody tr");
-      if (!tr) return;
-      const tds = Array.from(tr.querySelectorAll("td"));
-      ths.forEach((th, i) => {
-        if (th.includes("送信開始日時")) out.sentStartAt = parseDateTimeJP(text(tds[i]));
-        else if (th.includes("送信完了日時")) out.sentEndAt = parseDateTimeJP(text(tds[i]));
-        else if (th.includes("リスト条件"))
-          out.listCondition = text(tds[i]).replace(/\s+/g, " ").trim();
-      });
+
+    // 送信開始日時 / 送信完了日時 / リスト条件 を抽出。
+    // R-Mail のテーブルは <thead> を使うものと使わないものが混在するため、
+    // <th> 要素を全件走査して、その <th> と同じ行（or 親の親 table）の
+    // 同じ列インデックスにある <td> を取る、構造非依存な実装にする。
+    document.querySelectorAll("th").forEach((th) => {
+      const headerText = (th.textContent || "").replace(/\s+/g, "");
+      let key = null;
+      if (headerText.includes("送信開始日時")) key = "sentStartAt";
+      else if (headerText.includes("送信完了日時")) key = "sentEndAt";
+      else if (headerText.includes("リスト条件")) key = "listCondition";
+      if (!key) return;
+
+      const headerRow = th.parentElement;
+      if (!headerRow) return;
+      // 同じ行内の <th>/<td> インデックス
+      const siblings = Array.from(headerRow.children);
+      const colIdx = siblings.indexOf(th);
+      if (colIdx < 0) return;
+
+      const table = th.closest("table");
+      if (!table) return;
+      const allRows = Array.from(table.querySelectorAll("tr"));
+      const rowIdx = allRows.indexOf(headerRow);
+      if (rowIdx < 0) return;
+
+      // ヘッダー行の下の最初の非空セルを取得
+      for (let r = rowIdx + 1; r < allRows.length; r++) {
+        const cells = Array.from(allRows[r].children);
+        const cell = cells[colIdx];
+        if (!cell) continue;
+        const value = (cell.textContent || "").trim();
+        if (!value) continue;
+        if (key === "sentStartAt") out.sentStartAt = parseDateTimeJP(value);
+        else if (key === "sentEndAt") out.sentEndAt = parseDateTimeJP(value);
+        else if (key === "listCondition")
+          out.listCondition = cleanListCondition(value);
+        break;
+      }
     });
     return out;
+  }
+
+  /** リスト条件セルから折り畳みUI（"すべてを見る▼/閉じる▲"等）を除去 */
+  function cleanListCondition(s) {
+    if (!s) return null;
+    return s
+      .replace(/すべてを見る[▼▲△▽]?/g, "")
+      .replace(/閉じる[▼▲△▽]?/g, "")
+      .replace(/[▼▲△▽]/g, "")
+      .replace(/\s+/g, " ")
+      .trim() || null;
   }
 
   /** "2026/05/01 08:10:01" 形式を ISO8601(+09:00) に変換 */
