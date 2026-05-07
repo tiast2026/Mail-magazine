@@ -45,6 +45,14 @@ export default function OutputsListClient({
                 テンプレ {o.templateId}
               </span>
               {o.event && <EventBadge event={o.event} />}
+              {o.results?.rakuten?.isFreeQuota && (
+                <span
+                  className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200"
+                  title="無料枠で配信。料金がかかっていません。"
+                >
+                  💰 無料
+                </span>
+              )}
               <span>商品 {o.products.length} 点</span>
             </div>
             {o.event?.name && (

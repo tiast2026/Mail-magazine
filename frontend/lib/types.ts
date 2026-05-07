@@ -130,6 +130,8 @@ export type RakutenRMailMetrics = {
   sentEndAt?: string;
   /** R-Mail のリスト条件（配信対象セグメント。「指定はありません」= 全件） */
   listCondition?: string;
+  /** 無料枠で配信されたか（R-Mail 一覧の「無料」バッジ）。料金がかからないメルマガ */
+  isFreeQuota?: boolean;
   /** 集計期間 */
   aggregateFrom?: string;
   aggregateTo?: string;

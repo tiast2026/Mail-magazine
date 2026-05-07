@@ -90,6 +90,14 @@ export default function RakutenResultsPanel({
                 ✓ 確定値
               </span>
             )}
+            {metrics.isFreeQuota && (
+              <span
+                title="無料枠で配信されたメルマガ。料金がかかっていません。"
+                className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200"
+              >
+                💰 無料枠
+              </span>
+            )}
           </div>
           {metrics.mailId && (
             <div className="text-sm font-medium mt-0.5">
