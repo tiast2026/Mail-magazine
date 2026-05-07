@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.22
+// @version      0.7.23
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -183,7 +183,8 @@
 
   async function fetchDetailMetrics(mailId) {
     const startHash = location.hash;
-    location.hash = `#/trend/performance/${mailId}`;
+    // 実際の URL は #/performance/{id}（"trend/" は付かない）
+    location.hash = `#/performance/${mailId}`;
     const start = Date.now();
     while (Date.now() - start < 12000) {
       if (document.querySelector("div.statsBlock.statsBlock01 p.percent") &&
