@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.20
+// @version      0.7.22
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -19,7 +19,7 @@
   const DEFAULT_ENDPOINT = "https://mail-magazine.vercel.app/api/results/import";
   const IMPORTED_ENDPOINT = "https://mail-magazine.vercel.app/api/results/imported";
   const TREND_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
-  const BOOTSTRAP_URL = "https://rmail.rms.rakuten.co.jp/?menu=manage&act=cross_device_monthly_summary#/trend";
+  const BOOTSTRAP_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
   const AUTOSTART_KEY = "mm-autostart-v0713";
 
   const LAST_RUN_KEY = "mm_lastRun";
@@ -29,7 +29,10 @@
   const getEndpoint = () => GM_getValue("endpoint", DEFAULT_ENDPOINT);
   const getToken = () => GM_getValue("token", "");
   const getBrandId = () => GM_getValue("brandId", "noahl");
-  const getDetailMode = () => GM_getValue("detailMode", false);
+  // 詳細モード: 各メルマガの performance ページから送信時刻・デバイス別・
+  // 日別推移などの詳細を取得する。デフォルト ON（取り込み時間は伸びるが
+  // 実時刻 sentStartAt が必要なため）。
+  const getDetailMode = () => GM_getValue("detailMode", true);
 
   function getLastRun() {
     try {
@@ -255,6 +258,7 @@
       else if (label === "売上/通") out.revenuePerSent = main;
     });
     out.deviceBreakdown = scrapeDeviceTables();
+    out.dailyTrend = scrapeDailyTrend();
 
     // 送信開始日時 / 送信完了日時 / リスト条件 を抽出。
     // R-Mail のテーブルは <thead> を使うものと使わないものが混在するため、
@@ -360,6 +364,61 @@
     return Array.from(map.values());
   }
 
+  /**
+   * 「日別推移データ」テーブル（X日目 / 日付 / 開封数(全体/PC/スマフォ/タブレット) /
+   * クリック数(...) / 送客数(...)）を DailyMetric[] にスクレイプ。
+   * 各日「件数」「率%」の2行ペアになっており、件数行のみを使う。
+   *
+   * 列構成: [X日目, MM/DD, 開封数全体, 開封数PC, 開封数スマフォ, 開封数タブ,
+   *          クリック数全体, クリック数PC, ..., 送客数全体, ...]
+   * 件数行は MM/DD セルを持ち、率行は持たない（rowspan のため）。
+   */
+  function scrapeDailyTrend() {
+    // 「日別推移データ」見出しを探す
+    let heading = null;
+    document.querySelectorAll("h2,h3,h4,h5,p,div").forEach((el) => {
+      if (heading) return;
+      if (/日別推移データ/.test(text(el)) && el.children.length < 5) {
+        heading = el;
+      }
+    });
+    if (!heading) return undefined;
+    // 直後のテーブルを取得
+    let cur = heading.nextElementSibling;
+    let tbl = null;
+    while (cur && !tbl) {
+      if (cur.matches?.("table")) tbl = cur;
+      else tbl = cur.querySelector?.("table") || null;
+      cur = cur.nextElementSibling;
+    }
+    if (!tbl) return undefined;
+
+    const out = [];
+    const yearGuess = new Date().getFullYear();
+    Array.from(tbl.querySelectorAll("tr")).forEach((row) => {
+      const cells = Array.from(row.children).filter(
+        (c) => c.tagName === "TD" || c.tagName === "TH",
+      );
+      if (cells.length < 4) return;
+      const cellTexts = cells.map((c) => text(c));
+      const dateIdx = cellTexts.findIndex((t) =>
+        /^\d{1,2}\/\d{1,2}$/.test(t),
+      );
+      if (dateIdx < 0) return; // 件数行のみ処理（率行は日付セル無し）
+      const m = cellTexts[dateIdx].match(/^(\d{1,2})\/(\d{1,2})$/);
+      if (!m) return;
+      // dateIdx の直後に開封(全体) → +4 でクリック(全体) → +8 で送客(全体)
+      const opens = parseNum(cellTexts[dateIdx + 1]);
+      const conversions = parseNum(cellTexts[dateIdx + 9]);
+      out.push({
+        date: `${yearGuess}-${pad(m[1])}-${pad(m[2])}`,
+        opens: opens ?? undefined,
+        conversions: conversions ?? undefined,
+      });
+    });
+    return out.length > 0 ? out : undefined;
+  }
+
   function mapDevice(label) {
     const t = label.replace(/\s/g, "");
     if (/^PC/.test(t)) return "pc";
@@ -460,7 +519,10 @@
 
     setBtn("⏳ 取込済みリスト確認…");
     const importedSet = await fetchImportedIds();
+    // 詳細モードは設定次第だが、送信時刻は必須なので detail を常に取得する。
+    // detailMode が false なら HTML 取得だけスキップして高速化。
     const detailMode = getDetailMode();
+    const fetchDetailAlways = true;
 
     let pending = rows.filter((r) => !importedSet.has(r.id));
     let skipped = rows.length - pending.length;
@@ -491,8 +553,10 @@
       try {
         let detail = null;
         let html = null;
-        if (detailMode) {
+        if (fetchDetailAlways) {
           try { detail = await fetchDetailMetrics(row.id); } catch {}
+        }
+        if (detailMode) {
           try { html = await fetchHtmlContent(row.id); } catch {}
         }
         await send(buildPayload(row, detail, html));
