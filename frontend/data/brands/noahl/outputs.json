@@ -700,8 +700,8 @@
     ],
     "results": {
       "sentCount": 13387,
-      "openRate": 57.5,
-      "openCount": 7693,
+      "openRate": 60.2,
+      "openCount": 8060,
       "clickCount": 491,
       "salesCount": 10,
       "salesAmount": 83290,
@@ -714,7 +714,7 @@
         "transactionRate": 2.9,
         "revenuePerSent": 6.2,
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-01T03:02:20.932Z",
+        "importedAt": "2026-05-07T02:45:28.229Z",
         "deviceBreakdown": []
       },
       "aiAnalysis": {
