@@ -84,7 +84,6 @@ export default function ResultsClient({
     return arr;
   }, [filtered, sortKey, sortDir]);
 
-  const totals = aggregateTotals(filtered);
   const [showWorst, setShowWorst] = useState(false);
   const rank = (key: SortKey) =>
     showWorst ? bottomN(filtered, key, 3) : topN(filtered, key, 3);
@@ -166,14 +165,6 @@ export default function ResultsClient({
               return true;
             }}
           />
-
-          {/* 全期間サマリー（フィルター適用後、コンパクト） */}
-          <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Stat label="取込済み" value={`${filtered.length}`} unit="件" sub={filtered.length !== withResults.length ? `(全${withResults.length})` : ""} />
-            <Stat label="合計送信数" value={fmt(totals.sentCount)} unit="通" />
-            <Stat label="平均開封率" value={totals.avgOpenRate.toFixed(1)} unit="%" />
-            <Stat label="合計売上" value={`¥${fmt(totals.revenue)}`} unit="" />
-          </section>
 
           {/* ランキング セクション（6カテゴリ） */}
           <section className="space-y-3">
@@ -529,19 +520,6 @@ function Td({ children, right }: { children?: React.ReactNode; right?: boolean }
   return <td className={`py-2 px-3 ${right ? "text-right" : ""}`}>{children}</td>;
 }
 
-function Stat({ label, value, unit, sub }: { label: string; value: string; unit: string; sub?: string }) {
-  return (
-    <div className="border border-stone-200 rounded bg-white p-4">
-      <div className="text-xs text-stone-500">{label}</div>
-      <div className="mt-1">
-        <span className="text-xl font-semibold">{value}</span>
-        {unit && <span className="text-xs text-stone-500 ml-1">{unit}</span>}
-        {sub && <span className="text-[10px] text-stone-400 ml-1">{sub}</span>}
-      </div>
-    </div>
-  );
-}
-
 function FilterField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
@@ -837,27 +815,6 @@ function aggregateBy(
       sumRevenue: v.revenue,
     }))
     .sort((a, b) => b.sumRevenue - a.sumRevenue);
-}
-
-function aggregateTotals(outputs: MailOutput[]): {
-  sentCount: number;
-  avgOpenRate: number;
-  revenue: number;
-} {
-  let sent = 0, openRateSum = 0, openRateCount = 0, revenue = 0;
-  for (const o of outputs) {
-    if (typeof o.results?.sentCount === "number") sent += o.results.sentCount;
-    if (typeof o.results?.openRate === "number") {
-      openRateSum += o.results.openRate;
-      openRateCount++;
-    }
-    if (typeof o.results?.salesAmount === "number") revenue += o.results.salesAmount;
-  }
-  return {
-    sentCount: sent,
-    avgOpenRate: openRateCount ? openRateSum / openRateCount : 0,
-    revenue,
-  };
 }
 
 function fmt(n: number | undefined | null): string {
@@ -1182,6 +1139,10 @@ function TimingBox({
 type PeriodMetrics = {
   count: number;
   sent: number;
+  /** 無料枠で配信した送信数 */
+  freeSent: number;
+  /** 有料（課金対象）で配信した送信数 */
+  paidSent: number;
   opens: number;
   openRate: number;
   clicks: number;
@@ -1208,6 +1169,8 @@ type PeriodMetrics = {
 function computePeriodMetrics(outputs: MailOutput[]): PeriodMetrics {
   let count = 0,
     sent = 0,
+    freeSent = 0,
+    paidSent = 0,
     opens = 0,
     clicks = 0,
     visitors = 0,
@@ -1230,6 +1193,11 @@ function computePeriodMetrics(outputs: MailOutput[]): PeriodMetrics {
     if (typeof r.sentCount === "number") {
       sent += r.sentCount;
       has.sent = true;
+      if (r.rakuten?.isFreeQuota) {
+        freeSent += r.sentCount;
+      } else {
+        paidSent += r.sentCount;
+      }
     }
     if (typeof r.openCount === "number") {
       opens += r.openCount;
@@ -1260,6 +1228,8 @@ function computePeriodMetrics(outputs: MailOutput[]): PeriodMetrics {
   return {
     count,
     sent,
+    freeSent,
+    paidSent,
     opens,
     clicks,
     visitors,
@@ -1478,7 +1448,11 @@ function MonthlySummary({
           label="送信数"
           value={cur.has.sent ? fmt(cur.sent) : "—"}
           unit={cur.has.sent ? "通" : ""}
-          sub="通数（送信費用とは別）"
+          sub={
+            cur.has.sent && (cur.freeSent > 0 || cur.paidSent > 0)
+              ? `無料 ${fmt(cur.freeSent)} / 有料 ${fmt(cur.paidSent)}`
+              : "通数（送信費用とは別）"
+          }
           delta={
             prev && cur.has.sent && prev.has.sent ? pctDelta(cur.sent, prev.sent) : null
           }
