@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.16
+// @version      0.7.17
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -248,6 +248,8 @@
     });
     out.deviceBreakdown = scrapeDeviceTables();
     // 送信開始日時 / 送信完了日時 を thead-tbody テーブルから抽出
+    // 見出しにヘルプアイコン等の追加テキストが混じることがあるため、
+    // includes ベースで部分一致させる（"送信開始日時?" のようなケースを救う）。
     document.querySelectorAll("table").forEach((tbl) => {
       const thead = tbl.querySelector("thead tr");
       if (!thead) return;
@@ -258,8 +260,8 @@
       if (!tr) return;
       const tds = Array.from(tr.querySelectorAll("td"));
       ths.forEach((th, i) => {
-        if (th === "送信開始日時") out.sentStartAt = parseDateTimeJP(text(tds[i]));
-        else if (th === "送信完了日時") out.sentEndAt = parseDateTimeJP(text(tds[i]));
+        if (th.includes("送信開始日時")) out.sentStartAt = parseDateTimeJP(text(tds[i]));
+        else if (th.includes("送信完了日時")) out.sentEndAt = parseDateTimeJP(text(tds[i]));
       });
     });
     return out;
