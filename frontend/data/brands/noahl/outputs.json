@@ -405,21 +405,21 @@
     ],
     "results": {
       "sentCount": 13104,
-      "openRate": 55.6,
-      "openCount": 7283,
-      "clickCount": 270,
+      "openRate": 58.7,
+      "openCount": 7696,
+      "clickCount": 271,
       "salesCount": 14,
       "salesAmount": 99960,
       "rakuten": {
         "mailId": "26417059",
         "subject": "【 New arrivals 】機能性抜群！新作Tシャツが解禁。期間限定50%OFF&#9833;",
         "conversionVisitRate": 1.2,
-        "conversionVisitCount": 160,
+        "conversionVisitCount": 161,
         "transactionCount": 14,
-        "transactionRate": 8.8,
+        "transactionRate": 8.7,
         "revenuePerSent": 7.6,
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-01T02:59:27.480Z",
+        "importedAt": "2026-05-07T02:35:30.833Z",
         "deviceBreakdown": []
       },
       "aiAnalysis": {
