@@ -1,6 +1,6 @@
 {
   "source": "https://docs.google.com/spreadsheets/d/1XzHo3EGAnBIIt_1Ww44kiuwYbaNW8bvSfgOjvJt_pvg/",
-  "lastSynced": "2026-04-30T06:32:31.788Z",
+  "lastSynced": "2026-05-07T03:19:41.279Z",
   "note": "告知解禁日時 (announcementDate) でユニーク化。「×ポイントアップ」等の派生イベントは除外。",
   "events": [
     {
@@ -34,6 +34,16 @@
       "pageUrl": "https://event.rakuten.co.jp/card/pointday/"
     },
     {
+      "type": "marathon",
+      "category": "お買い物マラソン",
+      "name": "20251014_お買い物マラソン-ポイント最大47倍-",
+      "announcementDate": "2025-09-25T10:00:00+09:00",
+      "startDate": "2025-10-14T20:00:00+09:00",
+      "endDate": "2025-10-17T09:59:00+09:00",
+      "status": "開催終了",
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
+    },
+    {
       "type": "loyalty18",
       "category": "18日ご愛顧感謝デー",
       "name": "毎月18日は楽天市場ご愛顧感謝デー ダイヤモンド会員様ポイント4倍・プラチナ会員様ポイント3倍・ゴールド会員様ポイント2倍(2025/10/18)",
@@ -46,12 +56,12 @@
     {
       "type": "marathon",
       "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2025/10/24〜10/27）",
-      "announcementDate": "2025-10-22T00:00:00+09:00",
+      "name": "20251024_お買い物マラソン-ポイント最大47倍-",
+      "announcementDate": "2025-09-25T10:00:00+09:00",
       "startDate": "2025-10-24T20:00:00+09:00",
       "endDate": "2025-10-27T09:59:00+09:00",
       "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202510"
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
     },
     {
       "type": "marathon",
@@ -376,12 +386,12 @@
     {
       "type": "marathon",
       "category": "お買い物マラソン",
-      "name": "【学割】【お買い物マラソン】楽天学割本メンバー限定！エントリーで全ショップ対象ポイント2倍 （2026/4/24〜4/27）",
-      "announcementDate": "2026-04-22T00:00:00+09:00",
+      "name": "20260424_お買い物マラソン-ポイント最大47倍-",
+      "announcementDate": "2026-04-02T10:00:00+09:00",
       "startDate": "2026-04-24T20:00:00+09:00",
       "endDate": "2026-04-27T09:59:00+09:00",
       "status": "開催終了",
-      "pageUrl": "https://event.rakuten.co.jp/young/campaign/marathon/?l-id=ich_rgw_shoppage_marathon_202604"
+      "pageUrl": "https://event.rakuten.co.jp/campaign/point-up/marathon/"
     },
     {
       "type": "wonderfulday",
