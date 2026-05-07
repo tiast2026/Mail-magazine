@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.26
+// @version      0.7.27
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -19,6 +19,7 @@
   const SCRIPT_VERSION =
     (typeof GM_info !== "undefined" && GM_info?.script?.version) || "unknown";
   const DEFAULT_ENDPOINT = "https://mail-magazine.vercel.app/api/results/import";
+  const DEFAULT_BATCH_ENDPOINT = "https://mail-magazine.vercel.app/api/results/import-batch";
   const IMPORTED_ENDPOINT = "https://mail-magazine.vercel.app/api/results/imported";
   const TREND_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
   // 認証セッション張り直し用に長い形式を使う（SPA 直リンクだとログイン落ちが起きるケースあり）
@@ -30,6 +31,14 @@
   let userClicked = false;
 
   const getEndpoint = () => GM_getValue("endpoint", DEFAULT_ENDPOINT);
+  const getBatchEndpoint = () => {
+    // 個別エンドポイントが上書きされている場合、同じホストの import-batch を導出
+    const ep = getEndpoint();
+    if (ep && ep !== DEFAULT_ENDPOINT) {
+      return ep.replace(/\/api\/results\/import\/?$/, "/api/results/import-batch");
+    }
+    return DEFAULT_BATCH_ENDPOINT;
+  };
   const getToken = () => GM_getValue("token", "");
   const getBrandId = () => GM_getValue("brandId", "noahl");
   // 詳細モード: 各メルマガの performance ページから送信時刻・デバイス別・
@@ -471,8 +480,12 @@
   }
 
   function buildPayload(row, detail, html) {
+    return { brandId: getBrandId(), ...buildItem(row, detail, html) };
+  }
+
+  /** バッチ取込用のアイテム（brandId は外側で1度だけ） */
+  function buildItem(row, detail, html) {
     return {
-      brandId: getBrandId(),
       rakutenMailId: row.id,
       subject: row.subject,
       sentDate: toIsoDate(row.sentDateRaw),
@@ -540,6 +553,47 @@
     });
   }
 
+  function sendBatch(items) {
+    return new Promise((resolve, reject) => {
+      const url = getBatchEndpoint();
+      const hasToken = !!getToken();
+      GM_xmlhttpRequest({
+        method: "POST",
+        url,
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
+        data: JSON.stringify({ brandId: getBrandId(), items }),
+        timeout: 60000,
+        onload: (r) => {
+          let parsed = null;
+          try { parsed = r.responseText ? JSON.parse(r.responseText) : null; } catch {}
+          if (r.status >= 200 && r.status < 300) {
+            resolve(parsed ?? {});
+          } else {
+            const err = new Error(
+              `import-batch API ${r.status}${r.statusText ? " " + r.statusText : ""}` +
+              (!hasToken ? " (token 未設定: 設定画面で X-Ingest-Token を保存してください)" : "")
+            );
+            err.status = r.status;
+            err.body = parsed ?? r.responseText;
+            err.url = url;
+            reject(err);
+          }
+        },
+        onerror: (e) => {
+          const err = new Error(`import-batch network error: ${e?.error || "unknown"}`);
+          err.cause = e;
+          err.url = url;
+          reject(err);
+        },
+        ontimeout: () => {
+          const err = new Error(`import-batch timeout (60s)`);
+          err.url = url;
+          reject(err);
+        },
+      });
+    });
+  }
+
   function fetchImportedIds() {
     return new Promise((resolve) => {
       GM_xmlhttpRequest({
@@ -596,62 +650,89 @@
       if (!confirm(msg)) return;
     }
 
-    let ok = 0, ng = 0;
-    const errors = [];
+    // フェーズ1: 各メルマガの詳細・HTML を順番にスクレイプ（R-Mail 側の操作）
+    const items = [];
+    const scrapeErrors = [];
     for (let i = 0; i < pending.length; i++) {
       const row = pending[i];
-      setBtn(`⏳ ${i + 1}/${pending.length}: ${row.id}`);
-      try {
-        let detail = null;
-        let html = null;
-        if (fetchDetailAlways) {
-          try { detail = await fetchDetailMetrics(row.id); } catch {}
+      setBtn(`⏳ ${i + 1}/${pending.length}: ${row.id}（収集中）`);
+      let detail = null;
+      let html = null;
+      if (fetchDetailAlways) {
+        try { detail = await fetchDetailMetrics(row.id); } catch (e) {
+          scrapeErrors.push({ id: row.id, phase: "detail", error: e });
         }
-        if (detailMode) {
-          try { html = await fetchHtmlContent(row.id); } catch {}
-        }
-        await send(buildPayload(row, detail, html));
-        ok++;
-      } catch (err) {
-        ng++;
-        errors.push({ id: row.id, subject: row.subject, error: err });
       }
-      await new Promise((r) => setTimeout(r, 200));
+      if (detailMode) {
+        try { html = await fetchHtmlContent(row.id); } catch (e) {
+          scrapeErrors.push({ id: row.id, phase: "html", error: e });
+        }
+      }
+      items.push(buildItem(row, detail, html));
+      // R-Mail への過剰負荷を避ける程度の小待機（ネットワーク待機ではない）
+      await new Promise((r) => setTimeout(r, 100));
     }
+
+    // フェーズ2: 一括 POST（GitHub への commit は 1 回のみ → SHA 衝突回避）
+    setBtn(`📤 一括送信中…（${items.length}件）`);
+    let ok = 0, ng = 0;
+    const errors = [];
+    let batchError = null;
+    let perItemResults = [];
+    try {
+      const res = await sendBatch(items);
+      perItemResults = Array.isArray(res?.results) ? res.results : [];
+      ok = res?.successCount ?? 0;
+      ng = res?.failureCount ?? 0;
+      // 失敗アイテムを errors[] に詰め直す（subject はクライアント側 row から復元）
+      const rowById = new Map(pending.map((r) => [r.id, r]));
+      for (const r of perItemResults) {
+        if (!r.ok) {
+          const row = rowById.get(r.rakutenMailId);
+          errors.push({
+            id: r.rakutenMailId ?? "(unknown)",
+            subject: row?.subject ?? r.subject ?? "",
+            error: { message: r.error, status: 0 },
+          });
+        }
+      }
+    } catch (err) {
+      batchError = err;
+      ng = items.length;
+    }
+
     setLastRun();
     updateStatusUI();
 
-    if (ng) {
-      // 詳細はオブジェクト展開できるよう個別に出す
-      console.group(`[Mail-magazine] 取り込みエラー ${ng} 件`);
-      for (const e of errors) {
-        const err = e.error || {};
-        console.warn(
-          `[${e.id}] ${e.subject || ""} → ${err.message || err}`,
-          { status: err.status, body: err.body, url: err.url }
-        );
-      }
-      console.groupEnd();
-      // ステータスコード別に集計してアラートで要点を見せる
-      const byStatus = {};
-      for (const e of errors) {
-        const k = e.error?.status ?? "network";
-        byStatus[k] = (byStatus[k] || 0) + 1;
-      }
-      const summary = Object.entries(byStatus)
-        .map(([k, v]) => `${k}: ${v}件`)
-        .join(" / ");
+    // R-Mail 側のスクレイプ失敗もユーザーに見える形でログ
+    if (scrapeErrors.length) {
+      console.warn(`[Mail-magazine] スクレイプ警告 ${scrapeErrors.length} 件（取込は続行）`, scrapeErrors);
+    }
+
+    if (batchError) {
+      console.error("[Mail-magazine] 一括送信失敗:", batchError, {
+        status: batchError.status, body: batchError.body, url: batchError.url,
+      });
       const hint =
-        byStatus[401] || byStatus[403]
+        batchError.status === 401 || batchError.status === 403
           ? "\n→ 認証エラー: 設定画面で X-Ingest-Token を確認してください"
-          : byStatus[400]
-            ? "\n→ リクエスト不正: ペイロード内容を Console で確認してください"
-            : byStatus[500] || byStatus[502] || byStatus[503]
+          : batchError.status === 400
+            ? "\n→ リクエスト不正: 詳細は Console を確認してください"
+            : batchError.status >= 500
               ? "\n→ サーバーエラー: しばらくしてから再実行してください"
               : "";
       alert(
-        `完了: 成功 ${ok} / 失敗 ${ng}\n` +
-        `エラー内訳: ${summary}${hint}\n\n` +
+        `一括送信に失敗しました: ${batchError.message}${hint}\n\n` +
+        `（詳細は Console を「Mail-magazine」でフィルタしてください）`
+      );
+    } else if (ng) {
+      console.group(`[Mail-magazine] 取り込み失敗 ${ng} 件`);
+      for (const e of errors) {
+        console.warn(`[${e.id}] ${e.subject} → ${e.error.message}`);
+      }
+      console.groupEnd();
+      alert(
+        `完了: 成功 ${ok} / 失敗 ${ng}\n\n` +
         `（詳細は Console を「Mail-magazine」でフィルタしてください）`
       );
     } else {
