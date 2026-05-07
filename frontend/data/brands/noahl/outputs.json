@@ -339,21 +339,21 @@
     ],
     "results": {
       "sentCount": 13164,
-      "openRate": 48.8,
-      "openCount": 6424,
-      "clickCount": 734,
-      "salesCount": 13,
-      "salesAmount": 55810,
+      "openRate": 56.4,
+      "openCount": 7420,
+      "clickCount": 774,
+      "salesCount": 17,
+      "salesAmount": 90550,
       "rakuten": {
         "mailId": "26431856",
         "subject": "【ALL50%OFF】初夏の新作4点に、人気シャツも。＊「今だけ2,990円」で待望の再入荷！",
-        "conversionVisitRate": 3.6,
-        "conversionVisitCount": 468,
-        "transactionCount": 13,
-        "transactionRate": 2.8,
-        "revenuePerSent": 4.2,
+        "conversionVisitRate": 3.8,
+        "conversionVisitCount": 499,
+        "transactionCount": 17,
+        "transactionRate": 3.4,
+        "revenuePerSent": 6.9,
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-01T02:58:46.278Z",
+        "importedAt": "2026-05-07T02:34:44.778Z",
         "deviceBreakdown": []
       }
     }
