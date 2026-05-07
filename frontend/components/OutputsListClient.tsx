@@ -124,8 +124,10 @@ function DateTile({ output: o }: { output: MailOutput }) {
   });
 
   // ステータス判定
+  // R-Mail 取り込み済み（mailId あり）= 確実に配信済。実時刻が無いケースも含めて配信済扱い。
+  const hasRakutenImport = !!o.results?.rakuten?.mailId;
   let status: { label: string; color: string };
-  if (o.results?.rakuten?.sentStartAt || o.sentAt) {
+  if (o.results?.rakuten?.sentStartAt || o.sentAt || hasRakutenImport) {
     status = { label: "配信済", color: "text-emerald-700" };
   } else if (o.scheduledAt && new Date(o.scheduledAt).getTime() > Date.now()) {
     status = { label: "予定", color: "text-amber-700" };
