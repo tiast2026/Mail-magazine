@@ -101,6 +101,14 @@ export default function RakutenResultsPanel({
               RMS件名: {metrics.subject}
             </div>
           )}
+          {metrics.listCondition && (
+            <div
+              className="text-xs text-stone-500 mt-0.5 truncate max-w-xl"
+              title={metrics.listCondition}
+            >
+              配信先（リスト条件）: {metrics.listCondition}
+            </div>
+          )}
         </div>
         <div className="text-right shrink-0">
           {importedAt && (

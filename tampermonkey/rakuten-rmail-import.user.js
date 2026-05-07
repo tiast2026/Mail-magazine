@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.17
+// @version      0.7.18
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -133,6 +133,7 @@
       else if (/転換数/.test(k)) idx.conversions = i;
       else if (k === "売上") idx.revenue = i;
       else if (/売上\/通/.test(k)) idx.revPerSent = i;
+      else if (/リスト条件/.test(k)) idx.listCondition = i;
     });
     return idx;
   }
@@ -161,12 +162,16 @@
     const txRate = parsePctInside(txText);
     const revenue = idx.revenue != null ? parseNum(text(cells[idx.revenue])) : null;
     const revPerSent = idx.revPerSent != null ? parseNum(text(cells[idx.revPerSent])) : null;
+    const listCondition =
+      idx.listCondition != null
+        ? text(cells[idx.listCondition]).replace(/\s+/g, " ").trim()
+        : null;
 
     return {
       id, subject, sentDateRaw, sentCount,
       openCount, openRate, clickCount,
       sendCount, sendRate, txCount, txRate,
-      revenue, revPerSent,
+      revenue, revPerSent, listCondition,
     };
   }
 
@@ -262,6 +267,8 @@
       ths.forEach((th, i) => {
         if (th.includes("送信開始日時")) out.sentStartAt = parseDateTimeJP(text(tds[i]));
         else if (th.includes("送信完了日時")) out.sentEndAt = parseDateTimeJP(text(tds[i]));
+        else if (th.includes("リスト条件"))
+          out.listCondition = text(tds[i]).replace(/\s+/g, " ").trim();
       });
     });
     return out;
@@ -354,6 +361,7 @@
         subject: row.subject,
         sentStartAt: detail?.sentStartAt,
         sentEndAt: detail?.sentEndAt,
+        listCondition: detail?.listCondition ?? row.listCondition ?? undefined,
         conversionVisitRate: detail?.conversionVisitRate ?? row.sendRate ?? undefined,
         conversionVisitCount: detail?.conversionVisitCount ?? row.sendCount ?? undefined,
         transactionCount: detail?.transactionCount ?? row.txCount ?? undefined,
