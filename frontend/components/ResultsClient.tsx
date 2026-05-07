@@ -139,7 +139,21 @@ export default function ResultsClient({
         <EmptyImports />
       ) : (
         <>
-          {/* 集計カード */}
+          {/* 月次サマリー（RMS 月次指標スタイル） */}
+          <MonthlySummary
+            current={filtered}
+            withResults={withResults}
+            filterMonth={filterMonth}
+            extraFilter={(o) => {
+              if (filterEvent && (o.event?.type ?? "") !== filterEvent) return false;
+              if (filterTemplate && o.templateId !== filterTemplate) return false;
+              if (minRating > 0 && (o.results?.rating ?? 0) < minRating) return false;
+              if (searchText && !o.title.toLowerCase().includes(searchText.toLowerCase())) return false;
+              return true;
+            }}
+          />
+
+          {/* 全期間サマリー（フィルター適用後、コンパクト） */}
           <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Stat label="取込済み" value={`${filtered.length}`} unit="件" sub={filtered.length !== withResults.length ? `(全${withResults.length})` : ""} />
             <Stat label="合計送信数" value={fmt(totals.sentCount)} unit="通" />
@@ -1146,6 +1160,365 @@ function TimingBox({
     </div>
   );
 }
+
+// -----------------------------------------
+// 月次サマリー（RMS 月次指標スタイル）
+// -----------------------------------------
+
+type PeriodMetrics = {
+  count: number;
+  sent: number;
+  opens: number;
+  openRate: number;
+  clicks: number;
+  visitors: number;
+  visitorRate: number;
+  favorites: number;
+  favoriteRate: number;
+  txs: number;
+  txRate: number;
+  revenue: number;
+  revenuePerSent: number;
+  /** 各メトリクスのデータが1件でも存在したかどうか。false ならカードで「—」を表示 */
+  has: {
+    sent: boolean;
+    opens: boolean;
+    clicks: boolean;
+    visitors: boolean;
+    favorites: boolean;
+    txs: boolean;
+    revenue: boolean;
+  };
+};
+
+function computePeriodMetrics(outputs: MailOutput[]): PeriodMetrics {
+  let count = 0,
+    sent = 0,
+    opens = 0,
+    clicks = 0,
+    visitors = 0,
+    favorites = 0,
+    txs = 0,
+    revenue = 0;
+  const has = {
+    sent: false,
+    opens: false,
+    clicks: false,
+    visitors: false,
+    favorites: false,
+    txs: false,
+    revenue: false,
+  };
+  for (const o of outputs) {
+    const r = o.results;
+    if (!r) continue;
+    count++;
+    if (typeof r.sentCount === "number") {
+      sent += r.sentCount;
+      has.sent = true;
+    }
+    if (typeof r.openCount === "number") {
+      opens += r.openCount;
+      has.opens = true;
+    }
+    if (typeof r.clickCount === "number") {
+      clicks += r.clickCount;
+      has.clicks = true;
+    }
+    if (typeof r.salesAmount === "number") {
+      revenue += r.salesAmount;
+      has.revenue = true;
+    }
+    if (typeof r.salesCount === "number") {
+      txs += r.salesCount;
+      has.txs = true;
+    }
+    const rk = r.rakuten;
+    if (typeof rk?.conversionVisitCount === "number") {
+      visitors += rk.conversionVisitCount;
+      has.visitors = true;
+    }
+    if (typeof rk?.favoriteCount === "number") {
+      favorites += rk.favoriteCount;
+      has.favorites = true;
+    }
+  }
+  return {
+    count,
+    sent,
+    opens,
+    clicks,
+    visitors,
+    favorites,
+    txs,
+    revenue,
+    openRate: sent > 0 ? (opens / sent) * 100 : 0,
+    visitorRate: sent > 0 ? (visitors / sent) * 100 : 0,
+    favoriteRate: visitors > 0 ? (favorites / visitors) * 100 : 0,
+    txRate: visitors > 0 ? (txs / visitors) * 100 : 0,
+    revenuePerSent: sent > 0 ? revenue / sent : 0,
+    has,
+  };
+}
+
+/** "2026-05" → "2026-04"（1月→前年12月） */
+function prevMonthKey(ym: string): string | null {
+  const m = ym.match(/^(\d{4})-(\d{2})$/);
+  if (!m) return null;
+  let y = parseInt(m[1], 10);
+  let mo = parseInt(m[2], 10) - 1;
+  if (mo === 0) {
+    mo = 12;
+    y--;
+  }
+  return `${y}-${String(mo).padStart(2, "0")}`;
+}
+
+function MonthlySummary({
+  current,
+  withResults,
+  filterMonth,
+  extraFilter,
+}: {
+  current: MailOutput[];
+  withResults: MailOutput[];
+  filterMonth: string;
+  /** 月以外の条件で前月メトリクスを絞り込むためのフィルター */
+  extraFilter: (o: MailOutput) => boolean;
+}) {
+  const cur = computePeriodMetrics(current);
+  const prevKey = filterMonth ? prevMonthKey(filterMonth) : null;
+  const prev = prevKey
+    ? computePeriodMetrics(
+        withResults.filter((o) => extraFilter(o) && monthOf(o) === prevKey),
+      )
+    : null;
+  const heading = filterMonth
+    ? `${formatMonthLabel(filterMonth)}の月次指標`
+    : "全期間の指標";
+
+  return (
+    <section className="space-y-3">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-base font-semibold">{heading}</h2>
+        {prev && (
+          <span className="text-[10px] text-stone-500">
+            前月（{formatMonthLabel(prevKey!)} {prev.count}件）と比較
+          </span>
+        )}
+      </div>
+
+      {/* メイン2カード */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <BigStat
+          icon="💰"
+          label="売上"
+          value={cur.has.revenue ? `¥${fmt(cur.revenue)}` : "—"}
+          delta={
+            prev && cur.has.revenue && prev.has.revenue
+              ? pctDelta(cur.revenue, prev.revenue)
+              : null
+          }
+          deltaUnit="%"
+        />
+        <BigStat
+          icon="📨"
+          label="売上/通"
+          value={
+            cur.has.revenue && cur.has.sent
+              ? `¥${cur.revenuePerSent.toFixed(1)}`
+              : "—"
+          }
+          delta={
+            prev && cur.has.revenue && cur.has.sent && prev.has.revenue && prev.has.sent
+              ? pctDelta(cur.revenuePerSent, prev.revenuePerSent)
+              : null
+          }
+          deltaUnit="%"
+        />
+      </div>
+
+      {/* サブ7カード */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <SubStat
+          label="配信回数"
+          value={fmt(cur.count)}
+          unit="回"
+          delta={prev ? cur.count - prev.count : null}
+          deltaUnit="回"
+          deltaPrecision={0}
+        />
+        <SubStat
+          label="送信数"
+          value={cur.has.sent ? fmt(cur.sent) : "—"}
+          unit={cur.has.sent ? "通" : ""}
+          delta={
+            prev && cur.has.sent && prev.has.sent ? pctDelta(cur.sent, prev.sent) : null
+          }
+          deltaUnit="%"
+        />
+        <SubStat
+          label="開封率"
+          value={cur.has.opens && cur.has.sent ? cur.openRate.toFixed(1) : "—"}
+          unit={cur.has.opens && cur.has.sent ? "%" : ""}
+          sub={cur.has.opens && cur.opens > 0 ? `(${fmt(cur.opens)}件)` : undefined}
+          delta={
+            prev && cur.has.opens && cur.has.sent && prev.has.opens && prev.has.sent
+              ? cur.openRate - prev.openRate
+              : null
+          }
+          deltaUnit="pt"
+          deltaPrecision={1}
+        />
+        <SubStat
+          label="クリック数"
+          value={cur.has.clicks ? fmt(cur.clicks) : "—"}
+          unit={cur.has.clicks ? "件" : ""}
+          delta={
+            prev && cur.has.clicks && prev.has.clicks
+              ? pctDelta(cur.clicks, prev.clicks)
+              : null
+          }
+          deltaUnit="%"
+        />
+        <SubStat
+          label="送客率"
+          value={cur.has.visitors && cur.has.sent ? cur.visitorRate.toFixed(1) : "—"}
+          unit={cur.has.visitors && cur.has.sent ? "%" : ""}
+          sub={cur.has.visitors && cur.visitors > 0 ? `(${fmt(cur.visitors)}件)` : undefined}
+          delta={
+            prev && cur.has.visitors && cur.has.sent && prev.has.visitors && prev.has.sent
+              ? cur.visitorRate - prev.visitorRate
+              : null
+          }
+          deltaUnit="pt"
+          deltaPrecision={1}
+        />
+        <SubStat
+          label="お気に入り登録率"
+          value={
+            cur.has.favorites && cur.has.visitors ? cur.favoriteRate.toFixed(1) : "—"
+          }
+          unit={cur.has.favorites && cur.has.visitors ? "%" : ""}
+          sub={cur.has.favorites && cur.favorites > 0 ? `(${fmt(cur.favorites)}件)` : undefined}
+          delta={
+            prev && cur.has.favorites && cur.has.visitors && prev.has.favorites && prev.has.visitors
+              ? cur.favoriteRate - prev.favoriteRate
+              : null
+          }
+          deltaUnit="pt"
+          deltaPrecision={1}
+        />
+        <SubStat
+          label="転換率"
+          value={cur.has.txs && cur.has.visitors ? cur.txRate.toFixed(1) : "—"}
+          unit={cur.has.txs && cur.has.visitors ? "%" : ""}
+          sub={cur.has.txs && cur.txs > 0 ? `(${fmt(cur.txs)}件)` : undefined}
+          delta={
+            prev && cur.has.txs && cur.has.visitors && prev.has.txs && prev.has.visitors
+              ? cur.txRate - prev.txRate
+              : null
+          }
+          deltaUnit="pt"
+          deltaPrecision={1}
+        />
+        {/* 4n でグリッドを揃えるための空セル */}
+        <div className="hidden sm:block" />
+      </div>
+    </section>
+  );
+}
+
+function pctDelta(cur: number, prev: number): number | null {
+  if (!prev || prev === 0) return null;
+  return ((cur - prev) / prev) * 100;
+}
+
+function BigStat({
+  icon,
+  label,
+  value,
+  delta,
+  deltaUnit,
+}: {
+  icon?: string;
+  label: string;
+  value: string;
+  delta: number | null;
+  deltaUnit: string;
+}) {
+  return (
+    <div className="border border-stone-200 rounded bg-white p-5">
+      <div className="text-xs text-stone-600 flex items-center gap-1.5">
+        {icon && <span aria-hidden>{icon}</span>}
+        <span>{label}</span>
+      </div>
+      <div className="mt-2 text-3xl font-bold tabular-nums">{value}</div>
+      <DeltaPill delta={delta} unit={deltaUnit} />
+    </div>
+  );
+}
+
+function SubStat({
+  label,
+  value,
+  unit,
+  sub,
+  delta,
+  deltaUnit,
+  deltaPrecision,
+}: {
+  label: string;
+  value: string;
+  unit?: string;
+  sub?: string;
+  delta: number | null;
+  deltaUnit: string;
+  deltaPrecision?: number;
+}) {
+  return (
+    <div className="border border-stone-200 rounded bg-white p-3">
+      <div className="text-[11px] text-stone-600">{label}</div>
+      <div className="mt-1 flex items-baseline gap-1">
+        <span className="text-lg font-bold tabular-nums">{value}</span>
+        <span className="text-[10px] text-stone-500">{unit}</span>
+      </div>
+      {sub && <div className="text-[10px] text-stone-400 leading-none">{sub}</div>}
+      <DeltaPill delta={delta} unit={deltaUnit} precision={deltaPrecision} />
+    </div>
+  );
+}
+
+function DeltaPill({
+  delta,
+  unit,
+  precision,
+}: {
+  delta: number | null;
+  unit: string;
+  precision?: number;
+}) {
+  if (delta === null) return <div className="h-3.5 mt-1.5" />; // 余白を揃える
+  const isZero = Math.abs(delta) < 0.05;
+  const isPositive = delta > 0;
+  const sign = isZero ? "" : isPositive ? "+" : "";
+  const arrow = isZero ? "→" : isPositive ? "▲" : "▼";
+  const color = isZero
+    ? "text-stone-400"
+    : isPositive
+      ? "text-sky-700"
+      : "text-rose-700";
+  const p = precision ?? 1;
+  return (
+    <div className={`text-[10px] mt-1.5 leading-none ${color} tabular-nums`}>
+      前月比 {sign}
+      {delta.toFixed(p)}
+      {unit} <span className="text-[9px]">{arrow}</span>
+    </div>
+  );
+}
+
+// -----------------------------------------
 
 function DeviceBox({ rows }: { rows: DeviceTotalRow[] }) {
   const total = rows.reduce((s, r) => s + r.revenue, 0);
