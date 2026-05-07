@@ -355,9 +355,10 @@
         "transactionRate": 3.4,
         "revenuePerSent": 6.9,
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-07T03:00:06.905Z",
+        "importedAt": "2026-05-07T03:40:46.082Z",
         "deviceBreakdown": [],
-        "listCondition": "メール内リンクURLのクリック : 12ヶ月以内ORメール購読開始日 : 3ヶ月以内OR購入期間（予約日） : 3ヶ月間 すべてを見る▼閉じる▲"
+        "listCondition": "メール内リンクURLのクリック : 12ヶ月以内ORメール購読開始日 : 3ヶ月以内OR購入期間（予約日） : 3ヶ月間",
+        "isFreeQuota": true
       }
     }
   },
