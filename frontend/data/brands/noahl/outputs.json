@@ -372,21 +372,21 @@
     ],
     "results": {
       "sentCount": 34273,
-      "openRate": 47.5,
-      "openCount": 16281,
-      "clickCount": 355,
+      "openRate": 51.1,
+      "openCount": 17519,
+      "clickCount": 358,
       "salesCount": 9,
       "salesAmount": 75330,
       "rakuten": {
         "mailId": "26421978",
         "subject": "【2点で4,980円】きれいめスーツ4型 ＊ マラソン期間限定クーポン",
         "conversionVisitRate": 0.6,
-        "conversionVisitCount": 212,
+        "conversionVisitCount": 215,
         "transactionCount": 9,
         "transactionRate": 4.2,
         "revenuePerSent": 2.2,
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-01T02:59:04.815Z",
+        "importedAt": "2026-05-07T02:35:06.377Z",
         "deviceBreakdown": []
       }
     }
