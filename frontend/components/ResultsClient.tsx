@@ -96,6 +96,19 @@ export default function ResultsClient({
     (a, b) => (a.key < b.key ? 1 : a.key > b.key ? -1 : 0),
   );
 
+  // タイミング分析
+  const byDayOfWeek = aggregateByDimension(filtered, dimDayOfWeek);
+  const byHour = aggregateByDimension(filtered, dimHour);
+  const byDayCategory = aggregateByDimension(filtered, dimDayCategory);
+
+  // ターゲット分析
+  const bySegment = aggregateByDimension(filtered, dimSegment);
+  const byDevice = aggregateDeviceTotals(filtered);
+  const byTemplateEvent = aggregateByDimension(filtered, dimTemplateEvent)
+    .filter((r) => r.count >= 1)
+    .sort((a, b) => b.avgRevPerSent - a.avgRevPerSent)
+    .slice(0, 5);
+
   function changeSort(key: SortKey) {
     if (sortKey === key) {
       setSortDir(sortDir === "asc" ? "desc" : "asc");
@@ -202,6 +215,72 @@ export default function ResultsClient({
                 valueKey="favoriteRate"
                 allItems={filtered}
                 isWorst={showWorst}
+              />
+            </div>
+          </section>
+
+          {/* 配信タイミング分析（いつ送ると反応が良いか） */}
+          <section className="space-y-3">
+            <div>
+              <h2 className="text-lg font-semibold">⏰ 配信タイミング分析</h2>
+              <p className="text-xs text-stone-500 mt-1">
+                過去配信から「いつ送ると反応が良いか」を集計。売上/通でソートし、最上位に
+                <span className="mx-0.5 text-amber-700">推奨</span>
+                バッジを付与（2件以上のデータがある場合）。
+              </p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <TimingBox
+                title="曜日別"
+                hint="JST 基準。土日 vs 平日の反応差を確認"
+                rows={byDayOfWeek}
+                emptyHint="—"
+              />
+              <TimingBox
+                title="時間帯別"
+                hint="JST 基準。配信時刻の反応差を確認"
+                rows={byHour}
+                emptyHint={
+                  byHour.length <= 1
+                    ? "現状ほぼ同一時間帯のみ。他時間帯の A/B テストで比較できます"
+                    : "—"
+                }
+              />
+              <TimingBox
+                title="月内日パターン"
+                hint="楽天キャンペーン日との重なり"
+                rows={byDayCategory}
+                emptyHint="—"
+              />
+            </div>
+          </section>
+
+          {/* 配信ターゲット分析（誰に送ると効くか） */}
+          <section className="space-y-3">
+            <div>
+              <h2 className="text-lg font-semibold">🎯 配信ターゲット分析</h2>
+              <p className="text-xs text-stone-500 mt-1">
+                「誰に配信すると効くか」を見るための切り口。セグメント・デバイス・コンテンツ相性。
+              </p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <TimingBox
+                title="セグメント別"
+                hint="RMS のリスト条件で集計"
+                rows={bySegment}
+                emptyHint={
+                  bySegment.length <= 1 && bySegment[0]?.label.includes("全件")
+                    ? "現在は全件配信のみ。年代・購買頻度・ブランドお気に入り等のセグメント配信を試すと、ここで反応差が見えるようになります"
+                    : "—"
+                }
+              />
+              <DeviceBox rows={byDevice} />
+              <TimingBox
+                title="テンプレ × イベント 相性 TOP5"
+                hint="どのコンテンツ×訴求が当たるか。売上/通で順位付け"
+                rows={byTemplateEvent}
+                emptyHint="—"
+                showCount
               />
             </div>
           </section>
@@ -776,4 +855,345 @@ function formatMonthLabel(ym: string): string {
   const m = ym.match(/^(\d{4})-(\d{2})$/);
   if (!m) return ym;
   return `${m[1]}年${parseInt(m[2], 10)}月`;
+}
+
+// -----------------------------------------
+// タイミング・ターゲット分析
+// -----------------------------------------
+
+type TimingRow = {
+  key: string;
+  label: string;
+  count: number;
+  avgOpenRate: number;
+  avgTxRate: number;
+  avgRevPerSent: number;
+};
+
+const DOW_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
+
+/** ISO 文字列を JST の Date として返す。後段は getUTCXxx で読む前提（実行環境の TZ に依存しない） */
+function jstDate(o: MailOutput): Date | null {
+  const iso = o.results?.rakuten?.sentStartAt ?? o.sentAt ?? o.scheduledAt;
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  return new Date(d.getTime() + 9 * 3600 * 1000);
+}
+
+function dimDayOfWeek(o: MailOutput): { key: string; label: string } | null {
+  const d = jstDate(o);
+  if (!d) return null;
+  const dow = d.getUTCDay();
+  const isWeekend = dow === 0 || dow === 6;
+  return {
+    key: String(dow),
+    label: `${DOW_LABELS[dow]}曜${isWeekend ? "（週末）" : ""}`,
+  };
+}
+
+function dimHour(o: MailOutput): { key: string; label: string } | null {
+  const d = jstDate(o);
+  if (!d) return null;
+  const h = d.getUTCHours();
+  return { key: String(h), label: `${String(h).padStart(2, "0")}:00 台` };
+}
+
+function dimDayCategory(o: MailOutput): { key: string; label: string } | null {
+  const d = jstDate(o);
+  if (!d) return null;
+  const day = d.getUTCDate();
+  if (day === 1) return { key: "wonderful", label: "ワンダフルデー (1日)" };
+  if (day % 5 === 0) return { key: "points", label: "5・0のつく日" };
+  if (day >= 28) return { key: "monthend", label: "月末 (28日以降)" };
+  return { key: "other", label: "通常日" };
+}
+
+function dimSegment(o: MailOutput): { key: string; label: string } {
+  const lc = o.results?.rakuten?.listCondition;
+  if (!lc || /指定はありません|すべて/.test(lc)) {
+    return { key: "all", label: "全件配信" };
+  }
+  // 長すぎるラベルは省略
+  const trimmed = lc.replace(/▼閉じる▲/g, "").trim();
+  return { key: trimmed, label: trimmed.length > 30 ? trimmed.slice(0, 30) + "…" : trimmed };
+}
+
+function dimTemplateEvent(o: MailOutput): { key: string; label: string } {
+  const t = o.templateId || "(なし)";
+  const e = o.event?.type ? getEventLabel(o.event.type) : "通常配信";
+  return { key: `${t}|${e}`, label: `テンプレ ${t} × ${e}` };
+}
+
+function aggregateByDimension(
+  outputs: MailOutput[],
+  dimension: (o: MailOutput) => { key: string; label: string } | null,
+): TimingRow[] {
+  type Acc = {
+    label: string;
+    openSum: number;
+    openN: number;
+    txSum: number;
+    txN: number;
+    rpsSum: number;
+    rpsN: number;
+    count: number;
+  };
+  const map = new Map<string, Acc>();
+  for (const o of outputs) {
+    const dim = dimension(o);
+    if (!dim) continue;
+    const cur = map.get(dim.key) ?? {
+      label: dim.label,
+      openSum: 0,
+      openN: 0,
+      txSum: 0,
+      txN: 0,
+      rpsSum: 0,
+      rpsN: 0,
+      count: 0,
+    };
+    cur.count++;
+    if (typeof o.results?.openRate === "number") {
+      cur.openSum += o.results.openRate;
+      cur.openN++;
+    }
+    const rk = o.results?.rakuten;
+    if (typeof rk?.transactionRate === "number") {
+      cur.txSum += rk.transactionRate;
+      cur.txN++;
+    }
+    if (typeof rk?.revenuePerSent === "number") {
+      cur.rpsSum += rk.revenuePerSent;
+      cur.rpsN++;
+    }
+    map.set(dim.key, cur);
+  }
+  return Array.from(map.entries())
+    .map(([key, v]) => ({
+      key,
+      label: v.label,
+      count: v.count,
+      avgOpenRate: v.openN ? v.openSum / v.openN : 0,
+      avgTxRate: v.txN ? v.txSum / v.txN : 0,
+      avgRevPerSent: v.rpsN ? v.rpsSum / v.rpsN : 0,
+    }))
+    .sort((a, b) => b.avgRevPerSent - a.avgRevPerSent);
+}
+
+type DeviceTotalRow = {
+  device: string;
+  label: string;
+  opens: number;
+  clicks: number;
+  conversions: number;
+  revenue: number;
+};
+
+const DEVICE_LABELS: Record<string, string> = {
+  pc: "PC",
+  smartphone: "スマートフォン",
+  tablet: "タブレット",
+  app: "楽天アプリ",
+  total: "合計",
+};
+
+function aggregateDeviceTotals(outputs: MailOutput[]): DeviceTotalRow[] {
+  const map = new Map<string, DeviceTotalRow>();
+  for (const o of outputs) {
+    const breakdown = o.results?.rakuten?.deviceBreakdown ?? [];
+    for (const d of breakdown) {
+      if (d.device === "total") continue; // 合算はスキップ
+      const cur = map.get(d.device) ?? {
+        device: d.device,
+        label: DEVICE_LABELS[d.device] ?? d.device,
+        opens: 0,
+        clicks: 0,
+        conversions: 0,
+        revenue: 0,
+      };
+      cur.opens += d.opens ?? 0;
+      cur.clicks += d.clicks ?? 0;
+      cur.conversions += d.conversions ?? 0;
+      cur.revenue += d.revenue ?? 0;
+      map.set(d.device, cur);
+    }
+  }
+  return Array.from(map.values()).sort((a, b) => b.revenue - a.revenue);
+}
+
+function TimingBox({
+  title,
+  hint,
+  rows,
+  emptyHint,
+  showCount,
+}: {
+  title: string;
+  hint?: string;
+  rows: TimingRow[];
+  emptyHint?: string;
+  /** 件数カラムを目立たせるか（テンプレ×イベントなど件数自体に意味がある場合） */
+  showCount?: boolean;
+}) {
+  // 推奨判定：avgRevPerSent が最大かつ count >= 2、かつ比較対象が複数ある場合のみ
+  const eligible = rows.filter((r) => r.count >= 2);
+  const recommendedKey =
+    rows.length >= 2 && eligible.length > 0
+      ? eligible.reduce((best, r) => (r.avgRevPerSent > best.avgRevPerSent ? r : best))
+          .key
+      : null;
+  const singleRow = rows.length === 1;
+  // 開封率の最大値（バー長さの基準）
+  const maxOpen = Math.max(...rows.map((r) => r.avgOpenRate), 0.01);
+
+  return (
+    <div className="border border-stone-200 rounded bg-white p-4">
+      <h3 className="text-sm font-semibold">{title}</h3>
+      {hint && (
+        <div className="text-[10px] text-stone-500 mt-0.5 leading-snug">
+          {hint}
+        </div>
+      )}
+      {rows.length === 0 ? (
+        <div className="text-xs text-stone-400 py-3">
+          {emptyHint && emptyHint !== "—" ? emptyHint : "データなし"}
+        </div>
+      ) : (
+        <>
+          <table className="w-full text-xs mt-3">
+            <thead className="text-stone-500">
+              <tr className="border-b border-stone-200">
+                <th className="text-left py-1.5 font-medium">区分</th>
+                <th className="text-right py-1.5 font-medium">件数</th>
+                <th className="text-right py-1.5 font-medium" title="平均開封率">
+                  開封
+                </th>
+                <th className="text-right py-1.5 font-medium" title="平均転換率">
+                  転換
+                </th>
+                <th className="text-right py-1.5 font-medium" title="平均 売上/通">
+                  売上/通
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => {
+                const isRec = r.key === recommendedKey;
+                const barW = (r.avgOpenRate / maxOpen) * 100;
+                return (
+                  <tr
+                    key={r.key}
+                    className={`border-b border-stone-100 ${
+                      isRec ? "bg-amber-50" : ""
+                    }`}
+                  >
+                    <td className="py-1.5 pr-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="truncate" title={r.label}>
+                          {r.label}
+                        </span>
+                        {isRec && (
+                          <span className="shrink-0 text-[9px] px-1 py-px rounded bg-amber-200 text-amber-900 font-semibold">
+                            推奨
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td
+                      className={`py-1.5 text-right tabular-nums ${
+                        showCount ? "font-medium" : "text-stone-500"
+                      }`}
+                    >
+                      {r.count}
+                    </td>
+                    <td className="py-1.5 text-right tabular-nums">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <div
+                          className="h-1 bg-emerald-200 rounded shrink-0"
+                          style={{ width: `${Math.max(barW * 0.3, 2)}px` }}
+                        />
+                        <span>
+                          {r.avgOpenRate > 0 ? r.avgOpenRate.toFixed(1) + "%" : "—"}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-1.5 text-right tabular-nums">
+                      {r.avgTxRate > 0 ? r.avgTxRate.toFixed(1) + "%" : "—"}
+                    </td>
+                    <td className="py-1.5 text-right tabular-nums">
+                      {r.avgRevPerSent > 0
+                        ? "¥" + r.avgRevPerSent.toFixed(1)
+                        : "—"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {singleRow && emptyHint && emptyHint !== "—" && (
+            <div className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1.5 mt-2 leading-snug">
+              💡 {emptyHint}
+            </div>
+          )}
+          {!singleRow && recommendedKey === null && rows.some((r) => r.count < 2) && (
+            <div className="text-[10px] text-stone-400 mt-2">
+              ※ 各区分で2件以上のデータが揃うと推奨が表示されます
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function DeviceBox({ rows }: { rows: DeviceTotalRow[] }) {
+  const total = rows.reduce((s, r) => s + r.revenue, 0);
+  return (
+    <div className="border border-stone-200 rounded bg-white p-4">
+      <h3 className="text-sm font-semibold">デバイス別合算</h3>
+      <div className="text-[10px] text-stone-500 mt-0.5 leading-snug">
+        全配信のデバイス別合算。スマホ vs PC の構成比
+      </div>
+      {rows.length === 0 ? (
+        <div className="text-xs text-stone-400 py-3">
+          デバイス別データはまだ取り込まれていません。RMS から「📨 メルマガ分析取得」を実行すると表示されます
+        </div>
+      ) : (
+        <table className="w-full text-xs mt-3">
+          <thead className="text-stone-500">
+            <tr className="border-b border-stone-200">
+              <th className="text-left py-1.5 font-medium">デバイス</th>
+              <th className="text-right py-1.5 font-medium">開封</th>
+              <th className="text-right py-1.5 font-medium">クリック</th>
+              <th className="text-right py-1.5 font-medium">売上</th>
+              <th className="text-right py-1.5 font-medium">構成比</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const share = total > 0 ? (r.revenue / total) * 100 : 0;
+              return (
+                <tr key={r.device} className="border-b border-stone-100">
+                  <td className="py-1.5">{r.label}</td>
+                  <td className="py-1.5 text-right tabular-nums">
+                    {fmt(r.opens)}
+                  </td>
+                  <td className="py-1.5 text-right tabular-nums">
+                    {fmt(r.clicks)}
+                  </td>
+                  <td className="py-1.5 text-right tabular-nums">
+                    ¥{fmt(r.revenue)}
+                  </td>
+                  <td className="py-1.5 text-right tabular-nums text-stone-500">
+                    {share.toFixed(0)}%
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
 }
