@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.24
+// @version      0.7.25
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -86,6 +86,10 @@
   }
   function isPerformancePage() {
     return isRMailHost() && /^#\/(?:trend\/)?performance\/\d+/.test(location.hash || "");
+  }
+  /** R-Mail がエラーページにリダイレクトしたか（古いメルマガでクロスデバイス未対応など） */
+  function isErrorPage() {
+    return /^#\/error/.test(location.hash || "");
   }
 
   function findTrendTable() {
@@ -187,7 +191,9 @@
     // 実際の URL は #/performance/{id}（"trend/" は付かない）
     location.hash = `#/performance/${mailId}`;
     const start = Date.now();
+    let errored = false;
     while (Date.now() - start < 12000) {
+      if (isErrorPage()) { errored = true; break; }
       if (document.querySelector("div.statsBlock.statsBlock01 p.percent") &&
           document.querySelector("table.type1.table01 tbody td")) {
         await new Promise((r) => setTimeout(r, 500));
@@ -195,10 +201,27 @@
       }
       await new Promise((r) => setTimeout(r, 250));
     }
+    if (errored) {
+      console.warn(`[mail-magazine] performance ${mailId}: R-Mail がエラーページに遷移（古いメルマガでクロスデバイス分析が無い等）。詳細をスキップ`);
+      location.hash = "#/trend";
+      // SPA をトレンド画面に戻して安定するまで待つ
+      await waitForTrendPage(3000);
+      return null;
+    }
     const detail = scrapePerformancePage();
     location.hash = startHash || "#/trend";
     await new Promise((r) => setTimeout(r, 600));
     return detail;
+  }
+
+  /** トレンド画面のテーブルが描画されるまで待機（最大 timeoutMs ms） */
+  async function waitForTrendPage(timeoutMs) {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      if (findTrendTable()) return true;
+      await new Promise((r) => setTimeout(r, 200));
+    }
+    return false;
   }
 
   /** コンテンツ分析画面の「ソース」ボタンから HTML を取得 */
@@ -207,7 +230,9 @@
     location.hash = `#/content-analysis/${mailId}`;
     const start = Date.now();
     let html = null;
+    let errored = false;
     while (Date.now() - start < 12000) {
+      if (isErrorPage()) { errored = true; break; }
       // ソースボタンを探す（class="btn"、テキスト「ソース」）
       const srcBtn = Array.from(document.querySelectorAll("a.btn, button"))
         .find((el) => text(el) === "ソース");
@@ -227,6 +252,12 @@
         }
       }
       await new Promise((r) => setTimeout(r, 400));
+    }
+    if (errored) {
+      console.warn(`[mail-magazine] content-analysis ${mailId}: R-Mail がエラーページに遷移。HTML 取得をスキップ`);
+      location.hash = "#/trend";
+      await waitForTrendPage(3000);
+      return null;
     }
     location.hash = startHash || "#/trend";
     await new Promise((r) => setTimeout(r, 600));
