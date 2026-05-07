@@ -61,17 +61,37 @@ export default function ResultsClient({
     return Array.from(set).sort().reverse(); // 新しい月が上
   }, [withResults]);
 
+  // 期間タブで指定された期間（全期間/直近N日/月別）を現在の filtered に反映する
+  const summaryBucket = useMemo(
+    () => getDateBucket(summaryRange, filterMonth),
+    [summaryRange, filterMonth],
+  );
+
   const filtered = useMemo(() => {
+    const range = summaryBucket.range;
     return withResults.filter((o) => {
       if (filterEvent && (o.event?.type ?? "") !== filterEvent) return false;
       if (filterTemplate && o.templateId !== filterTemplate) return false;
-      if (filterMonth && monthOf(o) !== filterMonth) return false;
       if (minRating > 0 && (o.results?.rating ?? 0) < minRating) return false;
       if (searchText && !o.title.toLowerCase().includes(searchText.toLowerCase()))
         return false;
+      // summaryRange "month" は filterMonth を range に変換済みなので
+      // ここで重複チェックしない。summaryRange "all" の場合は range が null
+      if (range) {
+        const t = sendTimeMs(o);
+        if (t === null) return false;
+        if (t < range.from || t >= range.to) return false;
+      }
       return true;
     });
-  }, [withResults, filterEvent, filterTemplate, filterMonth, minRating, searchText]);
+  }, [
+    withResults,
+    filterEvent,
+    filterTemplate,
+    minRating,
+    searchText,
+    summaryBucket,
+  ]);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
@@ -128,6 +148,7 @@ export default function ResultsClient({
     setFilterMonth("");
     setMinRating(0);
     setSearchText("");
+    setSummaryRange("all");
   }
 
   return (
@@ -310,10 +331,19 @@ export default function ResultsClient({
               title="月別"
               rows={byMonth}
               labelMap={(k) => formatMonthLabel(k)}
-              activeKey={filterMonth || undefined}
-              onRowClick={(k) =>
-                setFilterMonth(filterMonth === k ? "" : k)
+              activeKey={
+                summaryRange === "month" && filterMonth ? filterMonth : undefined
               }
+              onRowClick={(k) => {
+                // 同じ月をもう一度押すと「全期間」へ。違う月なら「月別」モードに切替
+                if (summaryRange === "month" && filterMonth === k) {
+                  setSummaryRange("all");
+                  setFilterMonth("");
+                } else {
+                  setSummaryRange("month");
+                  setFilterMonth(k);
+                }
+              }}
             />
           </section>
 
@@ -346,8 +376,17 @@ export default function ResultsClient({
               </FilterField>
               <FilterField label="月">
                 <select
-                  value={filterMonth}
-                  onChange={(e) => setFilterMonth(e.target.value)}
+                  value={summaryRange === "month" ? filterMonth : ""}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    if (v) {
+                      setSummaryRange("month");
+                      setFilterMonth(v);
+                    } else {
+                      setSummaryRange("all");
+                      setFilterMonth("");
+                    }
+                  }}
                   className="w-full text-xs border border-stone-300 rounded px-2 py-1"
                 >
                   <option value="">全期間</option>
