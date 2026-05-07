@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.18
+// @version      0.7.19
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -166,12 +166,15 @@
       idx.listCondition != null
         ? text(cells[idx.listCondition]).replace(/\s+/g, " ").trim()
         : null;
+    // 「無料」バッジ判定: ID セル内（または行内）に「無料」表記があれば無料枠で配信
+    const idCellHtml = cells[idx.id]?.textContent || "";
+    const isFreeQuota = /無料/.test(idCellHtml);
 
     return {
       id, subject, sentDateRaw, sentCount,
       openCount, openRate, clickCount,
       sendCount, sendRate, txCount, txRate,
-      revenue, revPerSent, listCondition,
+      revenue, revPerSent, listCondition, isFreeQuota,
     };
   }
 
@@ -362,6 +365,7 @@
         sentStartAt: detail?.sentStartAt,
         sentEndAt: detail?.sentEndAt,
         listCondition: detail?.listCondition ?? row.listCondition ?? undefined,
+        isFreeQuota: row.isFreeQuota ?? undefined,
         conversionVisitRate: detail?.conversionVisitRate ?? row.sendRate ?? undefined,
         conversionVisitCount: detail?.conversionVisitCount ?? row.sendCount ?? undefined,
         transactionCount: detail?.transactionCount ?? row.txCount ?? undefined,
