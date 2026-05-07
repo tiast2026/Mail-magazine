@@ -128,6 +128,8 @@ export type RakutenRMailMetrics = {
   sentStartAt?: string;
   /** 配信完了日時 */
   sentEndAt?: string;
+  /** R-Mail のリスト条件（配信対象セグメント。「指定はありません」= 全件） */
+  listCondition?: string;
   /** 集計期間 */
   aggregateFrom?: string;
   aggregateTo?: string;
