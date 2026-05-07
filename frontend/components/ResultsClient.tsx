@@ -125,6 +125,11 @@ export default function ResultsClient({
   const byHour = aggregateByDimension(filtered, dimHour);
   const byDayCategory = aggregateByDimension(filtered, dimDayCategory);
 
+  // チャート用に欠損バケットを埋める（曜日0-6 / 時間0-23）
+  const dayOfWeekChartBars = fillDayOfWeekBuckets(byDayOfWeek);
+  const hourChartBars = fillHourBuckets(byHour);
+  const monthChartBars = monthRevenueBars(byMonth);
+
   // ターゲット分析
   const bySegment = aggregateByDimension(filtered, dimSegment);
   const byDevice = aggregateDeviceTotals(filtered);
@@ -274,12 +279,16 @@ export default function ResultsClient({
                 title="曜日別"
                 hint="JST 基準。土日 vs 平日の反応差を確認"
                 rows={byDayOfWeek}
+                chartBars={dayOfWeekChartBars}
+                chartLabel="開封率"
                 emptyHint="—"
               />
               <TimingBox
                 title="時間帯別"
                 hint="JST 基準。配信時刻の反応差を確認"
                 rows={byHour}
+                chartBars={hourChartBars}
+                chartLabel="開封率"
                 emptyHint={
                   byHour.length <= 1
                     ? "現状ほぼ同一時間帯のみ。他時間帯の A/B テストで比較できます"
@@ -324,6 +333,21 @@ export default function ResultsClient({
               />
             </div>
           </section>
+
+          {/* 月別売上推移（チャート + 既存の月別表） */}
+          {monthChartBars.length > 1 && (
+            <section className="border border-stone-200 rounded bg-white p-3">
+              <h3 className="text-sm font-semibold">📈 月別売上推移</h3>
+              <p className="text-[10px] text-stone-500 mt-0.5">
+                各月の売上合計（最大値で正規化）
+              </p>
+              <BarChart
+                bars={monthChartBars}
+                height={70}
+                formatValue={(v) => "¥" + fmt(Math.round(v))}
+              />
+            </section>
+          )}
 
           {/* 月別集計（クリックでフィルター適用） */}
           <section>
@@ -1046,12 +1070,113 @@ function aggregateDeviceTotals(outputs: MailOutput[]): DeviceTotalRow[] {
   return Array.from(map.values()).sort((a, b) => b.revenue - a.revenue);
 }
 
+// -----------------------------------------
+// チャート用バー配列の生成
+// -----------------------------------------
+
+type ChartBar = { key: string; label: string; value: number; emphasized?: boolean };
+
+/** 曜日別バー（日〜土の7個。データ無い曜日は値0で含める） */
+function fillDayOfWeekBuckets(rows: TimingRow[]): ChartBar[] {
+  const valueByKey = new Map(rows.map((r) => [r.key, r.avgOpenRate]));
+  return DOW_LABELS.map((label, i) => ({
+    key: String(i),
+    label,
+    value: valueByKey.get(String(i)) ?? 0,
+    emphasized: i === 0 || i === 6, // 週末
+  }));
+}
+
+/** 時間帯別バー（0〜23時の24個。データ無い時間は値0で含める） */
+function fillHourBuckets(rows: TimingRow[]): ChartBar[] {
+  const valueByKey = new Map(rows.map((r) => [r.key, r.avgOpenRate]));
+  return Array.from({ length: 24 }, (_, h) => ({
+    key: String(h),
+    label: String(h),
+    value: valueByKey.get(String(h)) ?? 0,
+  }));
+}
+
+/** 月別バー（売上、月の昇順） */
+function monthRevenueBars(
+  byMonth: Array<{ key: string; sumRevenue: number }>,
+): ChartBar[] {
+  return [...byMonth]
+    .filter((r) => r.key !== "(不明)")
+    .sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
+    .map((r) => ({
+      key: r.key,
+      label: formatMonthLabelShort(r.key),
+      value: r.sumRevenue,
+    }));
+}
+
+/** "2026-05" → "5月"（短縮ラベル） */
+function formatMonthLabelShort(ym: string): string {
+  const m = ym.match(/^\d{4}-(\d{2})$/);
+  return m ? `${parseInt(m[1], 10)}月` : ym;
+}
+
+/** シンプルな垂直バーチャート（SVG/div ベース、外部ライブラリなし） */
+function BarChart({
+  bars,
+  height = 60,
+  formatValue,
+}: {
+  bars: ChartBar[];
+  height?: number;
+  formatValue?: (v: number) => string;
+}) {
+  const max = Math.max(...bars.map((b) => b.value), 0.01);
+  return (
+    <div
+      className="flex items-end gap-px mt-2"
+      style={{ height: `${height + 16}px` }}
+    >
+      {bars.map((b) => {
+        const h = (b.value / max) * height;
+        const hasValue = b.value > 0;
+        return (
+          <div
+            key={b.key}
+            className="flex-1 flex flex-col items-center gap-0.5 min-w-0"
+            title={`${b.label}: ${formatValue ? formatValue(b.value) : b.value.toFixed(1)}`}
+          >
+            <div
+              className="w-full flex items-end"
+              style={{ height: `${height}px` }}
+            >
+              <div
+                className={`w-full rounded-t-sm ${
+                  hasValue
+                    ? b.emphasized
+                      ? "bg-amber-400"
+                      : "bg-stone-500"
+                    : "bg-stone-100"
+                }`}
+                style={{
+                  height: `${Math.max(h, hasValue ? 2 : 1)}px`,
+                }}
+              />
+            </div>
+            <div className="text-[9px] text-stone-500 truncate w-full text-center leading-tight">
+              {b.label}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function TimingBox({
   title,
   hint,
   rows,
   emptyHint,
   showCount,
+  chartBars,
+  chartLabel,
 }: {
   title: string;
   hint?: string;
@@ -1059,6 +1184,9 @@ function TimingBox({
   emptyHint?: string;
   /** 件数カラムを目立たせるか（テンプレ×イベントなど件数自体に意味がある場合） */
   showCount?: boolean;
+  /** 表の上に表示するチャート用バー配列（曜日別/時間帯別） */
+  chartBars?: Array<{ key: string; label: string; value: number; emphasized?: boolean }>;
+  chartLabel?: string;
 }) {
   // 推奨判定：avgRevPerSent が最大かつ count >= 2、かつ比較対象が複数ある場合のみ
   const eligible = rows.filter((r) => r.count >= 2);
@@ -1083,6 +1211,15 @@ function TimingBox({
         </div>
       ) : (
         <>
+          {chartBars && chartBars.length > 1 && (
+            <BarChart
+              bars={chartBars}
+              height={50}
+              formatValue={(v) =>
+                chartLabel ? `${chartLabel}: ${v.toFixed(1)}%` : v.toFixed(1)
+              }
+            />
+          )}
           <table className="w-full text-xs mt-2 table-fixed">
             <colgroup>
               <col />
