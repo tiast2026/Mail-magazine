@@ -664,8 +664,9 @@
         "transactionRate": 5.8,
         "revenuePerSent": 3.4,
         "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
-        "importedAt": "2026-05-07T02:40:18.849Z",
-        "deviceBreakdown": []
+        "importedAt": "2026-05-07T03:03:57.317Z",
+        "deviceBreakdown": [],
+        "listCondition": "指定はありません すべてを見る▼閉じる▲"
       },
       "aiAnalysis": {
         "analyzedAt": "2026-05-01T13:00:00.000Z",
