@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.27
+// @version      0.7.28
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -314,6 +314,7 @@
       if (headerText.includes("送信開始日時")) key = "sentStartAt";
       else if (headerText.includes("送信完了日時")) key = "sentEndAt";
       else if (headerText.includes("リスト条件")) key = "listCondition";
+      else if (headerText === "送信数") key = "sentCount";
       if (!key) return;
 
       const headerRow = th.parentElement;
@@ -340,6 +341,7 @@
         else if (key === "sentEndAt") out.sentEndAt = parseDateTimeJP(value);
         else if (key === "listCondition")
           out.listCondition = cleanListCondition(value);
+        else if (key === "sentCount") out.sentCount = parseNum(value);
         break;
       }
     });
@@ -781,6 +783,22 @@
     });
     wrap.appendChild(btn);
 
+    // パフォーマンスページ専用: この件だけ取り込むボタン
+    const single = document.createElement("button");
+    single.id = "mm-single-btn";
+    single.textContent = "📧 この件だけ取り込む";
+    Object.assign(single.style, {
+      padding: "10px 16px", background: "#4a3b2d", color: "#fff",
+      border: "none", borderRadius: "24px", cursor: "pointer",
+      fontSize: "14px", boxShadow: "0 2px 8px rgba(0,0,0,.25)",
+      whiteSpace: "nowrap", display: "none",
+    });
+    single.addEventListener("click", (e) => {
+      if (!e.isTrusted) return;
+      runSingleMail(single);
+    });
+    wrap.appendChild(single);
+
     const cog = document.createElement("button");
     cog.id = "mm-cog";
     cog.textContent = "⚙";
@@ -804,6 +822,114 @@
 
     updateStatusUI();
     setInterval(updateStatusUI, 60 * 1000);
+    updateSingleBtnVisibility();
+    window.addEventListener("hashchange", updateSingleBtnVisibility);
+  }
+
+  /** #/performance/{id} を見ているときだけ「この件だけ取り込む」を表示 */
+  function updateSingleBtnVisibility() {
+    const single = document.getElementById("mm-single-btn");
+    if (!single) return;
+    single.style.display = isPerformancePage() ? "" : "none";
+  }
+
+  /** ヘッダー（h1〜h3）から件名を抽出: "26352161: 件名…" の形式に対応 */
+  function scrapeSubjectFromHeading() {
+    for (const h of document.querySelectorAll("h1, h2, h3")) {
+      const t = text(h);
+      const m = t.match(/^\d{6,12}\s*[：:]\s*(.+)$/);
+      if (m) return m[1].trim();
+    }
+    return null;
+  }
+
+  /** 現在の #/performance/{id} ページを単独取り込み */
+  async function runSingleMail(btn) {
+    if (!getToken()) {
+      alert("Ingest トークン未設定です。⚙ から設定してください");
+      return;
+    }
+    const m = (location.hash || "").match(/^#\/(?:trend\/)?performance\/(\d+)/);
+    if (!m) {
+      alert("メルマガの詳細ページ（#/performance/{id}）を開いてから実行してください");
+      return;
+    }
+    const mailId = m[1];
+    btn.disabled = true;
+    const orig = btn.textContent;
+    btn.textContent = "⏳ 収集中…";
+    try {
+      // 既に詳細ページに居るので、要素描画を少し待つだけで良い
+      const start = Date.now();
+      while (Date.now() - start < 5000) {
+        if (
+          document.querySelector("div.statsBlock.statsBlock01 p.percent") ||
+          document.querySelector("div.miniStatsBlock")
+        ) break;
+        await new Promise((r) => setTimeout(r, 200));
+      }
+      const detail = scrapePerformancePage();
+      const subject = scrapeSubjectFromHeading() ?? "";
+
+      btn.textContent = "📤 送信中…";
+      // バッチ API に 1件だけ送る（GitHub commit は 1 回）
+      const res = await sendBatch([
+        {
+          rakutenMailId: mailId,
+          subject,
+          // sentDate は performance ページの sentStartAt から導出
+          sentDate: detail?.sentStartAt ? detail.sentStartAt.slice(0, 10) : undefined,
+          results: {
+            sentCount: detail?.sentCount ?? undefined,
+            openRate: detail?.openRate ?? undefined,
+            openCount: detail?.openCount ?? undefined,
+            clickCount: detail?.clickCount ?? undefined,
+            salesCount: detail?.transactionCount ?? undefined,
+            salesAmount: detail?.revenue ?? undefined,
+          },
+          rakuten: {
+            mailId,
+            subject,
+            sentStartAt: detail?.sentStartAt,
+            sentEndAt: detail?.sentEndAt,
+            listCondition: detail?.listCondition,
+            conversionVisitRate: detail?.conversionVisitRate,
+            conversionVisitCount: detail?.conversionVisitCount,
+            transactionCount: detail?.transactionCount,
+            transactionRate: detail?.transactionRate,
+            revenuePerSent: detail?.revenuePerSent,
+            favoriteCount: detail?.favoriteCount,
+            favoriteRate: detail?.favoriteRate,
+            deviceBreakdown: detail?.deviceBreakdown,
+            sourceUrl: location.href,
+          },
+        },
+      ]);
+      const ok = res?.successCount ?? 0;
+      if (ok === 1) {
+        btn.textContent = "✅ 取込完了";
+        alert(`取り込みました: ${mailId}\n件名: ${subject || "(なし)"}`);
+      } else {
+        const err = (res?.results || [])[0];
+        btn.textContent = "❌ 失敗";
+        alert(`取り込み失敗: ${err?.error || "unknown"}`);
+      }
+    } catch (e) {
+      console.error("[Mail-magazine] 個別取込失敗", e, { status: e?.status, body: e?.body });
+      btn.textContent = "❌ エラー";
+      const hint =
+        e?.status === 401 || e?.status === 403
+          ? "\n→ 認証エラー: 設定画面で X-Ingest-Token を確認してください"
+          : e?.status >= 500
+            ? "\n→ サーバーエラー: しばらくしてから再実行してください"
+            : "";
+      alert(`失敗: ${e?.message || e}${hint}\n（詳細は Console を確認）`);
+    } finally {
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = orig;
+      }, 4000);
+    }
   }
 
   function openSettings() {
