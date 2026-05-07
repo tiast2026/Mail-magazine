@@ -68,10 +68,31 @@ export async function getFile(
     );
   }
   const data = await res.json();
-  if (Array.isArray(data) || !data.content) {
-    throw new Error(`${filePath} はファイルではありません`);
+  if (Array.isArray(data)) {
+    throw new Error(`${filePath} はディレクトリです`);
   }
-  const content = Buffer.from(data.content, "base64").toString("utf8");
+  if (typeof data.sha !== "string") {
+    throw new Error(`${filePath} のメタデータが不正です`);
+  }
+  // 1MB 以下: content フィールドに base64 で入っている
+  if (data.encoding === "base64" && typeof data.content === "string" && data.content.length > 0) {
+    const content = Buffer.from(data.content, "base64").toString("utf8");
+    return { content, sha: data.sha };
+  }
+  // 1MB 超のファイル: Contents API は content を空で返すので Git Blobs API で取得
+  // （download_url はキャッシュ遅延があるため使わず、SHA から直接 blob を引く）
+  const blobRes = await ghFetch(`/git/blobs/${data.sha}`);
+  if (!blobRes.ok) {
+    const text = await blobRes.text();
+    throw new Error(
+      `Large file blob 読み取り失敗 (${filePath}): ${blobRes.status} ${text}`,
+    );
+  }
+  const blob = await blobRes.json();
+  if (blob.encoding !== "base64" || typeof blob.content !== "string") {
+    throw new Error(`${filePath} の blob レスポンスが不正です`);
+  }
+  const content = Buffer.from(blob.content, "base64").toString("utf8");
   return { content, sha: data.sha };
 }
 
