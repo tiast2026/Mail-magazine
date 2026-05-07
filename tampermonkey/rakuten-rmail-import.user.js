@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.25
+// @version      0.7.26
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -15,7 +15,9 @@
 (function () {
   "use strict";
 
-  const SCRIPT_VERSION = "0.7.15";
+  // 実バージョンは @version メタ（GM_info 経由）から取得する
+  const SCRIPT_VERSION =
+    (typeof GM_info !== "undefined" && GM_info?.script?.version) || "unknown";
   const DEFAULT_ENDPOINT = "https://mail-magazine.vercel.app/api/results/import";
   const IMPORTED_ENDPOINT = "https://mail-magazine.vercel.app/api/results/imported";
   const TREND_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
@@ -505,19 +507,35 @@
 
   function send(payload) {
     return new Promise((resolve, reject) => {
+      const url = getEndpoint();
+      const hasToken = !!getToken();
       GM_xmlhttpRequest({
         method: "POST",
-        url: getEndpoint(),
+        url,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
         data: JSON.stringify(payload),
         onload: (r) => {
-          try {
-            const json = JSON.parse(r.responseText || "{}");
-            if (r.status >= 200 && r.status < 300) resolve(json);
-            else reject(json);
-          } catch { reject({ status: r.status, body: r.responseText }); }
+          let parsed = null;
+          try { parsed = r.responseText ? JSON.parse(r.responseText) : null; } catch {}
+          if (r.status >= 200 && r.status < 300) {
+            resolve(parsed ?? {});
+          } else {
+            const err = new Error(
+              `import API ${r.status}${r.statusText ? " " + r.statusText : ""}` +
+              (!hasToken ? " (token 未設定: 設定画面で X-Ingest-Token を保存してください)" : "")
+            );
+            err.status = r.status;
+            err.body = parsed ?? r.responseText;
+            err.url = url;
+            reject(err);
+          }
         },
-        onerror: (e) => reject(e),
+        onerror: (e) => {
+          const err = new Error(`import API network error: ${e?.error || "unknown"}`);
+          err.cause = e;
+          err.url = url;
+          reject(err);
+        },
       });
     });
   }
@@ -604,8 +622,38 @@
     updateStatusUI();
 
     if (ng) {
-      console.warn("Mail-magazine 取り込みエラー:", errors);
-      alert(`完了: 成功 ${ok} / 失敗 ${ng}\n（エラー詳細は Console を確認）`);
+      // 詳細はオブジェクト展開できるよう個別に出す
+      console.group(`[Mail-magazine] 取り込みエラー ${ng} 件`);
+      for (const e of errors) {
+        const err = e.error || {};
+        console.warn(
+          `[${e.id}] ${e.subject || ""} → ${err.message || err}`,
+          { status: err.status, body: err.body, url: err.url }
+        );
+      }
+      console.groupEnd();
+      // ステータスコード別に集計してアラートで要点を見せる
+      const byStatus = {};
+      for (const e of errors) {
+        const k = e.error?.status ?? "network";
+        byStatus[k] = (byStatus[k] || 0) + 1;
+      }
+      const summary = Object.entries(byStatus)
+        .map(([k, v]) => `${k}: ${v}件`)
+        .join(" / ");
+      const hint =
+        byStatus[401] || byStatus[403]
+          ? "\n→ 認証エラー: 設定画面で X-Ingest-Token を確認してください"
+          : byStatus[400]
+            ? "\n→ リクエスト不正: ペイロード内容を Console で確認してください"
+            : byStatus[500] || byStatus[502] || byStatus[503]
+              ? "\n→ サーバーエラー: しばらくしてから再実行してください"
+              : "";
+      alert(
+        `完了: 成功 ${ok} / 失敗 ${ng}\n` +
+        `エラー内訳: ${summary}${hint}\n\n` +
+        `（詳細は Console を「Mail-magazine」でフィルタしてください）`
+      );
     } else {
       alert(`完了: 全 ${ok} 件取り込みました`);
     }
