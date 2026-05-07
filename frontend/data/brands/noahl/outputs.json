@@ -1419,5 +1419,44 @@
         "importedAt": "2026-05-07T04:05:00.240Z"
       }
     }
+  },
+  {
+    "id": "rmail-26352161",
+    "title": "【再入荷】2,000着突破のmayoさんコラボデニムが復活 ＊ 50%OFF",
+    "templateId": "external",
+    "createdAt": "2026-05-07T04:05:17.791Z",
+    "sentAt": "2026-05-07T04:05:02+09:00",
+    "products": [],
+    "variables": {},
+    "html": "",
+    "tags": [
+      "R-Mail直配信"
+    ],
+    "results": {
+      "sentCount": 16102,
+      "openRate": 0,
+      "openCount": 0,
+      "clickCount": 0,
+      "salesCount": 0,
+      "salesAmount": 0,
+      "rakuten": {
+        "mailId": "26352161",
+        "subject": "【再入荷】2,000着突破のmayoさんコラボデニムが復活 ＊ 50%OFF",
+        "sentStartAt": "2026-05-07T04:05:02+09:00",
+        "sentEndAt": "2026-05-07T04:05:02+09:00",
+        "listCondition": "購入期間（予約日） : 4日間OR購入期間（日付） : 2026-03-03までの1年間",
+        "isFreeQuota": false,
+        "conversionVisitRate": 0,
+        "conversionVisitCount": 0,
+        "transactionCount": 0,
+        "transactionRate": 0,
+        "revenuePerSent": 0,
+        "favoriteCount": 0,
+        "favoriteRate": 0,
+        "deviceBreakdown": [],
+        "sourceUrl": "https://rmail.rms.rakuten.co.jp/#/trend",
+        "importedAt": "2026-05-07T04:05:17.791Z"
+      }
+    }
   }
 ]
