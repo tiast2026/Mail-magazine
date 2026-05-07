@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         楽天R-Mail 実績取り込み (Mail-magazine)
 // @namespace    https://mail-magazine.vercel.app/
-// @version      0.7.23
+// @version      0.7.24
 // @description  R-Mail #/trend 一括取り込み（詳細モードは取込済みも再実行可能）
 // @author       Mail-magazine
 // @match        https://mainmenu.rms.rakuten.co.jp/*
@@ -19,7 +19,8 @@
   const DEFAULT_ENDPOINT = "https://mail-magazine.vercel.app/api/results/import";
   const IMPORTED_ENDPOINT = "https://mail-magazine.vercel.app/api/results/imported";
   const TREND_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
-  const BOOTSTRAP_URL = "https://rmail.rms.rakuten.co.jp/#/trend";
+  // 認証セッション張り直し用に長い形式を使う（SPA 直リンクだとログイン落ちが起きるケースあり）
+  const BOOTSTRAP_URL = "https://rmail.rms.rakuten.co.jp/?menu=manage&act=cross_device_monthly_summary#/trend";
   const AUTOSTART_KEY = "mm-autostart-v0713";
 
   const LAST_RUN_KEY = "mm_lastRun";
