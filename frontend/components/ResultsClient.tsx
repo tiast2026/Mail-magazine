@@ -451,9 +451,6 @@ function TopBox({
   /** ワースト表示モード（メダル無し、棒グラフ色を rose に） */
   isWorst?: boolean;
 }) {
-  // 1位の値（バーの正規化用）
-  const topValue =
-    items.length > 0 ? Number(getSortValue(items[0], valueKey)) || 0 : 0;
   // 平均値
   const avgValue =
     allItems && allItems.length > 0
@@ -471,14 +468,25 @@ function TopBox({
 
   return (
     <div className="border border-stone-200 rounded bg-white p-4">
-      <h3 className="text-sm font-semibold mb-3">{title}</h3>
+      <div className="flex items-baseline justify-between mb-3 gap-2">
+        <h3 className="text-sm font-semibold">{title}</h3>
+        {avgValue > 0 && (
+          <div className="text-[10px] text-stone-500 shrink-0" title="全件平均">
+            平均{" "}
+            <span className="font-medium text-stone-700">
+              {prefix}
+              {isPercent ? avgValue.toFixed(1) : fmt(Math.round(avgValue))}
+              {unit}
+            </span>
+          </div>
+        )}
+      </div>
       {items.length === 0 ? (
         <div className="text-xs text-stone-400 py-2">データなし</div>
       ) : (
         <ol className="space-y-3">
           {items.map((o, i) => {
             const v = Number(getSortValue(o, valueKey)) || 0;
-            const barRatio = topValue > 0 ? Math.max(0.05, v / topValue) : 0;
             const diffFromAvg = avgValue > 0 ? v - avgValue : 0;
             const dateStr = (
               o.results?.rakuten?.sentStartAt ??
@@ -543,21 +551,6 @@ function TopBox({
                       </div>
                     )}
                   </div>
-                </div>
-                <div className="ml-9 mt-1.5 h-1 bg-stone-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${barRatio * 100}%`,
-                      backgroundColor: isWorst
-                        ? "#f43f5e"
-                        : i === 0
-                          ? "#f59e0b"
-                          : i === 1
-                            ? "#a3a3a3"
-                            : "#cd7f32",
-                    }}
-                  />
                 </div>
               </li>
             );
