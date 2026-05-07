@@ -6,6 +6,8 @@ import type { CampaignEventType, MailOutput } from "@/lib/types";
 import { useOptimisticOutputs } from "@/lib/optimistic";
 import { EVENT_LABELS, getEventLabel } from "@/lib/events";
 
+type SummaryRange = "all" | "7d" | "30d" | "90d" | "month";
+
 type SortKey =
   | "date"
   | "title"
@@ -38,6 +40,9 @@ export default function ResultsClient({
   const [filterMonth, setFilterMonth] = useState<string>(""); // "YYYY-MM" 形式 / "" は全月
   const [minRating, setMinRating] = useState<number>(0);
   const [searchText, setSearchText] = useState<string>("");
+
+  // 月次サマリーの期間切替
+  const [summaryRange, setSummaryRange] = useState<SummaryRange>("all");
 
   // ソート
   const [sortKey, setSortKey] = useState<SortKey>("date");
@@ -141,9 +146,18 @@ export default function ResultsClient({
         <>
           {/* 月次サマリー（RMS 月次指標スタイル） */}
           <MonthlySummary
-            current={filtered}
             withResults={withResults}
+            range={summaryRange}
             filterMonth={filterMonth}
+            availableMonths={months}
+            onRangeChange={(r) => {
+              setSummaryRange(r);
+              // 「月別」を選んだとき、フィルター月が空なら最新月を自動選択
+              if (r === "month" && !filterMonth && months[0]) {
+                setFilterMonth(months[0]);
+              }
+            }}
+            onFilterMonthChange={setFilterMonth}
             extraFilter={(o) => {
               if (filterEvent && (o.event?.type ?? "") !== filterEvent) return false;
               if (filterTemplate && o.templateId !== filterTemplate) return false;
@@ -1274,38 +1288,150 @@ function prevMonthKey(ym: string): string | null {
   return `${y}-${String(mo).padStart(2, "0")}`;
 }
 
+/** 配信日（sentAt > scheduledAt > createdAt）を ms タイムスタンプで返す */
+function sendTimeMs(o: MailOutput): number | null {
+  const iso = o.results?.rakuten?.sentStartAt ?? o.sentAt ?? o.scheduledAt ?? o.createdAt;
+  if (!iso) return null;
+  const t = new Date(iso).getTime();
+  return isNaN(t) ? null : t;
+}
+
+type DateBucket = {
+  /** null = 全期間 */
+  range: { from: number; to: number } | null;
+  prevRange: { from: number; to: number } | null;
+  heading: string;
+  prevLabel: string;
+};
+
+function getDateBucket(range: SummaryRange, filterMonth: string): DateBucket {
+  const now = Date.now();
+  if (range === "all") {
+    return { range: null, prevRange: null, heading: "全期間の指標", prevLabel: "" };
+  }
+  if (range === "month") {
+    if (!filterMonth) {
+      return { range: null, prevRange: null, heading: "月別（月を選択）", prevLabel: "" };
+    }
+    const m = filterMonth.match(/^(\d{4})-(\d{2})$/);
+    if (!m) return { range: null, prevRange: null, heading: "月別", prevLabel: "" };
+    const y = parseInt(m[1], 10);
+    const mo = parseInt(m[2], 10);
+    // JST の月境界 = UTC の月初 00:00 - 9h
+    const from = new Date(Date.UTC(y, mo - 1, 1, -9, 0, 0)).getTime();
+    const to = new Date(Date.UTC(y, mo, 1, -9, 0, 0)).getTime();
+    const prevFromY = mo === 1 ? y - 1 : y;
+    const prevFromMo = mo === 1 ? 12 : mo - 1;
+    const prevFrom = new Date(Date.UTC(prevFromY, prevFromMo - 1, 1, -9, 0, 0)).getTime();
+    const prevTo = from;
+    const prevKey = prevMonthKey(filterMonth);
+    return {
+      range: { from, to },
+      prevRange: { from: prevFrom, to: prevTo },
+      heading: `${formatMonthLabel(filterMonth)}の月次指標`,
+      prevLabel: prevKey ? formatMonthLabel(prevKey) : "前月",
+    };
+  }
+  const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
+  const span = days * 86400000;
+  const to = now;
+  const from = now - span;
+  const prevTo = from;
+  const prevFrom = from - span;
+  return {
+    range: { from, to },
+    prevRange: { from: prevFrom, to: prevTo },
+    heading: `直近${days}日の指標`,
+    prevLabel: `その前の${days}日`,
+  };
+}
+
 function MonthlySummary({
-  current,
   withResults,
+  range,
   filterMonth,
+  availableMonths,
+  onRangeChange,
+  onFilterMonthChange,
   extraFilter,
 }: {
-  current: MailOutput[];
   withResults: MailOutput[];
+  range: SummaryRange;
   filterMonth: string;
-  /** 月以外の条件で前月メトリクスを絞り込むためのフィルター */
+  availableMonths: string[];
+  onRangeChange: (r: SummaryRange) => void;
+  onFilterMonthChange: (ym: string) => void;
+  /** 月・期間以外の条件で絞り込むフィルター */
   extraFilter: (o: MailOutput) => boolean;
 }) {
-  const cur = computePeriodMetrics(current);
-  const prevKey = filterMonth ? prevMonthKey(filterMonth) : null;
-  const prev = prevKey
-    ? computePeriodMetrics(
-        withResults.filter((o) => extraFilter(o) && monthOf(o) === prevKey),
-      )
+  const bucket = getDateBucket(range, filterMonth);
+  const inRange = (o: MailOutput, r: { from: number; to: number } | null) => {
+    if (!extraFilter(o)) return false;
+    if (!r) return true;
+    const t = sendTimeMs(o);
+    if (t === null) return false;
+    return t >= r.from && t < r.to;
+  };
+  const currentList = withResults.filter((o) => inRange(o, bucket.range));
+  const prevList = bucket.prevRange
+    ? withResults.filter((o) => inRange(o, bucket.prevRange))
     : null;
-  const heading = filterMonth
-    ? `${formatMonthLabel(filterMonth)}の月次指標`
-    : "全期間の指標";
+  const cur = computePeriodMetrics(currentList);
+  const prev = prevList ? computePeriodMetrics(prevList) : null;
+
+  const tabs: { key: SummaryRange; label: string }[] = [
+    { key: "all", label: "全期間" },
+    { key: "7d", label: "直近7日" },
+    { key: "30d", label: "直近30日" },
+    { key: "90d", label: "直近90日" },
+    { key: "month", label: "月別" },
+  ];
 
   return (
     <section className="space-y-3">
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-base font-semibold">{heading}</h2>
-        {prev && (
-          <span className="text-[10px] text-stone-500">
-            前月（{formatMonthLabel(prevKey!)} {prev.count}件）と比較
-          </span>
-        )}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-baseline gap-3">
+          <h2 className="text-lg font-semibold">{bucket.heading}</h2>
+          {prev && (
+            <span className="text-[11px] text-stone-500">
+              {bucket.prevLabel}（{prev.count}件）と比較
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <div className="inline-flex rounded-md border border-stone-300 overflow-hidden bg-white">
+            {tabs.map((t) => {
+              const active = range === t.key;
+              return (
+                <button
+                  key={t.key}
+                  onClick={() => onRangeChange(t.key)}
+                  className={`px-3 py-1.5 text-xs ${
+                    active
+                      ? "bg-stone-800 text-white font-medium"
+                      : "text-stone-600 hover:bg-stone-100"
+                  } ${t.key !== "all" ? "border-l border-stone-300" : ""}`}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+          {range === "month" && availableMonths.length > 0 && (
+            <select
+              value={filterMonth}
+              onChange={(e) => onFilterMonthChange(e.target.value)}
+              className="text-xs border border-stone-300 rounded px-2 py-1.5 bg-white"
+            >
+              <option value="">月を選択</option>
+              {availableMonths.map((m) => (
+                <option key={m} value={m}>
+                  {formatMonthLabel(m)}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
 
       {/* メイン2カード */}
@@ -1352,6 +1478,7 @@ function MonthlySummary({
           label="送信数"
           value={cur.has.sent ? fmt(cur.sent) : "—"}
           unit={cur.has.sent ? "通" : ""}
+          sub="通数（送信費用とは別）"
           delta={
             prev && cur.has.sent && prev.has.sent ? pctDelta(cur.sent, prev.sent) : null
           }
@@ -1440,21 +1567,26 @@ function BigStat({
   value,
   delta,
   deltaUnit,
+  sub,
 }: {
   icon?: string;
   label: string;
   value: string;
   delta: number | null;
   deltaUnit: string;
+  sub?: string;
 }) {
   return (
-    <div className="border border-stone-200 rounded bg-white p-5">
-      <div className="text-xs text-stone-600 flex items-center gap-1.5">
-        {icon && <span aria-hidden>{icon}</span>}
+    <div className="border border-stone-200 rounded bg-white p-6">
+      <div className="text-sm text-stone-600 flex items-center gap-1.5">
+        {icon && <span aria-hidden className="text-base">{icon}</span>}
         <span>{label}</span>
       </div>
-      <div className="mt-2 text-3xl font-bold tabular-nums">{value}</div>
-      <DeltaPill delta={delta} unit={deltaUnit} />
+      <div className="mt-3 text-4xl sm:text-5xl font-bold tabular-nums leading-none">
+        {value}
+      </div>
+      {sub && <div className="text-[11px] text-stone-400 mt-1.5">{sub}</div>}
+      <DeltaPill delta={delta} unit={deltaUnit} large />
     </div>
   );
 }
@@ -1477,13 +1609,15 @@ function SubStat({
   deltaPrecision?: number;
 }) {
   return (
-    <div className="border border-stone-200 rounded bg-white p-3">
-      <div className="text-[11px] text-stone-600">{label}</div>
-      <div className="mt-1 flex items-baseline gap-1">
-        <span className="text-lg font-bold tabular-nums">{value}</span>
-        <span className="text-[10px] text-stone-500">{unit}</span>
+    <div className="border border-stone-200 rounded bg-white p-4">
+      <div className="text-xs text-stone-600">{label}</div>
+      <div className="mt-2 flex items-baseline gap-1">
+        <span className="text-2xl sm:text-3xl font-bold tabular-nums leading-none">
+          {value}
+        </span>
+        {unit && <span className="text-xs text-stone-500">{unit}</span>}
       </div>
-      {sub && <div className="text-[10px] text-stone-400 leading-none">{sub}</div>}
+      {sub && <div className="text-[11px] text-stone-400 mt-1">{sub}</div>}
       <DeltaPill delta={delta} unit={deltaUnit} precision={deltaPrecision} />
     </div>
   );
@@ -1493,12 +1627,17 @@ function DeltaPill({
   delta,
   unit,
   precision,
+  large,
 }: {
   delta: number | null;
   unit: string;
   precision?: number;
+  large?: boolean;
 }) {
-  if (delta === null) return <div className="h-3.5 mt-1.5" />; // 余白を揃える
+  if (delta === null) {
+    // 余白を揃える
+    return <div className={large ? "h-4 mt-2" : "h-3.5 mt-1.5"} />;
+  }
   const isZero = Math.abs(delta) < 0.05;
   const isPositive = delta > 0;
   const sign = isZero ? "" : isPositive ? "+" : "";
@@ -1510,10 +1649,13 @@ function DeltaPill({
       : "text-rose-700";
   const p = precision ?? 1;
   return (
-    <div className={`text-[10px] mt-1.5 leading-none ${color} tabular-nums`}>
-      前月比 {sign}
+    <div
+      className={`${large ? "text-xs mt-2" : "text-[10px] mt-1.5"} leading-none ${color} tabular-nums`}
+    >
+      前期比 {sign}
       {delta.toFixed(p)}
-      {unit} <span className="text-[9px]">{arrow}</span>
+      {unit}{" "}
+      <span className={large ? "text-[10px]" : "text-[9px]"}>{arrow}</span>
     </div>
   );
 }
