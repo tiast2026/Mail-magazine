@@ -150,6 +150,7 @@ export default function ResultsClient({
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <TopBox
                 title={`${showWorst ? "📉" : "🏆"} 開封率 ${showWorst ? "ワースト3" : "TOP3"}`}
+                hint="開封数 ÷ 送信数（メールを受け取った人のうち何%が開いたか）"
                 items={top3OpenRate}
                 unit="%"
                 valueKey="openRate"
@@ -158,6 +159,7 @@ export default function ResultsClient({
               />
               <TopBox
                 title={`${showWorst ? "📉" : "💰"} 売上 ${showWorst ? "ワースト3" : "TOP3"}`}
+                hint="このメルマガ経由で発生した総売上"
                 items={top3Sales}
                 unit="円"
                 valueKey="revenue"
@@ -166,7 +168,8 @@ export default function ResultsClient({
                 isWorst={showWorst}
               />
               <TopBox
-                title={`${showWorst ? "📉" : "🎯"} 転換率 ${showWorst ? "ワースト3" : "TOP3"}`}
+                title={`${showWorst ? "📉" : "🎯"} 転換率（CVR） ${showWorst ? "ワースト3" : "TOP3"}`}
+                hint="転換数 ÷ 送客数（クリックして来訪した人のうち何%が購入したか）"
                 items={top3Conversion}
                 unit="%"
                 valueKey="txRate"
@@ -175,6 +178,7 @@ export default function ResultsClient({
               />
               <TopBox
                 title={`${showWorst ? "📉" : "💎"} 売上/通 ${showWorst ? "ワースト3" : "TOP3"}`}
+                hint="売上 ÷ 送信数（1通あたり何円の売上を生んだか）"
                 items={top3RevPerSent}
                 unit="円"
                 valueKey="revenuePerSent"
@@ -182,7 +186,8 @@ export default function ResultsClient({
                 isWorst={showWorst}
               />
               <TopBox
-                title={`${showWorst ? "📉" : "👆"} CTR ${showWorst ? "ワースト3" : "TOP3"}`}
+                title={`${showWorst ? "📉" : "👆"} CTR（開封クリック率） ${showWorst ? "ワースト3" : "TOP3"}`}
+                hint="クリック数 ÷ 開封数（メールを開いた人のうち何%が本文リンクをクリックしたか）"
                 items={top3CTR}
                 unit="%"
                 valueKey="ctr"
@@ -191,6 +196,7 @@ export default function ResultsClient({
               />
               <TopBox
                 title={`${showWorst ? "📉" : "❤️"} お気に入り率 ${showWorst ? "ワースト3" : "TOP3"}`}
+                hint="お気に入り登録数 ÷ 送客数（来訪者のうち何%がお気に入り登録したか）"
                 items={top3Favorite}
                 unit="%"
                 valueKey="favoriteRate"
@@ -439,9 +445,11 @@ function FilterField({ label, children }: { label: string; children: React.React
 }
 
 function TopBox({
-  title, items, unit, valueKey, prefix, allItems, isWorst,
+  title, hint, items, unit, valueKey, prefix, allItems, isWorst,
 }: {
   title: string;
+  /** タイトル下に小さく表示する補足説明（計算式など） */
+  hint?: string;
   items: MailOutput[];
   unit: string;
   valueKey: SortKey;
@@ -468,7 +476,7 @@ function TopBox({
 
   return (
     <div className="border border-stone-200 rounded bg-white p-4">
-      <div className="flex items-baseline justify-between mb-3 gap-2">
+      <div className="flex items-baseline justify-between mb-1 gap-2">
         <h3 className="text-sm font-semibold">{title}</h3>
         {avgValue > 0 && (
           <div className="text-[10px] text-stone-500 shrink-0" title="全件平均">
@@ -481,6 +489,11 @@ function TopBox({
           </div>
         )}
       </div>
+      {hint && (
+        <div className="text-[10px] text-stone-500 mb-2 leading-snug">
+          {hint}
+        </div>
+      )}
       {items.length === 0 ? (
         <div className="text-xs text-stone-400 py-2">データなし</div>
       ) : (
