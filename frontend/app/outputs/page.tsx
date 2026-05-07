@@ -10,7 +10,7 @@ export default function OutputsPage() {
       <section>
         <h1 className="text-2xl font-semibold mb-1">配信メルマガ</h1>
         <p className="text-stone-600 text-sm">
-          Claude Code が生成したメルマガの一覧です。プレビュー・HTMLコピー・実績入力ができます。
+          配信予定・配信済みのメルマガ一覧です。Claude Code で生成したものに加え、R-Mail 直配信メルマガも実績取り込み時に自動登録されます。プレビュー・HTMLコピー・実績入力ができます。
         </p>
       </section>
 
