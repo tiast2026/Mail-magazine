@@ -152,7 +152,7 @@ export default function ResultsClient({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">配信実績</h1>
         <p className="text-sm text-stone-500 mt-1">
@@ -200,7 +200,7 @@ export default function ResultsClient({
                 {showWorst ? "🏆 TOP3 を表示" : "📉 ワースト3 を表示"}
               </button>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
               <TopBox
                 title={`${showWorst ? "📉" : "🏆"} 開封率 ${showWorst ? "ワースト3" : "TOP3"}`}
                 hint="開封数 ÷ 送信数（メールを受け取った人のうち何%が開いたか）"
@@ -269,7 +269,7 @@ export default function ResultsClient({
                 バッジを付与（2件以上のデータがある場合）。
               </p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
               <TimingBox
                 title="曜日別"
                 hint="JST 基準。土日 vs 平日の反応差を確認"
@@ -303,7 +303,7 @@ export default function ResultsClient({
                 「誰に配信すると効くか」を見るための切り口。セグメント・デバイス・コンテンツ相性。
               </p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
               <TimingBox
                 title="セグメント別"
                 hint="RMS のリスト条件で集計"
@@ -348,7 +348,7 @@ export default function ResultsClient({
           </section>
 
           {/* テンプレ別 / イベント別集計 */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <AggBox title="テンプレ別" rows={byTemplate} />
             <AggBox title="イベント別" rows={byEvent} labelMap={(k) => getEventLabel(k as CampaignEventType) || k} />
           </section>
@@ -1068,11 +1068,9 @@ function TimingBox({
           .key
       : null;
   const singleRow = rows.length === 1;
-  // 開封率の最大値（バー長さの基準）
-  const maxOpen = Math.max(...rows.map((r) => r.avgOpenRate), 0.01);
 
   return (
-    <div className="border border-stone-200 rounded bg-white p-4">
+    <div className="border border-stone-200 rounded bg-white p-3">
       <h3 className="text-sm font-semibold">{title}</h3>
       {hint && (
         <div className="text-[10px] text-stone-500 mt-0.5 leading-snug">
@@ -1085,33 +1083,26 @@ function TimingBox({
         </div>
       ) : (
         <>
-          <table className="w-full text-xs mt-3 table-fixed">
+          <table className="w-full text-xs mt-2 table-fixed">
             <colgroup>
               <col />
-              <col className="w-9" />
+              <col className="w-8" />
+              <col className="w-11" />
+              <col className="w-11" />
               <col className="w-12" />
-              <col className="w-10" />
-              <col className="w-14" />
             </colgroup>
             <thead className="text-stone-500">
               <tr className="border-b border-stone-200">
-                <th className="text-left py-1.5 font-medium">区分</th>
-                <th className="text-right py-1.5 font-medium whitespace-nowrap">件数</th>
-                <th className="text-right py-1.5 font-medium whitespace-nowrap" title="平均開封率">
-                  開封
-                </th>
-                <th className="text-right py-1.5 font-medium whitespace-nowrap" title="平均転換率">
-                  転換
-                </th>
-                <th className="text-right py-1.5 font-medium whitespace-nowrap" title="平均 売上/通">
-                  売上/通
-                </th>
+                <th className="text-left py-1 font-medium">区分</th>
+                <th className="text-right py-1 px-0.5 font-medium whitespace-nowrap">件</th>
+                <th className="text-right py-1 px-0.5 font-medium whitespace-nowrap" title="平均開封率">開封</th>
+                <th className="text-right py-1 px-0.5 font-medium whitespace-nowrap" title="平均転換率">転換</th>
+                <th className="text-right py-1 px-0.5 font-medium whitespace-nowrap" title="平均 売上/通">売上/通</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => {
                 const isRec = r.key === recommendedKey;
-                const barW = (r.avgOpenRate / maxOpen) * 100;
                 return (
                   <tr
                     key={r.key}
@@ -1119,8 +1110,8 @@ function TimingBox({
                       isRec ? "bg-amber-50" : ""
                     }`}
                   >
-                    <td className="py-1.5 pr-1 min-w-0">
-                      <div className="flex items-center gap-1.5 min-w-0">
+                    <td className="py-1 pr-1 min-w-0">
+                      <div className="flex items-center gap-1 min-w-0">
                         <span className="truncate min-w-0" title={r.label}>
                           {r.label}
                         </span>
@@ -1132,27 +1123,19 @@ function TimingBox({
                       </div>
                     </td>
                     <td
-                      className={`py-1.5 text-right tabular-nums whitespace-nowrap ${
+                      className={`py-1 px-0.5 text-right tabular-nums whitespace-nowrap ${
                         showCount ? "font-medium" : "text-stone-500"
                       }`}
                     >
                       {r.count}
                     </td>
-                    <td className="py-1.5 text-right tabular-nums whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1 min-w-0">
-                        <div
-                          className="h-1 bg-emerald-200 rounded shrink-0 hidden sm:block"
-                          style={{ width: `${Math.max(barW * 0.18, 2)}px` }}
-                        />
-                        <span>
-                          {r.avgOpenRate > 0 ? r.avgOpenRate.toFixed(1) + "%" : "—"}
-                        </span>
-                      </div>
+                    <td className="py-1 px-0.5 text-right tabular-nums whitespace-nowrap">
+                      {r.avgOpenRate > 0 ? r.avgOpenRate.toFixed(1) + "%" : "—"}
                     </td>
-                    <td className="py-1.5 text-right tabular-nums whitespace-nowrap">
+                    <td className="py-1 px-0.5 text-right tabular-nums whitespace-nowrap">
                       {r.avgTxRate > 0 ? r.avgTxRate.toFixed(1) + "%" : "—"}
                     </td>
-                    <td className="py-1.5 text-right tabular-nums whitespace-nowrap">
+                    <td className="py-1 px-0.5 text-right tabular-nums whitespace-nowrap">
                       {r.avgRevPerSent > 0
                         ? "¥" + r.avgRevPerSent.toFixed(1)
                         : "—"}
@@ -1685,7 +1668,7 @@ function DeltaPill({
 function DeviceBox({ rows }: { rows: DeviceTotalRow[] }) {
   const total = rows.reduce((s, r) => s + r.revenue, 0);
   return (
-    <div className="border border-stone-200 rounded bg-white p-4">
+    <div className="border border-stone-200 rounded bg-white p-3">
       <h3 className="text-sm font-semibold">デバイス別合算</h3>
       <div className="text-[10px] text-stone-500 mt-0.5 leading-snug">
         全配信のデバイス別合算。スマホ vs PC の構成比
@@ -1695,14 +1678,14 @@ function DeviceBox({ rows }: { rows: DeviceTotalRow[] }) {
           デバイス別データはまだ取り込まれていません。RMS から「📨 メルマガ分析取得」を実行すると表示されます
         </div>
       ) : (
-        <table className="w-full text-xs mt-3">
+        <table className="w-full text-xs mt-2">
           <thead className="text-stone-500">
             <tr className="border-b border-stone-200">
-              <th className="text-left py-1.5 font-medium">デバイス</th>
-              <th className="text-right py-1.5 font-medium">開封</th>
-              <th className="text-right py-1.5 font-medium">クリック</th>
-              <th className="text-right py-1.5 font-medium">売上</th>
-              <th className="text-right py-1.5 font-medium">構成比</th>
+              <th className="text-left py-1 font-medium">デバイス</th>
+              <th className="text-right py-1 px-0.5 font-medium">開封</th>
+              <th className="text-right py-1 px-0.5 font-medium">クリック</th>
+              <th className="text-right py-1 px-0.5 font-medium">売上</th>
+              <th className="text-right py-1 px-0.5 font-medium">構成比</th>
             </tr>
           </thead>
           <tbody>
@@ -1710,17 +1693,17 @@ function DeviceBox({ rows }: { rows: DeviceTotalRow[] }) {
               const share = total > 0 ? (r.revenue / total) * 100 : 0;
               return (
                 <tr key={r.device} className="border-b border-stone-100">
-                  <td className="py-1.5">{r.label}</td>
-                  <td className="py-1.5 text-right tabular-nums">
+                  <td className="py-1">{r.label}</td>
+                  <td className="py-1 px-0.5 text-right tabular-nums">
                     {fmt(r.opens)}
                   </td>
-                  <td className="py-1.5 text-right tabular-nums">
+                  <td className="py-1 px-0.5 text-right tabular-nums">
                     {fmt(r.clicks)}
                   </td>
-                  <td className="py-1.5 text-right tabular-nums">
+                  <td className="py-1 px-0.5 text-right tabular-nums">
                     ¥{fmt(r.revenue)}
                   </td>
-                  <td className="py-1.5 text-right tabular-nums text-stone-500">
+                  <td className="py-1 px-0.5 text-right tabular-nums text-stone-500">
                     {share.toFixed(0)}%
                   </td>
                 </tr>
